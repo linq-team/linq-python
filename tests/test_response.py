@@ -6,8 +6,8 @@ import httpx
 import pytest
 import pydantic
 
-from linq_api_v3 import BaseModel, LinqAPIV3, AsyncLinqAPIV3
-from linq_api_v3._response import (
+from linq import BaseModel, LinqAPIV3, AsyncLinqAPIV3
+from linq._response import (
     APIResponse,
     BaseAPIResponse,
     AsyncAPIResponse,
@@ -15,8 +15,8 @@ from linq_api_v3._response import (
     AsyncBinaryAPIResponse,
     extract_response_type,
 )
-from linq_api_v3._streaming import Stream
-from linq_api_v3._base_client import FinalRequestOptions
+from linq._streaming import Stream
+from linq._base_client import FinalRequestOptions
 
 
 class ConcreteBaseAPIResponse(APIResponse[bytes]): ...
@@ -37,7 +37,7 @@ def test_extract_response_type_direct_classes() -> None:
 def test_extract_response_type_direct_class_missing_type_arg() -> None:
     with pytest.raises(
         RuntimeError,
-        match="Expected type <class 'linq_api_v3._response.AsyncAPIResponse'> to have a type argument at index 0 but it did not",
+        match="Expected type <class 'linq._response.AsyncAPIResponse'> to have a type argument at index 0 but it did not",
     ):
         extract_response_type(AsyncAPIResponse)
 
@@ -68,7 +68,7 @@ def test_response_parse_mismatched_basemodel(client: LinqAPIV3) -> None:
 
     with pytest.raises(
         TypeError,
-        match="Pydantic models must subclass our base model type, e.g. `from linq_api_v3 import BaseModel`",
+        match="Pydantic models must subclass our base model type, e.g. `from linq import BaseModel`",
     ):
         response.parse(to=PydanticModel)
 
@@ -86,7 +86,7 @@ async def test_async_response_parse_mismatched_basemodel(async_client: AsyncLinq
 
     with pytest.raises(
         TypeError,
-        match="Pydantic models must subclass our base model type, e.g. `from linq_api_v3 import BaseModel`",
+        match="Pydantic models must subclass our base model type, e.g. `from linq import BaseModel`",
     ):
         await response.parse(to=PydanticModel)
 

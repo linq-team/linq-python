@@ -5,8 +5,8 @@ from typing import Iterator, AsyncIterator
 import httpx
 import pytest
 
-from linq_api_v3 import LinqAPIV3, AsyncLinqAPIV3
-from linq_api_v3._streaming import Stream, AsyncStream, ServerSentEvent
+from linq import LinqAPIV3, AsyncLinqAPIV3
+from linq._streaming import Stream, AsyncStream, ServerSentEvent
 
 
 @pytest.mark.asyncio

@@ -8,8 +8,8 @@ from typing import Any, TypeVar, Iterator, Sequence, cast
 from datetime import date, datetime
 from typing_extensions import Literal, get_args, get_origin, assert_type
 
-from linq_api_v3._types import Omit, NoneType
-from linq_api_v3._utils import (
+from linq._types import Omit, NoneType
+from linq._utils import (
     is_dict,
     is_list,
     is_list_type,
@@ -19,8 +19,8 @@ from linq_api_v3._utils import (
     is_annotated_type,
     is_type_alias_type,
 )
-from linq_api_v3._compat import PYDANTIC_V1, field_outer_type, get_model_fields
-from linq_api_v3._models import BaseModel
+from linq._compat import PYDANTIC_V1, field_outer_type, get_model_fields
+from linq._models import BaseModel
 
 BaseModelT = TypeVar("BaseModelT", bound=BaseModel)
 

@@ -35,7 +35,7 @@ class PhoneNumbersResource(SyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/stainless-sdks/linq-api-v3-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/linq-team/linq-python#accessing-raw-response-data-eg-headers
         """
         return PhoneNumbersResourceWithRawResponse(self)
 
@@ -44,7 +44,7 @@ class PhoneNumbersResource(SyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/stainless-sdks/linq-api-v3-python#with_streaming_response
+        For more information, see https://www.github.com/linq-team/linq-python#with_streaming_response
         """
         return PhoneNumbersResourceWithStreamingResponse(self)
 
@@ -89,7 +89,7 @@ class AsyncPhoneNumbersResource(AsyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/stainless-sdks/linq-api-v3-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/linq-team/linq-python#accessing-raw-response-data-eg-headers
         """
         return AsyncPhoneNumbersResourceWithRawResponse(self)
 
@@ -98,7 +98,7 @@ class AsyncPhoneNumbersResource(AsyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/stainless-sdks/linq-api-v3-python#with_streaming_response
+        For more information, see https://www.github.com/linq-team/linq-python#with_streaming_response
         """
         return AsyncPhoneNumbersResourceWithStreamingResponse(self)
 

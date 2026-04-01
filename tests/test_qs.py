@@ -4,7 +4,7 @@ from urllib.parse import unquote
 
 import pytest
 
-from linq_api_v3._qs import Querystring, stringify
+from linq._qs import Querystring, stringify
 
 
 def test_empty() -> None:

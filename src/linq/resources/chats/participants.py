@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import httpx
 
-from ..._types import Body, Query, Headers, NoneType, NotGiven, not_given
-from ..._utils import path_template
+from ..._types import Body, Query, Headers, NotGiven, not_given
+from ..._utils import path_template, maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
 from ..._response import (
@@ -14,12 +14,15 @@ from ..._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
+from ...types.chats import participant_add_params, participant_remove_params
 from ..._base_client import make_request_options
+from ...types.chats.participant_add_response import ParticipantAddResponse
+from ...types.chats.participant_remove_response import ParticipantRemoveResponse
 
-__all__ = ["TypingResource", "AsyncTypingResource"]
+__all__ = ["ParticipantsResource", "AsyncParticipantsResource"]
 
 
-class TypingResource(SyncAPIResource):
+class ParticipantsResource(SyncAPIResource):
     """A Chat is a conversation thread with one or more participants.
 
     To begin a chat, you must create a Chat with at least one recipient handle.
@@ -39,42 +42,50 @@ class TypingResource(SyncAPIResource):
     """
 
     @cached_property
-    def with_raw_response(self) -> TypingResourceWithRawResponse:
+    def with_raw_response(self) -> ParticipantsResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/stainless-sdks/linq-api-v3-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/linq-team/linq-python#accessing-raw-response-data-eg-headers
         """
-        return TypingResourceWithRawResponse(self)
+        return ParticipantsResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> TypingResourceWithStreamingResponse:
+    def with_streaming_response(self) -> ParticipantsResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/stainless-sdks/linq-api-v3-python#with_streaming_response
+        For more information, see https://www.github.com/linq-team/linq-python#with_streaming_response
         """
-        return TypingResourceWithStreamingResponse(self)
+        return ParticipantsResourceWithStreamingResponse(self)
 
-    def start(
+    def add(
         self,
         chat_id: str,
         *,
+        handle: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> None:
+    ) -> ParticipantAddResponse:
         """
-        Send a typing indicator to show that someone is typing in the chat.
+        Add a new participant to an existing group chat.
 
-        **Note:** Group chat typing indicators are not currently supported. Attempting
-        to start a typing indicator in a group chat will return a `403` error.
+        **Requirements:**
+
+        - Group chats only (3+ existing participants)
+        - New participant must support the same messaging service as the group
+        - Cross-service additions not allowed (e.g., can't add RCS-only user to iMessage
+          group)
+        - For cross-service scenarios, create a new chat instead
 
         Args:
+          handle: Phone number (E.164 format) or email address of the participant to add
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -85,36 +96,38 @@ class TypingResource(SyncAPIResource):
         """
         if not chat_id:
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
-        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return self._post(
-            path_template("/v3/chats/{chat_id}/typing", chat_id=chat_id),
+            path_template("/v3/chats/{chat_id}/participants", chat_id=chat_id),
+            body=maybe_transform({"handle": handle}, participant_add_params.ParticipantAddParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=NoneType,
+            cast_to=ParticipantAddResponse,
         )
 
-    def stop(
+    def remove(
         self,
         chat_id: str,
         *,
+        handle: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> None:
+    ) -> ParticipantRemoveResponse:
         """
-        Stop the typing indicator for the chat.
+        Remove a participant from an existing group chat.
 
-        **Note:** Typing indicators are automatically stopped when a message is sent, so
-        calling this endpoint after sending a message is unnecessary.
+        **Requirements:**
 
-        **Note:** Group chat typing indicators are not currently supported. Attempting
-        to stop a typing indicator in a group chat will return a `403` error.
+        - Group chats only
+        - Must have 3+ participants after removal
 
         Args:
+          handle: Phone number (E.164 format) or email address of the participant to remove
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -125,17 +138,17 @@ class TypingResource(SyncAPIResource):
         """
         if not chat_id:
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
-        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return self._delete(
-            path_template("/v3/chats/{chat_id}/typing", chat_id=chat_id),
+            path_template("/v3/chats/{chat_id}/participants", chat_id=chat_id),
+            body=maybe_transform({"handle": handle}, participant_remove_params.ParticipantRemoveParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=NoneType,
+            cast_to=ParticipantRemoveResponse,
         )
 
 
-class AsyncTypingResource(AsyncAPIResource):
+class AsyncParticipantsResource(AsyncAPIResource):
     """A Chat is a conversation thread with one or more participants.
 
     To begin a chat, you must create a Chat with at least one recipient handle.
@@ -155,42 +168,50 @@ class AsyncTypingResource(AsyncAPIResource):
     """
 
     @cached_property
-    def with_raw_response(self) -> AsyncTypingResourceWithRawResponse:
+    def with_raw_response(self) -> AsyncParticipantsResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/stainless-sdks/linq-api-v3-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/linq-team/linq-python#accessing-raw-response-data-eg-headers
         """
-        return AsyncTypingResourceWithRawResponse(self)
+        return AsyncParticipantsResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> AsyncTypingResourceWithStreamingResponse:
+    def with_streaming_response(self) -> AsyncParticipantsResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/stainless-sdks/linq-api-v3-python#with_streaming_response
+        For more information, see https://www.github.com/linq-team/linq-python#with_streaming_response
         """
-        return AsyncTypingResourceWithStreamingResponse(self)
+        return AsyncParticipantsResourceWithStreamingResponse(self)
 
-    async def start(
+    async def add(
         self,
         chat_id: str,
         *,
+        handle: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> None:
+    ) -> ParticipantAddResponse:
         """
-        Send a typing indicator to show that someone is typing in the chat.
+        Add a new participant to an existing group chat.
 
-        **Note:** Group chat typing indicators are not currently supported. Attempting
-        to start a typing indicator in a group chat will return a `403` error.
+        **Requirements:**
+
+        - Group chats only (3+ existing participants)
+        - New participant must support the same messaging service as the group
+        - Cross-service additions not allowed (e.g., can't add RCS-only user to iMessage
+          group)
+        - For cross-service scenarios, create a new chat instead
 
         Args:
+          handle: Phone number (E.164 format) or email address of the participant to add
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -201,36 +222,38 @@ class AsyncTypingResource(AsyncAPIResource):
         """
         if not chat_id:
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
-        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return await self._post(
-            path_template("/v3/chats/{chat_id}/typing", chat_id=chat_id),
+            path_template("/v3/chats/{chat_id}/participants", chat_id=chat_id),
+            body=await async_maybe_transform({"handle": handle}, participant_add_params.ParticipantAddParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=NoneType,
+            cast_to=ParticipantAddResponse,
         )
 
-    async def stop(
+    async def remove(
         self,
         chat_id: str,
         *,
+        handle: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> None:
+    ) -> ParticipantRemoveResponse:
         """
-        Stop the typing indicator for the chat.
+        Remove a participant from an existing group chat.
 
-        **Note:** Typing indicators are automatically stopped when a message is sent, so
-        calling this endpoint after sending a message is unnecessary.
+        **Requirements:**
 
-        **Note:** Group chat typing indicators are not currently supported. Attempting
-        to stop a typing indicator in a group chat will return a `403` error.
+        - Group chats only
+        - Must have 3+ participants after removal
 
         Args:
+          handle: Phone number (E.164 format) or email address of the participant to remove
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -241,59 +264,59 @@ class AsyncTypingResource(AsyncAPIResource):
         """
         if not chat_id:
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
-        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return await self._delete(
-            path_template("/v3/chats/{chat_id}/typing", chat_id=chat_id),
+            path_template("/v3/chats/{chat_id}/participants", chat_id=chat_id),
+            body=await async_maybe_transform({"handle": handle}, participant_remove_params.ParticipantRemoveParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=NoneType,
+            cast_to=ParticipantRemoveResponse,
         )
 
 
-class TypingResourceWithRawResponse:
-    def __init__(self, typing: TypingResource) -> None:
-        self._typing = typing
+class ParticipantsResourceWithRawResponse:
+    def __init__(self, participants: ParticipantsResource) -> None:
+        self._participants = participants
 
-        self.start = to_raw_response_wrapper(
-            typing.start,
+        self.add = to_raw_response_wrapper(
+            participants.add,
         )
-        self.stop = to_raw_response_wrapper(
-            typing.stop,
-        )
-
-
-class AsyncTypingResourceWithRawResponse:
-    def __init__(self, typing: AsyncTypingResource) -> None:
-        self._typing = typing
-
-        self.start = async_to_raw_response_wrapper(
-            typing.start,
-        )
-        self.stop = async_to_raw_response_wrapper(
-            typing.stop,
+        self.remove = to_raw_response_wrapper(
+            participants.remove,
         )
 
 
-class TypingResourceWithStreamingResponse:
-    def __init__(self, typing: TypingResource) -> None:
-        self._typing = typing
+class AsyncParticipantsResourceWithRawResponse:
+    def __init__(self, participants: AsyncParticipantsResource) -> None:
+        self._participants = participants
 
-        self.start = to_streamed_response_wrapper(
-            typing.start,
+        self.add = async_to_raw_response_wrapper(
+            participants.add,
         )
-        self.stop = to_streamed_response_wrapper(
-            typing.stop,
+        self.remove = async_to_raw_response_wrapper(
+            participants.remove,
         )
 
 
-class AsyncTypingResourceWithStreamingResponse:
-    def __init__(self, typing: AsyncTypingResource) -> None:
-        self._typing = typing
+class ParticipantsResourceWithStreamingResponse:
+    def __init__(self, participants: ParticipantsResource) -> None:
+        self._participants = participants
 
-        self.start = async_to_streamed_response_wrapper(
-            typing.start,
+        self.add = to_streamed_response_wrapper(
+            participants.add,
         )
-        self.stop = async_to_streamed_response_wrapper(
-            typing.stop,
+        self.remove = to_streamed_response_wrapper(
+            participants.remove,
+        )
+
+
+class AsyncParticipantsResourceWithStreamingResponse:
+    def __init__(self, participants: AsyncParticipantsResource) -> None:
+        self._participants = participants
+
+        self.add = async_to_streamed_response_wrapper(
+            participants.add,
+        )
+        self.remove = async_to_streamed_response_wrapper(
+            participants.remove,
         )

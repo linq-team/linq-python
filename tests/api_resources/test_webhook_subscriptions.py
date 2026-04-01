@@ -7,13 +7,13 @@ from typing import Any, cast
 
 import pytest
 
-from linq_api_v3 import LinqAPIV3, AsyncLinqAPIV3
-from tests.utils import assert_matches_type
-from linq_api_v3.types import (
+from linq import LinqAPIV3, AsyncLinqAPIV3
+from linq.types import (
     WebhookSubscription,
     WebhookSubscriptionListResponse,
     WebhookSubscriptionCreateResponse,
 )
+from tests.utils import assert_matches_type
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
