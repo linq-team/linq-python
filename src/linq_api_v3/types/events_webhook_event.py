@@ -1,0 +1,50 @@
+# File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+from typing import Union
+from typing_extensions import Annotated, TypeAlias
+
+from .._utils import PropertyInfo
+from .chat_created_webhook_event import ChatCreatedWebhookEvent
+from .message_read_webhook_event import MessageReadWebhookEvent
+from .message_sent_webhook_event import MessageSentWebhookEvent
+from .message_edited_webhook_event import MessageEditedWebhookEvent
+from .message_failed_webhook_event import MessageFailedWebhookEvent
+from .reaction_added_webhook_event import ReactionAddedWebhookEvent
+from .message_received_webhook_event import MessageReceivedWebhookEvent
+from .reaction_removed_webhook_event import ReactionRemovedWebhookEvent
+from .message_delivered_webhook_event import MessageDeliveredWebhookEvent
+from .participant_added_webhook_event import ParticipantAddedWebhookEvent
+from .participant_removed_webhook_event import ParticipantRemovedWebhookEvent
+from .chat_group_icon_updated_webhook_event import ChatGroupIconUpdatedWebhookEvent
+from .chat_group_name_updated_webhook_event import ChatGroupNameUpdatedWebhookEvent
+from .phone_number_status_updated_webhook_event import PhoneNumberStatusUpdatedWebhookEvent
+from .chat_group_icon_update_failed_webhook_event import ChatGroupIconUpdateFailedWebhookEvent
+from .chat_group_name_update_failed_webhook_event import ChatGroupNameUpdateFailedWebhookEvent
+from .chat_typing_indicator_started_webhook_event import ChatTypingIndicatorStartedWebhookEvent
+from .chat_typing_indicator_stopped_webhook_event import ChatTypingIndicatorStoppedWebhookEvent
+
+__all__ = ["EventsWebhookEvent"]
+
+EventsWebhookEvent: TypeAlias = Annotated[
+    Union[
+        MessageSentWebhookEvent,
+        MessageReceivedWebhookEvent,
+        MessageReadWebhookEvent,
+        MessageDeliveredWebhookEvent,
+        MessageFailedWebhookEvent,
+        MessageEditedWebhookEvent,
+        ReactionAddedWebhookEvent,
+        ReactionRemovedWebhookEvent,
+        ParticipantAddedWebhookEvent,
+        ParticipantRemovedWebhookEvent,
+        ChatCreatedWebhookEvent,
+        ChatGroupNameUpdatedWebhookEvent,
+        ChatGroupIconUpdatedWebhookEvent,
+        ChatGroupNameUpdateFailedWebhookEvent,
+        ChatGroupIconUpdateFailedWebhookEvent,
+        ChatTypingIndicatorStartedWebhookEvent,
+        ChatTypingIndicatorStoppedWebhookEvent,
+        PhoneNumberStatusUpdatedWebhookEvent,
+    ],
+    PropertyInfo(discriminator="event_type"),
+]
