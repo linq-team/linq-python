@@ -5,8 +5,8 @@ from typing import Union
 
 import pydantic
 
-from linq_api_v3 import _compat
-from linq_api_v3._utils._json import openapi_dumps
+from linq import _compat
+from linq._utils._json import openapi_dumps
 
 
 class TestOpenapiDumps:

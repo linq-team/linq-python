@@ -2,7 +2,7 @@ import operator
 from typing import Any
 from typing_extensions import override
 
-from linq_api_v3._utils import LazyProxy
+from linq._utils import LazyProxy
 
 
 class RecursiveLazyProxy(LazyProxy[Any]):

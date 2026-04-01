@@ -10,15 +10,15 @@ import httpx
 import pytest
 from pytest_asyncio import is_async_test
 
-from linq_api_v3 import LinqAPIV3, AsyncLinqAPIV3, DefaultAioHttpClient
-from linq_api_v3._utils import is_dict
+from linq import LinqAPIV3, AsyncLinqAPIV3, DefaultAioHttpClient
+from linq._utils import is_dict
 
 if TYPE_CHECKING:
     from _pytest.fixtures import FixtureRequest  # pyright: ignore[reportPrivateImportUsage]
 
 pytest.register_assert_rewrite("tests.utils")
 
-logging.getLogger("linq_api_v3").setLevel(logging.DEBUG)
+logging.getLogger("linq").setLevel(logging.DEBUG)
 
 
 # automatically add `pytest.mark.asyncio()` to all of our async tests

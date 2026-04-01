@@ -4,7 +4,7 @@ from typing import Any
 
 import pytest
 
-from linq_api_v3._utils._path import path_template
+from linq._utils._path import path_template
 
 
 @pytest.mark.parametrize(

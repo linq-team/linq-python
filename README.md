@@ -1,7 +1,7 @@
 # Linq API V3 Python API library
 
 <!-- prettier-ignore -->
-[![PyPI version](https://img.shields.io/pypi/v/linq_api_v3.svg?label=pypi%20(stable))](https://pypi.org/project/linq_api_v3/)
+[![PyPI version](https://img.shields.io/pypi/v/linq-python.svg?label=pypi%20(stable))](https://pypi.org/project/linq-python/)
 
 The Linq API V3 Python library provides convenient access to the Linq API V3 REST API from any Python 3.9+
 application. The library includes type definitions for all request params and response fields,
@@ -16,12 +16,9 @@ The REST API documentation can be found on [apidocs.linqapp.com](https://apidocs
 ## Installation
 
 ```sh
-# install from this staging repo
-pip install git+ssh://git@github.com/stainless-sdks/linq-api-v3-python.git
+# install from PyPI
+pip install linq-python
 ```
-
-> [!NOTE]
-> Once this package is [published to PyPI](https://www.stainless.com/docs/guides/publish), this will become: `pip install linq_api_v3`
 
 ## Usage
 
@@ -29,7 +26,7 @@ The full API of this library can be found in [api.md](api.md).
 
 ```python
 import os
-from linq_api_v3 import LinqAPIV3
+from linq import LinqAPIV3
 
 client = LinqAPIV3(
     api_key=os.environ.get("LINQ_API_V3_API_KEY"),  # This is the default and can be omitted
@@ -62,7 +59,7 @@ Simply import `AsyncLinqAPIV3` instead of `LinqAPIV3` and use `await` with each 
 ```python
 import os
 import asyncio
-from linq_api_v3 import AsyncLinqAPIV3
+from linq import AsyncLinqAPIV3
 
 client = AsyncLinqAPIV3(
     api_key=os.environ.get("LINQ_API_V3_API_KEY"),  # This is the default and can be omitted
@@ -97,8 +94,8 @@ By default, the async client uses `httpx` for HTTP requests. However, for improv
 You can enable this by installing `aiohttp`:
 
 ```sh
-# install from this staging repo
-pip install 'linq_api_v3[aiohttp] @ git+ssh://git@github.com/stainless-sdks/linq-api-v3-python.git'
+# install from PyPI
+pip install linq-python[aiohttp]
 ```
 
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
@@ -106,8 +103,8 @@ Then you can enable it by instantiating the client with `http_client=DefaultAioH
 ```python
 import os
 import asyncio
-from linq_api_v3 import DefaultAioHttpClient
-from linq_api_v3 import AsyncLinqAPIV3
+from linq import DefaultAioHttpClient
+from linq import AsyncLinqAPIV3
 
 
 async def main() -> None:
@@ -149,7 +146,7 @@ List methods in the Linq API V3 API are paginated.
 This library provides auto-paginating iterators with each list response, so you do not have to request successive pages manually:
 
 ```python
-from linq_api_v3 import LinqAPIV3
+from linq import LinqAPIV3
 
 client = LinqAPIV3()
 
@@ -165,7 +162,7 @@ Or, asynchronously:
 
 ```python
 import asyncio
-from linq_api_v3 import AsyncLinqAPIV3
+from linq import AsyncLinqAPIV3
 
 client = AsyncLinqAPIV3()
 
@@ -210,7 +207,7 @@ for chat in first_page.chats:
 Nested parameters are dictionaries, typed using `TypedDict`, for example:
 
 ```python
-from linq_api_v3 import LinqAPIV3
+from linq import LinqAPIV3
 
 client = LinqAPIV3()
 
@@ -231,16 +228,16 @@ print(chat.message)
 
 ## Handling errors
 
-When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `linq_api_v3.APIConnectionError` is raised.
+When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `linq.APIConnectionError` is raised.
 
 When the API returns a non-success status code (that is, 4xx or 5xx
-response), a subclass of `linq_api_v3.APIStatusError` is raised, containing `status_code` and `response` properties.
+response), a subclass of `linq.APIStatusError` is raised, containing `status_code` and `response` properties.
 
-All errors inherit from `linq_api_v3.APIError`.
+All errors inherit from `linq.APIError`.
 
 ```python
-import linq_api_v3
-from linq_api_v3 import LinqAPIV3
+import linq
+from linq import LinqAPIV3
 
 client = LinqAPIV3()
 
@@ -257,12 +254,12 @@ try:
         },
         to=["+12052532136"],
     )
-except linq_api_v3.APIConnectionError as e:
+except linq.APIConnectionError as e:
     print("The server could not be reached")
     print(e.__cause__)  # an underlying Exception, likely raised within httpx.
-except linq_api_v3.RateLimitError as e:
+except linq.RateLimitError as e:
     print("A 429 status code was received; we should back off a bit.")
-except linq_api_v3.APIStatusError as e:
+except linq.APIStatusError as e:
     print("Another non-200-range status code was received")
     print(e.status_code)
     print(e.response)
@@ -290,7 +287,7 @@ Connection errors (for example, due to a network connectivity problem), 408 Requ
 You can use the `max_retries` option to configure or disable retry settings:
 
 ```python
-from linq_api_v3 import LinqAPIV3
+from linq import LinqAPIV3
 
 # Configure the default for all requests:
 client = LinqAPIV3(
@@ -319,7 +316,7 @@ By default requests time out after 1 minute. You can configure this with a `time
 which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/timeouts/#fine-tuning-the-configuration) object:
 
 ```python
-from linq_api_v3 import LinqAPIV3
+from linq import LinqAPIV3
 
 # Configure the default for all requests:
 client = LinqAPIV3(
@@ -382,7 +379,7 @@ if response.my_field is None:
 The "raw" Response object can be accessed by prefixing `.with_raw_response.` to any HTTP method call, e.g.,
 
 ```py
-from linq_api_v3 import LinqAPIV3
+from linq import LinqAPIV3
 
 client = LinqAPIV3()
 response = client.chats.with_raw_response.create(
@@ -401,9 +398,9 @@ chat = response.parse()  # get the object that `chats.create()` would have retur
 print(chat.chat)
 ```
 
-These methods return an [`APIResponse`](https://github.com/stainless-sdks/linq-api-v3-python/tree/main/src/linq_api_v3/_response.py) object.
+These methods return an [`APIResponse`](https://github.com/linq-team/linq-python/tree/main/src/linq/_response.py) object.
 
-The async client returns an [`AsyncAPIResponse`](https://github.com/stainless-sdks/linq-api-v3-python/tree/main/src/linq_api_v3/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
+The async client returns an [`AsyncAPIResponse`](https://github.com/linq-team/linq-python/tree/main/src/linq/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
 
 #### `.with_streaming_response`
 
@@ -476,7 +473,7 @@ You can directly override the [httpx client](https://www.python-httpx.org/api/#c
 
 ```python
 import httpx
-from linq_api_v3 import LinqAPIV3, DefaultHttpxClient
+from linq import LinqAPIV3, DefaultHttpxClient
 
 client = LinqAPIV3(
     # Or use the `LINQ_API_V3_BASE_URL` env var
@@ -499,7 +496,7 @@ client.with_options(http_client=DefaultHttpxClient(...))
 By default the library closes underlying HTTP connections whenever the client is [garbage collected](https://docs.python.org/3/reference/datamodel.html#object.__del__). You can manually close the client using the `.close()` method if desired, or with a context manager that closes when exiting.
 
 ```py
-from linq_api_v3 import LinqAPIV3
+from linq import LinqAPIV3
 
 with LinqAPIV3() as client:
   # make requests here
@@ -518,7 +515,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/linq-api-v3-python/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/linq-team/linq-python/issues) with questions, bugs, or suggestions.
 
 ### Determining the installed version
 
@@ -527,8 +524,8 @@ If you've upgraded to the latest version but aren't seeing any new features you 
 You can determine the version that is being used at runtime with:
 
 ```py
-import linq_api_v3
-print(linq_api_v3.__version__)
+import linq
+print(linq.__version__)
 ```
 
 ## Requirements

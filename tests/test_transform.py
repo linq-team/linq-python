@@ -8,15 +8,15 @@ from typing_extensions import Required, Annotated, TypedDict
 
 import pytest
 
-from linq_api_v3._types import Base64FileInput, omit, not_given
-from linq_api_v3._utils import (
+from linq._types import Base64FileInput, omit, not_given
+from linq._utils import (
     PropertyInfo,
     transform as _transform,
     parse_datetime,
     async_transform as _async_transform,
 )
-from linq_api_v3._compat import PYDANTIC_V1
-from linq_api_v3._models import BaseModel
+from linq._compat import PYDANTIC_V1
+from linq._models import BaseModel
 
 _T = TypeVar("_T")
 

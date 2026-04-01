@@ -7,9 +7,9 @@ import pytest
 import pydantic
 from pydantic import Field
 
-from linq_api_v3._utils import PropertyInfo
-from linq_api_v3._compat import PYDANTIC_V1, parse_obj, model_dump, model_json
-from linq_api_v3._models import DISCRIMINATOR_CACHE, BaseModel, construct_type
+from linq._utils import PropertyInfo
+from linq._compat import PYDANTIC_V1, parse_obj, model_dump, model_json
+from linq._models import DISCRIMINATOR_CACHE, BaseModel, construct_type
 
 
 class BasicModel(BaseModel):

@@ -220,9 +220,7 @@ class BaseAPIResponse(Generic[R]):
             and not issubclass(origin, BaseModel)
             and issubclass(origin, pydantic.BaseModel)
         ):
-            raise TypeError(
-                "Pydantic models must subclass our base model type, e.g. `from linq_api_v3 import BaseModel`"
-            )
+            raise TypeError("Pydantic models must subclass our base model type, e.g. `from linq import BaseModel`")
 
         if (
             cast_to is not object
@@ -288,7 +286,7 @@ class APIResponse(BaseAPIResponse[R]):
         the `to` argument, e.g.
 
         ```py
-        from linq_api_v3 import BaseModel
+        from linq import BaseModel
 
 
         class MyModel(BaseModel):
@@ -390,7 +388,7 @@ class AsyncAPIResponse(BaseAPIResponse[R]):
         the `to` argument, e.g.
 
         ```py
-        from linq_api_v3 import BaseModel
+        from linq import BaseModel
 
 
         class MyModel(BaseModel):
@@ -561,7 +559,7 @@ class AsyncStreamedBinaryAPIResponse(AsyncAPIResponse[bytes]):
 class MissingStreamClassError(TypeError):
     def __init__(self) -> None:
         super().__init__(
-            "The `stream` argument was set to `True` but the `stream_cls` argument was not given. See `linq_api_v3._streaming` for reference",
+            "The `stream` argument was set to `True` but the `stream_cls` argument was not given. See `linq._streaming` for reference",
         )
 
 

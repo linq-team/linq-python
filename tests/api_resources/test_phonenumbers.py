@@ -7,9 +7,9 @@ from typing import Any, cast
 
 import pytest
 
-from linq_api_v3 import LinqAPIV3, AsyncLinqAPIV3
+from linq import LinqAPIV3, AsyncLinqAPIV3
+from linq.types import PhonenumberListResponse
 from tests.utils import assert_matches_type
-from linq_api_v3.types import PhonenumberListResponse
 
 # pyright: reportDeprecated=false
 
