@@ -2,36 +2,22 @@
 
 from typing import List, Union, Optional
 from datetime import datetime
-from typing_extensions import Literal, TypeAlias
+from typing_extensions import TypeAlias
 
 from pydantic import Field as FieldInfo
 
 from .._models import BaseModel
 from .reply_to import ReplyTo
 from .message_effect import MessageEffect
-from .shared.reaction import Reaction
 from .shared.chat_handle import ChatHandle
 from .shared.service_type import ServiceType
+from .shared.link_part_response import LinkPartResponse
 from .shared.text_part_response import TextPartResponse
 from .shared.media_part_response import MediaPartResponse
 
-__all__ = ["Message", "Part", "PartLinkPartResponse"]
+__all__ = ["Message", "Part"]
 
-
-class PartLinkPartResponse(BaseModel):
-    """A rich link preview part"""
-
-    reactions: Optional[List[Reaction]] = None
-    """Reactions on this message part"""
-
-    type: Literal["link"]
-    """Indicates this is a rich link preview part"""
-
-    value: str
-    """The URL"""
-
-
-Part: TypeAlias = Union[TextPartResponse, MediaPartResponse, PartLinkPartResponse]
+Part: TypeAlias = Union[TextPartResponse, MediaPartResponse, LinkPartResponse]
 
 
 class Message(BaseModel):
