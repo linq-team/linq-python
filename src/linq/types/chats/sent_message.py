@@ -7,29 +7,15 @@ from typing_extensions import Literal, TypeAlias
 from ..._models import BaseModel
 from ..reply_to import ReplyTo
 from ..message_effect import MessageEffect
-from ..shared.reaction import Reaction
 from ..shared.chat_handle import ChatHandle
 from ..shared.service_type import ServiceType
+from ..shared.link_part_response import LinkPartResponse
 from ..shared.text_part_response import TextPartResponse
 from ..shared.media_part_response import MediaPartResponse
 
-__all__ = ["SentMessage", "Part", "PartLinkPartResponse"]
+__all__ = ["SentMessage", "Part"]
 
-
-class PartLinkPartResponse(BaseModel):
-    """A rich link preview part"""
-
-    reactions: Optional[List[Reaction]] = None
-    """Reactions on this message part"""
-
-    type: Literal["link"]
-    """Indicates this is a rich link preview part"""
-
-    value: str
-    """The URL"""
-
-
-Part: TypeAlias = Union[TextPartResponse, MediaPartResponse, PartLinkPartResponse]
+Part: TypeAlias = Union[TextPartResponse, MediaPartResponse, LinkPartResponse]
 
 
 class SentMessage(BaseModel):

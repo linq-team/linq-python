@@ -9,6 +9,7 @@ from .shared import (
     ServiceType as ServiceType,
     ReactionType as ReactionType,
     TextDecoration as TextDecoration,
+    LinkPartResponse as LinkPartResponse,
     TextPartResponse as TextPartResponse,
     MediaPartResponse as MediaPartResponse,
 )
