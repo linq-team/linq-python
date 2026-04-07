@@ -199,25 +199,37 @@ class AttachmentsResource(SyncAPIResource):
           content_type: Supported MIME types for file attachments and media URLs.
 
               **Images:** image/jpeg, image/png, image/gif, image/heic, image/heif,
-              image/tiff, image/bmp
+              image/tiff, image/bmp, image/svg+xml, image/webp, image/x-icon
 
-              **Videos:** video/mp4, video/quicktime, video/mpeg, video/3gpp
+              **Videos:** video/mp4, video/quicktime, video/mpeg, video/mpeg2,
+              video/x-msvideo, video/3gpp
 
-              **Audio:** audio/mpeg, audio/mp4, audio/x-m4a, audio/x-caf, audio/wav,
-              audio/aiff, audio/aac, audio/amr
+              **Audio:** audio/mpeg, audio/x-m4a, audio/x-caf, audio/x-wav, audio/x-aiff,
+              audio/aac, audio/midi, audio/amr
 
               **Documents:** application/pdf, text/plain, text/markdown, text/vcard, text/rtf,
-              text/csv, text/html, text/calendar, application/msword,
+              text/csv, text/html, text/calendar, text/xml, application/json,
+              application/msword,
               application/vnd.openxmlformats-officedocument.wordprocessingml.document,
               application/vnd.ms-excel,
               application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
               application/vnd.ms-powerpoint,
               application/vnd.openxmlformats-officedocument.presentationml.presentation,
-              application/vnd.apple.pages, application/vnd.apple.numbers,
-              application/vnd.apple.keynote, application/epub+zip, application/zip
+              application/x-iwork-pages-sffpages, application/x-iwork-numbers-sffnumbers,
+              application/x-iwork-keynote-sffkey, application/epub+zip, application/zip,
+              application/x-gzip
 
-              **Unsupported:** WebP, SVG, FLAC, OGG, and executable files are explicitly
-              rejected.
+              **Deprecated (accepted but transcoded):**
+
+              - `audio/mp3` — Deprecated. Use `audio/mpeg` instead. Files sent as audio/mp3
+                will be delivered as audio/mpeg.
+              - `audio/mp4` — Deprecated. Use `audio/x-m4a` instead. Files sent as audio/mp4
+                will be delivered as audio/x-m4a.
+              - `audio/aiff` — Deprecated. Use `audio/x-aiff` instead. Files sent as
+                audio/aiff will be delivered as audio/x-aiff.
+              - `image/tiff` — Accepted, but TIFF images are transcoded to JPEG for delivery.
+
+              **Unsupported:** FLAC, OGG, and executable files are explicitly rejected.
 
           filename: Name of the file to upload
 
@@ -458,25 +470,37 @@ class AsyncAttachmentsResource(AsyncAPIResource):
           content_type: Supported MIME types for file attachments and media URLs.
 
               **Images:** image/jpeg, image/png, image/gif, image/heic, image/heif,
-              image/tiff, image/bmp
+              image/tiff, image/bmp, image/svg+xml, image/webp, image/x-icon
 
-              **Videos:** video/mp4, video/quicktime, video/mpeg, video/3gpp
+              **Videos:** video/mp4, video/quicktime, video/mpeg, video/mpeg2,
+              video/x-msvideo, video/3gpp
 
-              **Audio:** audio/mpeg, audio/mp4, audio/x-m4a, audio/x-caf, audio/wav,
-              audio/aiff, audio/aac, audio/amr
+              **Audio:** audio/mpeg, audio/x-m4a, audio/x-caf, audio/x-wav, audio/x-aiff,
+              audio/aac, audio/midi, audio/amr
 
               **Documents:** application/pdf, text/plain, text/markdown, text/vcard, text/rtf,
-              text/csv, text/html, text/calendar, application/msword,
+              text/csv, text/html, text/calendar, text/xml, application/json,
+              application/msword,
               application/vnd.openxmlformats-officedocument.wordprocessingml.document,
               application/vnd.ms-excel,
               application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
               application/vnd.ms-powerpoint,
               application/vnd.openxmlformats-officedocument.presentationml.presentation,
-              application/vnd.apple.pages, application/vnd.apple.numbers,
-              application/vnd.apple.keynote, application/epub+zip, application/zip
+              application/x-iwork-pages-sffpages, application/x-iwork-numbers-sffnumbers,
+              application/x-iwork-keynote-sffkey, application/epub+zip, application/zip,
+              application/x-gzip
 
-              **Unsupported:** WebP, SVG, FLAC, OGG, and executable files are explicitly
-              rejected.
+              **Deprecated (accepted but transcoded):**
+
+              - `audio/mp3` — Deprecated. Use `audio/mpeg` instead. Files sent as audio/mp3
+                will be delivered as audio/mpeg.
+              - `audio/mp4` — Deprecated. Use `audio/x-m4a` instead. Files sent as audio/mp4
+                will be delivered as audio/x-m4a.
+              - `audio/aiff` — Deprecated. Use `audio/x-aiff` instead. Files sent as
+                audio/aiff will be delivered as audio/x-aiff.
+              - `image/tiff` — Accepted, but TIFF images are transcoded to JPEG for delivery.
+
+              **Unsupported:** FLAC, OGG, and executable files are explicitly rejected.
 
           filename: Name of the file to upload
 
