@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.3 (2026-04-08)
+
+Full Changelog: [v0.2.2...v0.2.3](https://github.com/linq-team/linq-python/compare/v0.2.2...v0.2.3)
+
+### Bug Fixes
+
+* **api-service:** add created_at and make sent_at nullable in SentMessage ([fa68395](https://github.com/linq-team/linq-python/commit/fa683950b661507844f9d1f22c4716daf9805810))
+* block SMS group participant changes and fix e2e test failures ([e05f1af](https://github.com/linq-team/linq-python/commit/e05f1af36a6d37d13952bdad56f16b903bfccc34))
+
 ## 0.2.2 (2026-04-08)
 
 Full Changelog: [v0.2.1...v0.2.2](https://github.com/linq-team/linq-python/compare/v0.2.1...v0.2.2)
