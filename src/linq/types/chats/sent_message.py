@@ -24,6 +24,9 @@ class SentMessage(BaseModel):
     id: str
     """Message identifier (UUID)"""
 
+    created_at: datetime
+    """When the message was created"""
+
     delivery_status: Literal["pending", "queued", "sent", "delivered", "failed"]
     """Current delivery status of a message"""
 
@@ -33,8 +36,8 @@ class SentMessage(BaseModel):
     parts: List[Part]
     """Message parts in order (text, media, and link)"""
 
-    sent_at: datetime
-    """When the message was sent"""
+    sent_at: Optional[datetime] = None
+    """When the message was actually sent (null if still queued)"""
 
     delivered_at: Optional[datetime] = None
     """When the message was delivered"""
