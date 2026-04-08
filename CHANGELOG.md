@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.2 (2026-04-08)
+
+Full Changelog: [v0.2.1...v0.2.2](https://github.com/linq-team/linq-python/compare/v0.2.1...v0.2.2)
+
+### Bug Fixes
+
+* **client:** preserve hardcoded query params when merging with user params ([6c18c57](https://github.com/linq-team/linq-python/commit/6c18c57b5aa590fe7a096b98ef617f3be086d066))
+
 ## 0.2.1 (2026-04-07)
 
 Full Changelog: [v0.2.0...v0.2.1](https://github.com/linq-team/linq-python/compare/v0.2.0...v0.2.1)
