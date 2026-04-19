@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.2.4 (2026-04-18)
+
+Full Changelog: [v0.2.3...v0.2.4](https://github.com/linq-team/linq-python/compare/v0.2.3...v0.2.4)
+
+### Bug Fixes
+
+* ensure file data are only sent as 1 parameter ([0e5a821](https://github.com/linq-team/linq-python/commit/0e5a8217fcab667939e6a211e4f3b9abab7acfca))
+
+
+### Performance Improvements
+
+* **client:** optimize file structure copying in multipart requests ([2d5ebac](https://github.com/linq-team/linq-python/commit/2d5ebacb793aa7f2f86b9e820db6e8f01b71605d))
+
+
+### Documentation
+
+* **openapi:** document typing indicator behavior and limitations ([3ea2cea](https://github.com/linq-team/linq-python/commit/3ea2ceaf47fd3a340a58e7334e58375f950862fc))
+
 ## 0.2.3 (2026-04-08)
 
 Full Changelog: [v0.2.2...v0.2.3](https://github.com/linq-team/linq-python/compare/v0.2.2...v0.2.3)
