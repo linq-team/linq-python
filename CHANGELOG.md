@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.5 (2026-04-20)
+
+Full Changelog: [v0.2.4...v0.2.5](https://github.com/linq-team/linq-python/compare/v0.2.4...v0.2.5)
+
+### Documentation
+
+* **api:** document edit message limits (BUG-7607) ([f7838ae](https://github.com/linq-team/linq-python/commit/f7838ae0fd6155e6db6cc501798c7c7665a63631))
+
 ## 0.2.4 (2026-04-18)
 
 Full Changelog: [v0.2.3...v0.2.4](https://github.com/linq-team/linq-python/compare/v0.2.3...v0.2.4)
