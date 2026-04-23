@@ -117,6 +117,9 @@ class MessagesResource(SyncAPIResource):
         """
         Edit the text content of a specific part of a previously sent message.
 
+        **Note:** A message can be edited up to 5 times, and only within 15 minutes of
+        when it was originally sent.
+
         Args:
           text: New text content for the message part
 
@@ -404,6 +407,9 @@ class AsyncMessagesResource(AsyncAPIResource):
     ) -> Message:
         """
         Edit the text content of a specific part of a previously sent message.
+
+        **Note:** A message can be edited up to 5 times, and only within 15 minutes of
+        when it was originally sent.
 
         Args:
           text: New text content for the message part
