@@ -7,7 +7,17 @@ from .chats.sent_message import SentMessage
 from .shared.chat_handle import ChatHandle
 from .shared.service_type import ServiceType
 
-__all__ = ["ChatCreateResponse", "Chat"]
+__all__ = ["ChatCreateResponse", "Chat", "ChatHealthScore"]
+
+
+class ChatHealthScore(BaseModel):
+    """**[BETA]** Health assessment for a chat. Higher `score` means a healthier chat."""
+
+    reason: str
+    """Short summary of what's affecting the score. Empty when the score is 100."""
+
+    score: int
+    """Health score from 0 to 100. Higher is healthier."""
 
 
 class Chat(BaseModel):
@@ -36,6 +46,9 @@ class Chat(BaseModel):
 
     service: ServiceType
     """Messaging service type"""
+
+    health_score: Optional[ChatHealthScore] = None
+    """**[BETA]** Health assessment for a chat. Higher `score` means a healthier chat."""
 
 
 class ChatCreateResponse(BaseModel):

@@ -7,7 +7,17 @@ from .._models import BaseModel
 from .shared.chat_handle import ChatHandle
 from .shared.service_type import ServiceType
 
-__all__ = ["Chat"]
+__all__ = ["Chat", "HealthScore"]
+
+
+class HealthScore(BaseModel):
+    """**[BETA]** Health assessment for a chat. Higher `score` means a healthier chat."""
+
+    reason: str
+    """Short summary of what's affecting the score. Empty when the score is 100."""
+
+    score: int
+    """Health score from 0 to 100. Higher is healthier."""
 
 
 class Chat(BaseModel):
@@ -39,6 +49,9 @@ class Chat(BaseModel):
 
     updated_at: datetime
     """When the chat was last updated"""
+
+    health_score: Optional[HealthScore] = None
+    """**[BETA]** Health assessment for a chat. Higher `score` means a healthier chat."""
 
     service: Optional[ServiceType] = None
     """Messaging service type"""
