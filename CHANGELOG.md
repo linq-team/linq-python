@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.0 (2026-04-23)
+
+Full Changelog: [v0.2.5...v0.3.0](https://github.com/linq-team/linq-python/compare/v0.2.5...v0.3.0)
+
+### Features
+
+* **api:** expose health_score on chats (BETA) ([b7d22d6](https://github.com/linq-team/linq-python/commit/b7d22d642e1192a77dd695c178eee322357de024))
+
+
+### Chores
+
+* **internal:** more robust bootstrap script ([b504bb9](https://github.com/linq-team/linq-python/commit/b504bb9f84501d3e20fe3654a67e739fa1986e77))
+
 ## 0.2.5 (2026-04-20)
 
 Full Changelog: [v0.2.4...v0.2.5](https://github.com/linq-team/linq-python/compare/v0.2.4...v0.2.5)
