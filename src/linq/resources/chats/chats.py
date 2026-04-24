@@ -199,6 +199,17 @@ class ChatsResource(SyncAPIResource):
         must not overlap with other animations or styles. Text decorations only render
         for iMessage recipients. For SMS/RCS, text decorations are not applied.
 
+        ## First-Message Link Restriction
+
+        To protect sender deliverability, the **first outbound message** of a new chat
+        cannot be a link. The request is rejected with `400` (error code `1005`) when:
+
+        - The message contains a `link` part (explicit rich-preview link), or
+        - Any `text` part contains a URL.
+
+        This rule applies only to `POST /v3/chats`. Follow-up messages on an existing
+        chat (`POST /v3/chats/{chatId}/messages`) are not subject to this restriction.
+
         Args:
           from_: Sender phone number in E.164 format. Must be a phone number that the
               authenticated partner has permission to send from.
@@ -726,6 +737,17 @@ class AsyncChatsResource(AsyncAPIResource):
         **Note:** Style ranges (bold, italic, etc.) may overlap, but animation ranges
         must not overlap with other animations or styles. Text decorations only render
         for iMessage recipients. For SMS/RCS, text decorations are not applied.
+
+        ## First-Message Link Restriction
+
+        To protect sender deliverability, the **first outbound message** of a new chat
+        cannot be a link. The request is rejected with `400` (error code `1005`) when:
+
+        - The message contains a `link` part (explicit rich-preview link), or
+        - Any `text` part contains a URL.
+
+        This rule applies only to `POST /v3/chats`. Follow-up messages on an existing
+        chat (`POST /v3/chats/{chatId}/messages`) are not subject to this restriction.
 
         Args:
           from_: Sender phone number in E.164 format. Must be a phone number that the
