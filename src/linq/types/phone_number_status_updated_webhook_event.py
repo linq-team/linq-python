@@ -46,6 +46,8 @@ class PhoneNumberStatusUpdatedWebhookEvent(BaseModel):
         "message.delivered",
         "message.failed",
         "message.edited",
+        "message.opt_out",
+        "message.opt_in",
         "reaction.added",
         "reaction.removed",
         "participant.added",
