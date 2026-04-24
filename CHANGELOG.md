@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.4.0 (2026-04-24)
+
+Full Changelog: [v0.3.0...v0.4.0](https://github.com/linq-team/linq-python/compare/v0.3.0...v0.4.0)
+
+### Features
+
+* make compliance webhooks (message.opt_out/opt_in) GA ([1a5b0e6](https://github.com/linq-team/linq-python/commit/1a5b0e6d75f47b67cb2447e180712d334f7f06d0))
+
+
+### Documentation
+
+* **api:** add first outbound message link restriction note to POST /v3/chats ([f44e698](https://github.com/linq-team/linq-python/commit/f44e6989ce805821306fb22c62a38c0f251c2846))
+
 ## 0.3.0 (2026-04-23)
 
 Full Changelog: [v0.2.5...v0.3.0](https://github.com/linq-team/linq-python/compare/v0.2.5...v0.3.0)
