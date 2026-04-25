@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.1 (2026-04-25)
+
+Full Changelog: [v0.4.0...v0.4.1](https://github.com/linq-team/linq-python/compare/v0.4.0...v0.4.1)
+
+### Chores
+
+* configure new SDK language ([196bf69](https://github.com/linq-team/linq-python/commit/196bf69450146c67bf2b82da2a64e70a71d2600b))
+
 ## 0.4.0 (2026-04-24)
 
 Full Changelog: [v0.3.0...v0.4.0](https://github.com/linq-team/linq-python/compare/v0.3.0...v0.4.0)
