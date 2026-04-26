@@ -20,7 +20,7 @@ Use the Linq API V3 MCP Server to enable AI assistants to interact with this API
 
 ## Documentation
 
-The REST API documentation can be found on [apidocs.linqapp.com](https://apidocs.linqapp.com). The full API of this library can be found in [api.md](api.md).
+The REST API documentation can be found on [docs.linqapp.com](https://docs.linqapp.com). The full API of this library can be found in [api.md](api.md).
 
 ## Installation
 

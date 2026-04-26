@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0 (2026-04-26)
+
+Full Changelog: [v0.4.1...v0.5.0](https://github.com/linq-team/linq-python/compare/v0.4.1...v0.5.0)
+
+### Features
+
+* **api:** update docs link ([1a8c502](https://github.com/linq-team/linq-python/commit/1a8c502a622035274cff32f279f5781b8a9bab0e))
+
 ## 0.4.1 (2026-04-25)
 
 Full Changelog: [v0.4.0...v0.4.1](https://github.com/linq-team/linq-python/compare/v0.4.0...v0.4.1)
