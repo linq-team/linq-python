@@ -354,7 +354,7 @@ class TestChats:
     def test_method_send_voicememo_with_all_params(self, client: LinqAPIV3) -> None:
         chat = client.chats.send_voicememo(
             chat_id="f19ee7b8-8533-4c5c-83ec-4ef8d6d1ddbd",
-            attachment_id="550e8400-e29b-41d4-a716-446655440000",
+            attachment_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             voice_memo_url="https://example.com/voice-memo.m4a",
         )
         assert_matches_type(ChatSendVoicememoResponse, chat, path=["response"])
@@ -771,7 +771,7 @@ class TestAsyncChats:
     async def test_method_send_voicememo_with_all_params(self, async_client: AsyncLinqAPIV3) -> None:
         chat = await async_client.chats.send_voicememo(
             chat_id="f19ee7b8-8533-4c5c-83ec-4ef8d6d1ddbd",
-            attachment_id="550e8400-e29b-41d4-a716-446655440000",
+            attachment_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             voice_memo_url="https://example.com/voice-memo.m4a",
         )
         assert_matches_type(ChatSendVoicememoResponse, chat, path=["response"])

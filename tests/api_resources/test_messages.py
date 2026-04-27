@@ -178,7 +178,7 @@ class TestMessages:
             message_id="69a37c7d-af4f-4b5e-af42-e28e98ce873a",
             operation="add",
             type="love",
-            custom_emoji="😍",
+            custom_emoji="custom_emoji",
             part_index=1,
         )
         assert_matches_type(MessageAddReactionResponse, message, path=["response"])
@@ -439,7 +439,7 @@ class TestAsyncMessages:
             message_id="69a37c7d-af4f-4b5e-af42-e28e98ce873a",
             operation="add",
             type="love",
-            custom_emoji="😍",
+            custom_emoji="custom_emoji",
             part_index=1,
         )
         assert_matches_type(MessageAddReactionResponse, message, path=["response"])
