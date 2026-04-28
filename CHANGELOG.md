@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.6.0 (2026-04-28)
+
+Full Changelog: [v0.5.0...v0.6.0](https://github.com/linq-team/linq-python/compare/v0.5.0...v0.6.0)
+
+### Features
+
+* support setting headers via env ([d4398f4](https://github.com/linq-team/linq-python/commit/d4398f434cc4a920f59625eee7be9f1cdef8725b))
+
+
+### Bug Fixes
+
+* **openapi:** enforce mutual exclusivity constraints on reaction and voice memo schemas ([e057279](https://github.com/linq-team/linq-python/commit/e05727975ba84c6a022bd8e8d7a9d212cd864082))
+* use correct field name format for multipart file arrays ([0e992dc](https://github.com/linq-team/linq-python/commit/0e992dc83b80f05698e9cc3d2e656f6ca890576a))
+
 ## 0.5.0 (2026-04-26)
 
 Full Changelog: [v0.4.1...v0.5.0](https://github.com/linq-team/linq-python/compare/v0.4.1...v0.5.0)
