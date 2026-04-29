@@ -11,7 +11,11 @@ __all__ = ["Chat", "HealthScore"]
 
 
 class HealthScore(BaseModel):
-    """**[BETA]** Health assessment for a chat. Higher `score` means a healthier chat."""
+    """**[BETA]** Health assessment for a chat.
+
+    Higher `score` is healthier.
+    `null` when a score isn't available yet. Scoring may change during beta.
+    """
 
     reason: str
     """Short summary of what's affecting the score. Empty when the score is 100."""
@@ -51,7 +55,11 @@ class Chat(BaseModel):
     """When the chat was last updated"""
 
     health_score: Optional[HealthScore] = None
-    """**[BETA]** Health assessment for a chat. Higher `score` means a healthier chat."""
+    """**[BETA]** Health assessment for a chat.
+
+    Higher `score` is healthier. `null` when a score isn't available yet. Scoring
+    may change during beta.
+    """
 
     service: Optional[ServiceType] = None
     """Messaging service type"""
