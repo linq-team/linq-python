@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.7.0 (2026-04-30)
+
+Full Changelog: [v0.6.0...v0.7.0](https://github.com/linq-team/linq-python/compare/v0.6.0...v0.7.0)
+
+### Features
+
+* [PoC] sync risk lookup on message.received via NATS req/reply ([8a0e4fb](https://github.com/linq-team/linq-python/commit/8a0e4fbac82a824759b563d3b241e513e85c53d3))
+* **webhooks:** nest health_score under chat (PLT-540) + remove standalone opt_out/opt_in webhooks ([59ab16c](https://github.com/linq-team/linq-python/commit/59ab16c54abb0cb25e68aed20acf9198611eaf48))
+
 ## 0.6.0 (2026-04-28)
 
 Full Changelog: [v0.5.0...v0.6.0](https://github.com/linq-team/linq-python/compare/v0.5.0...v0.6.0)
