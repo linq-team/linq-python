@@ -23,6 +23,9 @@ class HealthScore(BaseModel):
     score: int
     """Health score from 0 to 100. Higher is healthier."""
 
+    updated_at: datetime
+    """When this health score was last computed."""
+
 
 class Chat(BaseModel):
     id: str

@@ -1,6 +1,7 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 from typing import List, Optional
+from datetime import datetime
 
 from .._models import BaseModel
 from .chats.sent_message import SentMessage
@@ -22,6 +23,9 @@ class ChatHealthScore(BaseModel):
 
     score: int
     """Health score from 0 to 100. Higher is healthier."""
+
+    updated_at: datetime
+    """When this health score was last computed."""
 
 
 class Chat(BaseModel):
