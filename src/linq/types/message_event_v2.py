@@ -12,14 +12,25 @@ from .schemas_message_effect import SchemasMessageEffect
 from .schemas_text_part_response import SchemasTextPartResponse
 from .schemas_media_part_response import SchemasMediaPartResponse
 
-__all__ = ["MessageEventV2", "Chat", "ChatHealthScore", "Part", "PartSchemasLinkPartResponse", "ReplyTo"]
+__all__ = [
+    "MessageEventV2",
+    "Chat",
+    "ChatHealthScore",
+    "ChatHealthStatus",
+    "Part",
+    "PartSchemasLinkPartResponse",
+    "ReplyTo",
+]
 
 
 class ChatHealthScore(BaseModel):
-    """**[BETA]** Health assessment for a chat.
+    """**[BETA — DEPRECATED]** Legacy health assessment for a chat.
 
-    Higher `score` is healthier.
-    `null` when a score isn't available yet. Scoring may change during beta.
+    Use `health_status` instead — it's the long-term contract.
+
+    Higher `score` is healthier. `null` when a score isn't available yet. Low health scores across multiple chats increase risk of line flagging. Scoring model may change during beta. This field will be removed in a future release; partners on new integrations should switch on `health_status.status`.
+
+    See the [Chat Health guide](/guides/chats/chat-health) for what we score on and how it relates to line health.
     """
 
     reason: str
@@ -32,6 +43,30 @@ class ChatHealthScore(BaseModel):
     """When this health score was last computed."""
 
 
+class ChatHealthStatus(BaseModel):
+    """**[BETA]** Current health for a chat.
+
+    Always present — chats start at `healthy` and may shift based on engagement and delivery signals on the conversation. Many `at_risk` or `critical` chats on a single line increase the risk of line flagging.
+
+    Switch on `status` to gate sends or surface line health in your UI — the enum is the long-term contract. Each status carries a `doc_url` that deep-links to the relevant section of the Chat Health guide.
+
+    See the [Chat Health guide](/guides/chats/chat-health) for what each status means and how to react.
+    """
+
+    doc_url: str
+    """Deep-link to the relevant section of the Chat Health guide for this status."""
+
+    status: Literal["healthy", "at_risk", "critical", "opted_out"]
+    """Current health bucket for the chat.
+
+    See the [Chat Health guide](/guides/chats/chat-health) for what each value means
+    and how to react. `doc_url` deep-links to the relevant section.
+    """
+
+    updated_at: datetime
+    """When this status last changed."""
+
+
 class Chat(BaseModel):
     """Chat information"""
 
@@ -39,10 +74,32 @@ class Chat(BaseModel):
     """Chat identifier"""
 
     health_score: Optional[ChatHealthScore] = None
-    """**[BETA]** Health assessment for a chat.
+    """**[BETA — DEPRECATED]** Legacy health assessment for a chat.
 
-    Higher `score` is healthier. `null` when a score isn't available yet. Scoring
-    may change during beta.
+    Use `health_status` instead — it's the long-term contract.
+
+    Higher `score` is healthier. `null` when a score isn't available yet. Low health
+    scores across multiple chats increase risk of line flagging. Scoring model may
+    change during beta. This field will be removed in a future release; partners on
+    new integrations should switch on `health_status.status`.
+
+    See the [Chat Health guide](/guides/chats/chat-health) for what we score on and
+    how it relates to line health.
+    """
+
+    health_status: Optional[ChatHealthStatus] = None
+    """**[BETA]** Current health for a chat.
+
+    Always present — chats start at `healthy` and may shift based on engagement and
+    delivery signals on the conversation. Many `at_risk` or `critical` chats on a
+    single line increase the risk of line flagging.
+
+    Switch on `status` to gate sends or surface line health in your UI — the enum is
+    the long-term contract. Each status carries a `doc_url` that deep-links to the
+    relevant section of the Chat Health guide.
+
+    See the [Chat Health guide](/guides/chats/chat-health) for what each status
+    means and how to react.
     """
 
     is_group: Optional[bool] = None
