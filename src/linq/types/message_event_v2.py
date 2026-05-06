@@ -12,15 +12,7 @@ from .schemas_message_effect import SchemasMessageEffect
 from .schemas_text_part_response import SchemasTextPartResponse
 from .schemas_media_part_response import SchemasMediaPartResponse
 
-__all__ = [
-    "MessageEventV2",
-    "Chat",
-    "ChatHealthStatus",
-    "ChatHealthScore",
-    "Part",
-    "PartSchemasLinkPartResponse",
-    "ReplyTo",
-]
+__all__ = ["MessageEventV2", "Chat", "ChatHealthStatus", "Part", "PartSchemasLinkPartResponse", "ReplyTo"]
 
 
 class ChatHealthStatus(BaseModel):
@@ -47,26 +39,6 @@ class ChatHealthStatus(BaseModel):
     """When this status last changed."""
 
 
-class ChatHealthScore(BaseModel):
-    """**[BETA — DEPRECATED]** Legacy health assessment for a chat.
-
-    Use `health_status` instead — it's the long-term contract.
-
-    Higher `score` is healthier. `null` when a score isn't available yet. Low health scores across multiple chats increase risk of line flagging. Scoring model may change during beta. This field will be removed in a future release; partners on new integrations should switch on `health_status.status`.
-
-    See the [Chat Health guide](/guides/chats/chat-health) for what we score on and how it relates to line health.
-    """
-
-    reason: str
-    """Short summary of what's affecting the score. Empty when the score is 100."""
-
-    score: int
-    """Health score from 0 to 100. Higher is healthier."""
-
-    updated_at: datetime
-    """When this health score was last computed."""
-
-
 class Chat(BaseModel):
     """Chat information"""
 
@@ -86,20 +58,6 @@ class Chat(BaseModel):
 
     See the [Chat Health guide](/guides/chats/chat-health) for what each status
     means and how to react.
-    """
-
-    health_score: Optional[ChatHealthScore] = None
-    """**[BETA — DEPRECATED]** Legacy health assessment for a chat.
-
-    Use `health_status` instead — it's the long-term contract.
-
-    Higher `score` is healthier. `null` when a score isn't available yet. Low health
-    scores across multiple chats increase risk of line flagging. Scoring model may
-    change during beta. This field will be removed in a future release; partners on
-    new integrations should switch on `health_status.status`.
-
-    See the [Chat Health guide](/guides/chats/chat-health) for what we score on and
-    how it relates to line health.
     """
 
     is_group: Optional[bool] = None

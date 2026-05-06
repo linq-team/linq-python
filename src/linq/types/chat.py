@@ -8,7 +8,7 @@ from .._models import BaseModel
 from .shared.chat_handle import ChatHandle
 from .shared.service_type import ServiceType
 
-__all__ = ["Chat", "HealthStatus", "HealthScore"]
+__all__ = ["Chat", "HealthStatus"]
 
 
 class HealthStatus(BaseModel):
@@ -33,26 +33,6 @@ class HealthStatus(BaseModel):
 
     updated_at: datetime
     """When this status last changed."""
-
-
-class HealthScore(BaseModel):
-    """**[BETA — DEPRECATED]** Legacy health assessment for a chat.
-
-    Use `health_status` instead — it's the long-term contract.
-
-    Higher `score` is healthier. `null` when a score isn't available yet. Low health scores across multiple chats increase risk of line flagging. Scoring model may change during beta. This field will be removed in a future release; partners on new integrations should switch on `health_status.status`.
-
-    See the [Chat Health guide](/guides/chats/chat-health) for what we score on and how it relates to line health.
-    """
-
-    reason: str
-    """Short summary of what's affecting the score. Empty when the score is 100."""
-
-    score: int
-    """Health score from 0 to 100. Higher is healthier."""
-
-    updated_at: datetime
-    """When this health score was last computed."""
 
 
 class Chat(BaseModel):
@@ -99,20 +79,6 @@ class Chat(BaseModel):
 
     updated_at: datetime
     """When the chat was last updated"""
-
-    health_score: Optional[HealthScore] = None
-    """**[BETA — DEPRECATED]** Legacy health assessment for a chat.
-
-    Use `health_status` instead — it's the long-term contract.
-
-    Higher `score` is healthier. `null` when a score isn't available yet. Low health
-    scores across multiple chats increase risk of line flagging. Scoring model may
-    change during beta. This field will be removed in a future release; partners on
-    new integrations should switch on `health_status.status`.
-
-    See the [Chat Health guide](/guides/chats/chat-health) for what we score on and
-    how it relates to line health.
-    """
 
     service: Optional[ServiceType] = None
     """Messaging service type"""
