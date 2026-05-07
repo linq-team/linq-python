@@ -24,7 +24,7 @@ class TestContactCard:
     @parametrize
     def test_method_create(self, client: LinqAPIV3) -> None:
         contact_card = client.contact_card.create(
-            first_name="John",
+            first_name="Acme",
             phone_number="+15551234567",
         )
         assert_matches_type(SetContactCard, contact_card, path=["response"])
@@ -33,10 +33,10 @@ class TestContactCard:
     @parametrize
     def test_method_create_with_all_params(self, client: LinqAPIV3) -> None:
         contact_card = client.contact_card.create(
-            first_name="John",
+            first_name="Acme",
             phone_number="+15551234567",
             image_url="https://cdn.linqapp.com/contact-card/example.jpg",
-            last_name="Doe",
+            last_name="Support",
         )
         assert_matches_type(SetContactCard, contact_card, path=["response"])
 
@@ -44,7 +44,7 @@ class TestContactCard:
     @parametrize
     def test_raw_response_create(self, client: LinqAPIV3) -> None:
         response = client.contact_card.with_raw_response.create(
-            first_name="John",
+            first_name="Acme",
             phone_number="+15551234567",
         )
 
@@ -57,7 +57,7 @@ class TestContactCard:
     @parametrize
     def test_streaming_response_create(self, client: LinqAPIV3) -> None:
         with client.contact_card.with_streaming_response.create(
-            first_name="John",
+            first_name="Acme",
             phone_number="+15551234567",
         ) as response:
             assert not response.is_closed
@@ -159,7 +159,7 @@ class TestAsyncContactCard:
     @parametrize
     async def test_method_create(self, async_client: AsyncLinqAPIV3) -> None:
         contact_card = await async_client.contact_card.create(
-            first_name="John",
+            first_name="Acme",
             phone_number="+15551234567",
         )
         assert_matches_type(SetContactCard, contact_card, path=["response"])
@@ -168,10 +168,10 @@ class TestAsyncContactCard:
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncLinqAPIV3) -> None:
         contact_card = await async_client.contact_card.create(
-            first_name="John",
+            first_name="Acme",
             phone_number="+15551234567",
             image_url="https://cdn.linqapp.com/contact-card/example.jpg",
-            last_name="Doe",
+            last_name="Support",
         )
         assert_matches_type(SetContactCard, contact_card, path=["response"])
 
@@ -179,7 +179,7 @@ class TestAsyncContactCard:
     @parametrize
     async def test_raw_response_create(self, async_client: AsyncLinqAPIV3) -> None:
         response = await async_client.contact_card.with_raw_response.create(
-            first_name="John",
+            first_name="Acme",
             phone_number="+15551234567",
         )
 
@@ -192,7 +192,7 @@ class TestAsyncContactCard:
     @parametrize
     async def test_streaming_response_create(self, async_client: AsyncLinqAPIV3) -> None:
         async with async_client.contact_card.with_streaming_response.create(
-            first_name="John",
+            first_name="Acme",
             phone_number="+15551234567",
         ) as response:
             assert not response.is_closed
