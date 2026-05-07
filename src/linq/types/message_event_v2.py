@@ -12,21 +12,31 @@ from .schemas_message_effect import SchemasMessageEffect
 from .schemas_text_part_response import SchemasTextPartResponse
 from .schemas_media_part_response import SchemasMediaPartResponse
 
-__all__ = ["MessageEventV2", "Chat", "ChatHealthScore", "Part", "PartSchemasLinkPartResponse", "ReplyTo"]
+__all__ = ["MessageEventV2", "Chat", "ChatHealthStatus", "Part", "PartSchemasLinkPartResponse", "ReplyTo"]
 
 
-class ChatHealthScore(BaseModel):
-    """**[BETA]** Health assessment for a chat.
+class ChatHealthStatus(BaseModel):
+    """**[BETA]** Current health for a chat.
 
-    Higher `score` is healthier.
-    `null` when a score isn't available yet. Scoring may change during beta.
+    Always present — chats start at `healthy` and may shift based on engagement and delivery signals on the conversation. Many `at_risk` or `critical` chats on a single line increase the risk of line flagging.
+
+    Switch on `status` to gate sends or surface line health in your UI — the enum is the long-term contract. Each status carries a `doc_url` that deep-links to the relevant section of the Chat Health guide.
+
+    See the [Chat Health guide](/guides/chats/chat-health) for what each status means and how to react.
     """
 
-    reason: str
-    """Short summary of what's affecting the score. Empty when the score is 100."""
+    doc_url: str
+    """Deep-link to the relevant section of the Chat Health guide for this status."""
 
-    score: int
-    """Health score from 0 to 100. Higher is healthier."""
+    status: Literal["healthy", "at_risk", "critical", "opted_out"]
+    """Current health bucket for the chat.
+
+    See the [Chat Health guide](/guides/chats/chat-health) for what each value means
+    and how to react. `doc_url` deep-links to the relevant section.
+    """
+
+    updated_at: datetime
+    """When this status last changed."""
 
 
 class Chat(BaseModel):
@@ -35,11 +45,19 @@ class Chat(BaseModel):
     id: str
     """Chat identifier"""
 
-    health_score: Optional[ChatHealthScore] = None
-    """**[BETA]** Health assessment for a chat.
+    health_status: ChatHealthStatus
+    """**[BETA]** Current health for a chat.
 
-    Higher `score` is healthier. `null` when a score isn't available yet. Scoring
-    may change during beta.
+    Always present — chats start at `healthy` and may shift based on engagement and
+    delivery signals on the conversation. Many `at_risk` or `critical` chats on a
+    single line increase the risk of line flagging.
+
+    Switch on `status` to gate sends or surface line health in your UI — the enum is
+    the long-term contract. Each status carries a `doc_url` that deep-links to the
+    relevant section of the Chat Health guide.
+
+    See the [Chat Health guide](/guides/chats/chat-health) for what each status
+    means and how to react.
     """
 
     is_group: Optional[bool] = None

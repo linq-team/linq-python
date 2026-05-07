@@ -2,26 +2,37 @@
 
 from typing import List, Optional
 from datetime import datetime
+from typing_extensions import Literal
 
 from .._models import BaseModel
 from .shared.chat_handle import ChatHandle
 from .shared.service_type import ServiceType
 
-__all__ = ["Chat", "HealthScore"]
+__all__ = ["Chat", "HealthStatus"]
 
 
-class HealthScore(BaseModel):
-    """**[BETA]** Health assessment for a chat.
+class HealthStatus(BaseModel):
+    """**[BETA]** Current health for a chat.
 
-    Higher `score` is healthier.
-    `null` when a score isn't available yet. Scoring may change during beta.
+    Always present — chats start at `healthy` and may shift based on engagement and delivery signals on the conversation. Many `at_risk` or `critical` chats on a single line increase the risk of line flagging.
+
+    Switch on `status` to gate sends or surface line health in your UI — the enum is the long-term contract. Each status carries a `doc_url` that deep-links to the relevant section of the Chat Health guide.
+
+    See the [Chat Health guide](/guides/chats/chat-health) for what each status means and how to react.
     """
 
-    reason: str
-    """Short summary of what's affecting the score. Empty when the score is 100."""
+    doc_url: str
+    """Deep-link to the relevant section of the Chat Health guide for this status."""
 
-    score: int
-    """Health score from 0 to 100. Higher is healthier."""
+    status: Literal["healthy", "at_risk", "critical", "opted_out"]
+    """Current health bucket for the chat.
+
+    See the [Chat Health guide](/guides/chats/chat-health) for what each value means
+    and how to react. `doc_url` deep-links to the relevant section.
+    """
+
+    updated_at: datetime
+    """When this status last changed."""
 
 
 class Chat(BaseModel):
@@ -45,6 +56,21 @@ class Chat(BaseModel):
     participant).
     """
 
+    health_status: HealthStatus
+    """**[BETA]** Current health for a chat.
+
+    Always present — chats start at `healthy` and may shift based on engagement and
+    delivery signals on the conversation. Many `at_risk` or `critical` chats on a
+    single line increase the risk of line flagging.
+
+    Switch on `status` to gate sends or surface line health in your UI — the enum is
+    the long-term contract. Each status carries a `doc_url` that deep-links to the
+    relevant section of the Chat Health guide.
+
+    See the [Chat Health guide](/guides/chats/chat-health) for what each status
+    means and how to react.
+    """
+
     is_archived: bool
     """Whether the chat is archived"""
 
@@ -53,13 +79,6 @@ class Chat(BaseModel):
 
     updated_at: datetime
     """When the chat was last updated"""
-
-    health_score: Optional[HealthScore] = None
-    """**[BETA]** Health assessment for a chat.
-
-    Higher `score` is healthier. `null` when a score isn't available yet. Scoring
-    may change during beta.
-    """
 
     service: Optional[ServiceType] = None
     """Messaging service type"""

@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.8.0 (2026-05-07)
+
+Full Changelog: [v0.7.0...v0.8.0](https://github.com/linq-team/linq-python/compare/v0.7.0...v0.8.0)
+
+### Features
+
+* **chat-service:** expose health_score.updated_at on chat reads + webhooks ([ae5f146](https://github.com/linq-team/linq-python/commit/ae5f1461f6468c48ec88d999d59293e2f364ddd6))
+* remove health_score from synapse — health_status is the contract ([5ec27d1](https://github.com/linq-team/linq-python/commit/5ec27d1544c85532b8d0344b3108a88cf474db90))
+
+
+### Bug Fixes
+
+* **chat-service:** stamp health_status from risk-service sync reply ([ff22296](https://github.com/linq-team/linq-python/commit/ff222969e755bd20e352de665b5e7fe47ea99705))
+
+
+### Chores
+
+* **internal:** reformat pyproject.toml ([3ab97d9](https://github.com/linq-team/linq-python/commit/3ab97d9f5daea08054fba6086ca2c1849289d8ff))
+
+
+### Documentation
+
+* **openapi:** add HealthStatus [BETA] + deprecate HealthScore ([d4e3711](https://github.com/linq-team/linq-python/commit/d4e37118b71348796cb029bed6f3b831c3996941))
+* **openapi:** add named examples to unblock docs OpExample ([6a37d71](https://github.com/linq-team/linq-python/commit/6a37d71c0aa57feefc85810a5012da74153b835f))
+
 ## 0.7.0 (2026-04-30)
 
 Full Changelog: [v0.6.0...v0.7.0](https://github.com/linq-team/linq-python/compare/v0.6.0...v0.7.0)
