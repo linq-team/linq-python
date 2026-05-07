@@ -12,7 +12,21 @@ from .schemas_message_effect import SchemasMessageEffect
 from .schemas_text_part_response import SchemasTextPartResponse
 from .schemas_media_part_response import SchemasMediaPartResponse
 
-__all__ = ["MessageEventV2", "Chat", "Part", "PartSchemasLinkPartResponse", "ReplyTo"]
+__all__ = ["MessageEventV2", "Chat", "ChatHealthScore", "Part", "PartSchemasLinkPartResponse", "ReplyTo"]
+
+
+class ChatHealthScore(BaseModel):
+    """**[BETA]** Health assessment for a chat.
+
+    Higher `score` is healthier.
+    `null` when a score isn't available yet. Scoring may change during beta.
+    """
+
+    reason: str
+    """Short summary of what's affecting the score. Empty when the score is 100."""
+
+    score: int
+    """Health score from 0 to 100. Higher is healthier."""
 
 
 class Chat(BaseModel):
@@ -20,6 +34,13 @@ class Chat(BaseModel):
 
     id: str
     """Chat identifier"""
+
+    health_score: Optional[ChatHealthScore] = None
+    """**[BETA]** Health assessment for a chat.
+
+    Higher `score` is healthier. `null` when a score isn't available yet. Scoring
+    may change during beta.
+    """
 
     is_group: Optional[bool] = None
     """Whether this is a group chat"""
