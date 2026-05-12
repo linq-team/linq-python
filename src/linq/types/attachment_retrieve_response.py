@@ -65,7 +65,10 @@ class AttachmentRetrieveResponse(BaseModel):
     """Size of the attachment in bytes"""
 
     status: Literal["pending", "complete", "failed"]
-    """Current upload/processing status"""
+    """
+    **DEPRECATED:** This field is deprecated and will be removed in a future API
+    version.
+    """
 
     download_url: Optional[str] = None
     """URL to download the attachment"""
