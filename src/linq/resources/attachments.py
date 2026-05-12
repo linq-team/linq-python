@@ -275,8 +275,10 @@ class AttachmentsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AttachmentRetrieveResponse:
         """
-        Retrieve metadata for a specific attachment including its status, file
-        information, and URLs for downloading.
+        Retrieve metadata for a specific attachment including file information, and URLs
+        for downloading.
+
+        `status`: (**deprecated** — will be removed in a future API version)
 
         Args:
           extra_headers: Send extra headers
@@ -550,8 +552,10 @@ class AsyncAttachmentsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AttachmentRetrieveResponse:
         """
-        Retrieve metadata for a specific attachment including its status, file
-        information, and URLs for downloading.
+        Retrieve metadata for a specific attachment including file information, and URLs
+        for downloading.
+
+        `status`: (**deprecated** — will be removed in a future API version)
 
         Args:
           extra_headers: Send extra headers
