@@ -103,6 +103,7 @@ Methods:
 
 - <code title="post /v3/attachments">client.attachments.<a href="./src/linq/resources/attachments.py">create</a>(\*\*<a href="src/linq/types/attachment_create_params.py">params</a>) -> <a href="./src/linq/types/attachment_create_response.py">AttachmentCreateResponse</a></code>
 - <code title="get /v3/attachments/{attachmentId}">client.attachments.<a href="./src/linq/resources/attachments.py">retrieve</a>(attachment_id) -> <a href="./src/linq/types/attachment_retrieve_response.py">AttachmentRetrieveResponse</a></code>
+- <code title="delete /v3/attachments/{attachmentId}">client.attachments.<a href="./src/linq/resources/attachments.py">delete</a>(attachment_id) -> None</code>
 
 # Phonenumbers
 

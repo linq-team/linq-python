@@ -5,7 +5,7 @@ from __future__ import annotations
 import httpx
 
 from ..types import SupportedContentType, attachment_create_params
-from .._types import Body, Query, Headers, NotGiven, not_given
+from .._types import Body, Query, Headers, NoneType, NotGiven, not_given
 from .._utils import path_template, maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
@@ -415,6 +415,40 @@ class AttachmentsResource(SyncAPIResource):
             cast_to=AttachmentRetrieveResponse,
         )
 
+    def delete(
+        self,
+        attachment_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> None:
+        """
+        Permanently delete an attachment owned by the authenticated partner.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not attachment_id:
+            raise ValueError(f"Expected a non-empty value for `attachment_id` but received {attachment_id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        return self._delete(
+            path_template("/v3/attachments/{attachment_id}", attachment_id=attachment_id),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NoneType,
+        )
+
 
 class AsyncAttachmentsResource(AsyncAPIResource):
     """
@@ -808,6 +842,40 @@ class AsyncAttachmentsResource(AsyncAPIResource):
             cast_to=AttachmentRetrieveResponse,
         )
 
+    async def delete(
+        self,
+        attachment_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> None:
+        """
+        Permanently delete an attachment owned by the authenticated partner.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not attachment_id:
+            raise ValueError(f"Expected a non-empty value for `attachment_id` but received {attachment_id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        return await self._delete(
+            path_template("/v3/attachments/{attachment_id}", attachment_id=attachment_id),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NoneType,
+        )
+
 
 class AttachmentsResourceWithRawResponse:
     def __init__(self, attachments: AttachmentsResource) -> None:
@@ -818,6 +886,9 @@ class AttachmentsResourceWithRawResponse:
         )
         self.retrieve = to_raw_response_wrapper(
             attachments.retrieve,
+        )
+        self.delete = to_raw_response_wrapper(
+            attachments.delete,
         )
 
 
@@ -831,6 +902,9 @@ class AsyncAttachmentsResourceWithRawResponse:
         self.retrieve = async_to_raw_response_wrapper(
             attachments.retrieve,
         )
+        self.delete = async_to_raw_response_wrapper(
+            attachments.delete,
+        )
 
 
 class AttachmentsResourceWithStreamingResponse:
@@ -843,6 +917,9 @@ class AttachmentsResourceWithStreamingResponse:
         self.retrieve = to_streamed_response_wrapper(
             attachments.retrieve,
         )
+        self.delete = to_streamed_response_wrapper(
+            attachments.delete,
+        )
 
 
 class AsyncAttachmentsResourceWithStreamingResponse:
@@ -854,4 +931,7 @@ class AsyncAttachmentsResourceWithStreamingResponse:
         )
         self.retrieve = async_to_streamed_response_wrapper(
             attachments.retrieve,
+        )
+        self.delete = async_to_streamed_response_wrapper(
+            attachments.delete,
         )
