@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.9.0 (2026-05-13)
+
+Full Changelog: [v0.8.0...v0.9.0](https://github.com/linq-team/linq-python/compare/v0.8.0...v0.9.0)
+
+### Features
+
+* **api:** add delete endpoint ([1daeeb6](https://github.com/linq-team/linq-python/commit/1daeeb6eaa3bf3c3688de581b1cb35714fc9881b))
+* **internal/types:** support eagerly validating pydantic iterators ([ebac43c](https://github.com/linq-team/linq-python/commit/ebac43cb5d8a54eae38f50562ff1cf972c998a4a))
+
+
+### Bug Fixes
+
+* **client:** add missing f-string prefix in file type error message ([1fe708e](https://github.com/linq-team/linq-python/commit/1fe708e103ce31e536a237844bd7866ba98423a9))
+
+
+### Documentation
+
+* **api:** expand attachments resource documentation ([ec612eb](https://github.com/linq-team/linq-python/commit/ec612eb80312a4ebd49cea6028d99a9665f347d2))
+* **api:** mark status and is_archived fields as deprecated in attachments/chat ([36a77d9](https://github.com/linq-team/linq-python/commit/36a77d9e66f5cd7d52bd42f0e438f663ea8f10cf))
+
 ## 0.8.0 (2026-05-07)
 
 Full Changelog: [v0.7.0...v0.8.0](https://github.com/linq-team/linq-python/compare/v0.7.0...v0.8.0)
