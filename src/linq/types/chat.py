@@ -72,7 +72,10 @@ class Chat(BaseModel):
     """
 
     is_archived: bool
-    """Whether the chat is archived"""
+    """
+    **DEPRECATED:** This field is deprecated and will be removed in a future API
+    version.
+    """
 
     is_group: bool
     """Whether this is a group chat"""

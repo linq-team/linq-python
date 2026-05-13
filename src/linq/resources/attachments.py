@@ -5,7 +5,7 @@ from __future__ import annotations
 import httpx
 
 from ..types import SupportedContentType, attachment_create_params
-from .._types import Body, Query, Headers, NotGiven, not_given
+from .._types import Body, Query, Headers, NoneType, NotGiven, not_given
 from .._utils import path_template, maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
@@ -87,6 +87,122 @@ class AttachmentsResource(SyncAPIResource):
 
     - **URL-based (`url` field):** 10MB maximum
     - **Pre-upload (`attachment_id`):** 100MB maximum
+
+    ## Security & Ownership
+
+    Every attachment is bound to the partner account that created or received it. The API enforces ownership on every operation that touches an attachment — sending, retrieving, deleting.
+
+    **What this means for you:**
+
+    - An attachment created under your API key can only be referenced by your API key.
+    - Submitting another partner's `attachment_id` returns `404 Not Found`. We do not disclose whether the id exists or belongs to someone else.
+    - Submitting a CDN URL that resolves to another partner's attachment is rejected before the send is attempted.
+    - Ownership enforcement applies uniformly across send, create-chat, voice memo, retrieve, and delete operations.
+
+    Every attachment-affecting endpoint requires a valid partner API key. Unauthenticated calls return `401 Unauthorized`.
+
+    ## Attachment URL Patterns
+
+    Attachment URLs in API responses and webhook payloads use one of two layouts, depending on the attachment's tier:
+
+    | Tier | URL pattern | TTL |
+    |---|---|---|
+    | Persistent (default) | `https://cdn.linqapp.com/attachments/partners/{partner_id}/{attachment_id}/{filename}` | Long-lived |
+    | Ephemeral | Pre-signed URL pointing at the ephemeral prefix on `cdn.linqapp.com` | 15 minutes per signed URL — re-fetch via the API for a fresh URL |
+
+    Inbound media you receive over webhooks uses the same layout your outbound sends produce, so the URL you store and the URL you build look identical — no special casing in your client.
+
+    ## Ephemeral Attachments (Privacy Tier)
+
+    For regulated or sensitive content, opt in to the **ephemeral attachments** tier by contacting your Linq support contact. You can request it at two scopes:
+
+    | Scope | Effect |
+    |---|---|
+    | **Partner-wide** | Every outbound and inbound attachment on every phone number under your account is routed through the ephemeral tier. |
+    | **Per phone number** | Only the specified phone numbers route their attachments through the ephemeral tier. The rest stay on the persistent tier. |
+
+    **Behavioral differences vs the persistent default:**
+
+    | Aspect | Persistent | Ephemeral |
+    |---|---|---|
+    | Download URL form | Long-lived CDN URL | Pre-signed URL with short TTL |
+    | Retention floor | Indefinite (until you call `DELETE`) | **Hard backstop: 1 day** — even without an explicit `DELETE`, the platform removes the underlying bytes after 24 hours |
+    | URL re-fetch | Not required | Fetch via `GET /v3/attachments/{attachmentId}` for a fresh signed URL after TTL expiry |
+    | Cross-partner isolation | Enforced | Enforced |
+
+    **When to choose ephemeral:**
+
+    - Your downstream system processes the file immediately on receipt and does not need to re-read it later.
+    - You have a compliance requirement that the platform must not retain attachments beyond a short window.
+    - The content is high-sensitivity (PHI, financial documents, identity verification) and you do not want it sitting behind a long-lived URL.
+
+    **Important:** ephemeral applies in *both directions* — outbound files you upload **and** inbound media received by the phone numbers in that scope. Download bytes you need to keep promptly, or fetch a fresh signed URL via the API when needed.
+
+    ## Deleting an Attachment
+
+    To permanently remove an attachment you own, use:
+
+    ```http
+    DELETE /v3/attachments/{attachmentId}
+    Authorization: Bearer <your_api_key>
+    ```
+
+    **What this does:**
+
+    1. Verifies the attachment is owned by your account. Returns `404` otherwise.
+    2. Removes the underlying file from Linq storage.
+    3. Records an audit entry (timestamp, partner, attachment id).
+
+    **Response codes:**
+
+    | Status | Meaning |
+    |---|---|
+    | `204 No Content` | Deletion succeeded. The attachment is removed from Linq storage. |
+    | `400 Bad Request` | `attachmentId` is not a valid UUID. |
+    | `401 Unauthorized` | Missing or invalid API key. |
+    | `404 Not Found` | Attachment does not exist or is not owned by your account. |
+    | `500 Internal Server Error` | Transient infrastructure issue — safe to retry. |
+
+    **Effect on message history:**
+
+    - Messages that referenced the deleted attachment remain visible.
+    - The message part that pointed at the attachment is preserved with no attachment reference.
+    - Webhook payloads previously delivered to you retain the original URL string, but downloads from that URL return `404` going forward.
+
+    Deletion is **irreversible**. Once `204` is returned, the bytes are gone — there is no undelete.
+
+    ## Inbound Media Flow
+
+    When one of your phone numbers receives a message with media (image, video, audio, document), the platform:
+
+    1. Stores the file under your partner account.
+    2. Records metadata linked to the inbound message.
+    3. Delivers a webhook whose `parts[]` array includes a `media` part with a `url` pointing at `cdn.linqapp.com`.
+    4. If the receiving phone is opted in to ephemeral, the `url` is a short-TTL signed URL.
+
+    You can acknowledge the webhook without fetching the file inline, and lazy-load via `GET /v3/attachments/{attachmentId}` later. For ephemeral attachments, retrieving via the API always returns a freshly-signed URL.
+
+    ## Data Lifecycle Summary
+
+    | Data | Persistent tier | Ephemeral tier |
+    |---|---|---|
+    | Attachment bytes | Retained until you `DELETE` | **Auto-removed after 1 day**, also removable via `DELETE` |
+    | Attachment metadata (id, filename, mime type, size) | Retained until you `DELETE` | Removed alongside the bytes |
+    | Message body & parts | Retained per message-retention policy | Retained per message-retention policy |
+    | Audit log of deletions | Retained per platform retention policy | Retained per platform retention policy |
+
+    **In transit:** TLS 1.2+ everywhere. **At rest:** AES-256 (server-side encryption).
+
+    ## Compliance Checklist
+
+    If you're integrating Linq under a security or privacy review, here is the short list:
+
+    - Allowlist exactly one outbound domain: `cdn.linqapp.com`.
+    - Decide whether you need ephemeral attachments (high-sensitivity content) — request enablement through your Linq support contact.
+    - Implement `DELETE /v3/attachments/{attachmentId}` calls in your deletion workflow.
+    - Persist any attachments your application needs long-term — Linq is the authoritative source until you delete, but the ephemeral tier auto-purges after 1 day.
+    - For audit: every deletion is logged on Linq's side. Surface a confirmation in your application UI based on the `204` response.
+    - For end-user "right to delete" requests: enumerate attachment ids and `DELETE` each. The platform does not provide a partner-wide wipe endpoint — deletion is per-attachment by design.
     """
 
     @cached_property
@@ -275,8 +391,10 @@ class AttachmentsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AttachmentRetrieveResponse:
         """
-        Retrieve metadata for a specific attachment including its status, file
-        information, and URLs for downloading.
+        Retrieve metadata for a specific attachment including file information, and URLs
+        for downloading.
+
+        `status`: (**deprecated** — will be removed in a future API version)
 
         Args:
           extra_headers: Send extra headers
@@ -295,6 +413,40 @@ class AttachmentsResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=AttachmentRetrieveResponse,
+        )
+
+    def delete(
+        self,
+        attachment_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> None:
+        """
+        Permanently delete an attachment owned by the authenticated partner.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not attachment_id:
+            raise ValueError(f"Expected a non-empty value for `attachment_id` but received {attachment_id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        return self._delete(
+            path_template("/v3/attachments/{attachment_id}", attachment_id=attachment_id),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NoneType,
         )
 
 
@@ -362,6 +514,122 @@ class AsyncAttachmentsResource(AsyncAPIResource):
 
     - **URL-based (`url` field):** 10MB maximum
     - **Pre-upload (`attachment_id`):** 100MB maximum
+
+    ## Security & Ownership
+
+    Every attachment is bound to the partner account that created or received it. The API enforces ownership on every operation that touches an attachment — sending, retrieving, deleting.
+
+    **What this means for you:**
+
+    - An attachment created under your API key can only be referenced by your API key.
+    - Submitting another partner's `attachment_id` returns `404 Not Found`. We do not disclose whether the id exists or belongs to someone else.
+    - Submitting a CDN URL that resolves to another partner's attachment is rejected before the send is attempted.
+    - Ownership enforcement applies uniformly across send, create-chat, voice memo, retrieve, and delete operations.
+
+    Every attachment-affecting endpoint requires a valid partner API key. Unauthenticated calls return `401 Unauthorized`.
+
+    ## Attachment URL Patterns
+
+    Attachment URLs in API responses and webhook payloads use one of two layouts, depending on the attachment's tier:
+
+    | Tier | URL pattern | TTL |
+    |---|---|---|
+    | Persistent (default) | `https://cdn.linqapp.com/attachments/partners/{partner_id}/{attachment_id}/{filename}` | Long-lived |
+    | Ephemeral | Pre-signed URL pointing at the ephemeral prefix on `cdn.linqapp.com` | 15 minutes per signed URL — re-fetch via the API for a fresh URL |
+
+    Inbound media you receive over webhooks uses the same layout your outbound sends produce, so the URL you store and the URL you build look identical — no special casing in your client.
+
+    ## Ephemeral Attachments (Privacy Tier)
+
+    For regulated or sensitive content, opt in to the **ephemeral attachments** tier by contacting your Linq support contact. You can request it at two scopes:
+
+    | Scope | Effect |
+    |---|---|
+    | **Partner-wide** | Every outbound and inbound attachment on every phone number under your account is routed through the ephemeral tier. |
+    | **Per phone number** | Only the specified phone numbers route their attachments through the ephemeral tier. The rest stay on the persistent tier. |
+
+    **Behavioral differences vs the persistent default:**
+
+    | Aspect | Persistent | Ephemeral |
+    |---|---|---|
+    | Download URL form | Long-lived CDN URL | Pre-signed URL with short TTL |
+    | Retention floor | Indefinite (until you call `DELETE`) | **Hard backstop: 1 day** — even without an explicit `DELETE`, the platform removes the underlying bytes after 24 hours |
+    | URL re-fetch | Not required | Fetch via `GET /v3/attachments/{attachmentId}` for a fresh signed URL after TTL expiry |
+    | Cross-partner isolation | Enforced | Enforced |
+
+    **When to choose ephemeral:**
+
+    - Your downstream system processes the file immediately on receipt and does not need to re-read it later.
+    - You have a compliance requirement that the platform must not retain attachments beyond a short window.
+    - The content is high-sensitivity (PHI, financial documents, identity verification) and you do not want it sitting behind a long-lived URL.
+
+    **Important:** ephemeral applies in *both directions* — outbound files you upload **and** inbound media received by the phone numbers in that scope. Download bytes you need to keep promptly, or fetch a fresh signed URL via the API when needed.
+
+    ## Deleting an Attachment
+
+    To permanently remove an attachment you own, use:
+
+    ```http
+    DELETE /v3/attachments/{attachmentId}
+    Authorization: Bearer <your_api_key>
+    ```
+
+    **What this does:**
+
+    1. Verifies the attachment is owned by your account. Returns `404` otherwise.
+    2. Removes the underlying file from Linq storage.
+    3. Records an audit entry (timestamp, partner, attachment id).
+
+    **Response codes:**
+
+    | Status | Meaning |
+    |---|---|
+    | `204 No Content` | Deletion succeeded. The attachment is removed from Linq storage. |
+    | `400 Bad Request` | `attachmentId` is not a valid UUID. |
+    | `401 Unauthorized` | Missing or invalid API key. |
+    | `404 Not Found` | Attachment does not exist or is not owned by your account. |
+    | `500 Internal Server Error` | Transient infrastructure issue — safe to retry. |
+
+    **Effect on message history:**
+
+    - Messages that referenced the deleted attachment remain visible.
+    - The message part that pointed at the attachment is preserved with no attachment reference.
+    - Webhook payloads previously delivered to you retain the original URL string, but downloads from that URL return `404` going forward.
+
+    Deletion is **irreversible**. Once `204` is returned, the bytes are gone — there is no undelete.
+
+    ## Inbound Media Flow
+
+    When one of your phone numbers receives a message with media (image, video, audio, document), the platform:
+
+    1. Stores the file under your partner account.
+    2. Records metadata linked to the inbound message.
+    3. Delivers a webhook whose `parts[]` array includes a `media` part with a `url` pointing at `cdn.linqapp.com`.
+    4. If the receiving phone is opted in to ephemeral, the `url` is a short-TTL signed URL.
+
+    You can acknowledge the webhook without fetching the file inline, and lazy-load via `GET /v3/attachments/{attachmentId}` later. For ephemeral attachments, retrieving via the API always returns a freshly-signed URL.
+
+    ## Data Lifecycle Summary
+
+    | Data | Persistent tier | Ephemeral tier |
+    |---|---|---|
+    | Attachment bytes | Retained until you `DELETE` | **Auto-removed after 1 day**, also removable via `DELETE` |
+    | Attachment metadata (id, filename, mime type, size) | Retained until you `DELETE` | Removed alongside the bytes |
+    | Message body & parts | Retained per message-retention policy | Retained per message-retention policy |
+    | Audit log of deletions | Retained per platform retention policy | Retained per platform retention policy |
+
+    **In transit:** TLS 1.2+ everywhere. **At rest:** AES-256 (server-side encryption).
+
+    ## Compliance Checklist
+
+    If you're integrating Linq under a security or privacy review, here is the short list:
+
+    - Allowlist exactly one outbound domain: `cdn.linqapp.com`.
+    - Decide whether you need ephemeral attachments (high-sensitivity content) — request enablement through your Linq support contact.
+    - Implement `DELETE /v3/attachments/{attachmentId}` calls in your deletion workflow.
+    - Persist any attachments your application needs long-term — Linq is the authoritative source until you delete, but the ephemeral tier auto-purges after 1 day.
+    - For audit: every deletion is logged on Linq's side. Surface a confirmation in your application UI based on the `204` response.
+    - For end-user "right to delete" requests: enumerate attachment ids and `DELETE` each. The platform does not provide a partner-wide wipe endpoint — deletion is per-attachment by design.
     """
 
     @cached_property
@@ -550,8 +818,10 @@ class AsyncAttachmentsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AttachmentRetrieveResponse:
         """
-        Retrieve metadata for a specific attachment including its status, file
-        information, and URLs for downloading.
+        Retrieve metadata for a specific attachment including file information, and URLs
+        for downloading.
+
+        `status`: (**deprecated** — will be removed in a future API version)
 
         Args:
           extra_headers: Send extra headers
@@ -572,6 +842,40 @@ class AsyncAttachmentsResource(AsyncAPIResource):
             cast_to=AttachmentRetrieveResponse,
         )
 
+    async def delete(
+        self,
+        attachment_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> None:
+        """
+        Permanently delete an attachment owned by the authenticated partner.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not attachment_id:
+            raise ValueError(f"Expected a non-empty value for `attachment_id` but received {attachment_id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        return await self._delete(
+            path_template("/v3/attachments/{attachment_id}", attachment_id=attachment_id),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NoneType,
+        )
+
 
 class AttachmentsResourceWithRawResponse:
     def __init__(self, attachments: AttachmentsResource) -> None:
@@ -582,6 +886,9 @@ class AttachmentsResourceWithRawResponse:
         )
         self.retrieve = to_raw_response_wrapper(
             attachments.retrieve,
+        )
+        self.delete = to_raw_response_wrapper(
+            attachments.delete,
         )
 
 
@@ -595,6 +902,9 @@ class AsyncAttachmentsResourceWithRawResponse:
         self.retrieve = async_to_raw_response_wrapper(
             attachments.retrieve,
         )
+        self.delete = async_to_raw_response_wrapper(
+            attachments.delete,
+        )
 
 
 class AttachmentsResourceWithStreamingResponse:
@@ -607,6 +917,9 @@ class AttachmentsResourceWithStreamingResponse:
         self.retrieve = to_streamed_response_wrapper(
             attachments.retrieve,
         )
+        self.delete = to_streamed_response_wrapper(
+            attachments.delete,
+        )
 
 
 class AsyncAttachmentsResourceWithStreamingResponse:
@@ -618,4 +931,7 @@ class AsyncAttachmentsResourceWithStreamingResponse:
         )
         self.retrieve = async_to_streamed_response_wrapper(
             attachments.retrieve,
+        )
+        self.delete = async_to_streamed_response_wrapper(
+            attachments.delete,
         )

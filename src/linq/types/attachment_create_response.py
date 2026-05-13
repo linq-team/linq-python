@@ -11,10 +11,7 @@ __all__ = ["AttachmentCreateResponse"]
 
 class AttachmentCreateResponse(BaseModel):
     attachment_id: str
-    """
-    Unique identifier for the attachment (for status checks via GET
-    /v3/attachments/{id})
-    """
+    """Unique identifier for the attachment"""
 
     download_url: str
     """Permanent CDN URL for the file.
