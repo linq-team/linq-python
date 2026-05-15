@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.10.0 (2026-05-15)
+
+Full Changelog: [v0.9.0...v0.10.0](https://github.com/linq-team/linq-python/compare/v0.9.0...v0.10.0)
+
+### Features
+
+* **api:** add health_status field to phone_number response ([3467668](https://github.com/linq-team/linq-python/commit/3467668bdbcee3805c3f2b4a99c93f842454ee8b))
+* **api:** add health_status fields to PhoneNumber and webhook event ([dab602c](https://github.com/linq-team/linq-python/commit/dab602cb2f935e9c1bb6b00660adbaecfb001d18))
+
+
+### Bug Fixes
+
+* **types:** uppercase health_status enum values in chat-related models ([a763854](https://github.com/linq-team/linq-python/commit/a763854d1ca795bb1bb996058d97f306aef7b9e7))
+
 ## 0.9.0 (2026-05-13)
 
 Full Changelog: [v0.8.0...v0.9.0](https://github.com/linq-team/linq-python/compare/v0.8.0...v0.9.0)
