@@ -14,11 +14,17 @@ class Data(BaseModel):
     changed_at: datetime
     """When the status change occurred"""
 
+    new_health_status: Literal["HEALTHY", "AT_RISK", "CRITICAL"]
+    """The new line health status"""
+
     new_status: Literal["ACTIVE", "FLAGGED"]
     """The new service status"""
 
     phone_number: str
     """Phone number in E.164 format"""
+
+    previous_health_status: Literal["HEALTHY", "AT_RISK", "CRITICAL"]
+    """The previous line health status"""
 
     previous_status: Literal["ACTIVE", "FLAGGED"]
     """The previous service status"""
