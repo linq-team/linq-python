@@ -13,7 +13,7 @@ __all__ = ["MessageEditedWebhookEvent", "Data", "DataChat", "DataChatHealthStatu
 class DataChatHealthStatus(BaseModel):
     """**[BETA]** Current health for a chat.
 
-    Always present — chats start at `healthy` and may shift based on engagement and delivery signals on the conversation. Many `at_risk` or `critical` chats on a single line increase the risk of line flagging.
+    Always present — chats start at `HEALTHY` and may shift based on engagement and delivery signals on the conversation. Many `AT_RISK` or `CRITICAL` chats on a single line increase the risk of line flagging.
 
     Switch on `status` to gate sends or surface line health in your UI — the enum is the long-term contract. Each status carries a `doc_url` that deep-links to the relevant section of the Chat Health guide.
 
@@ -23,7 +23,7 @@ class DataChatHealthStatus(BaseModel):
     doc_url: str
     """Deep-link to the relevant section of the Chat Health guide for this status."""
 
-    status: Literal["healthy", "at_risk", "critical", "opted_out"]
+    status: Literal["HEALTHY", "AT_RISK", "CRITICAL", "OPTED_OUT"]
     """Current health bucket for the chat.
 
     See the [Chat Health guide](/guides/chats/chat-health) for what each value means
@@ -43,8 +43,8 @@ class DataChat(BaseModel):
     health_status: DataChatHealthStatus
     """**[BETA]** Current health for a chat.
 
-    Always present — chats start at `healthy` and may shift based on engagement and
-    delivery signals on the conversation. Many `at_risk` or `critical` chats on a
+    Always present — chats start at `HEALTHY` and may shift based on engagement and
+    delivery signals on the conversation. Many `AT_RISK` or `CRITICAL` chats on a
     single line increase the risk of line flagging.
 
     Switch on `status` to gate sends or surface line health in your UI — the enum is
