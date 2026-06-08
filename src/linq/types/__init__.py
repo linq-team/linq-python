@@ -28,8 +28,8 @@ from .webhook_event_type import WebhookEventType as WebhookEventType
 from .reaction_event_base import ReactionEventBase as ReactionEventBase
 from .chat_create_response import ChatCreateResponse as ChatCreateResponse
 from .chat_update_response import ChatUpdateResponse as ChatUpdateResponse
-from .events_webhook_event import EventsWebhookEvent as EventsWebhookEvent
 from .message_effect_param import MessageEffectParam as MessageEffectParam
+from .unwrap_webhook_event import UnwrapWebhookEvent as UnwrapWebhookEvent
 from .webhook_subscription import WebhookSubscription as WebhookSubscription
 from .handle_check_response import HandleCheckResponse as HandleCheckResponse
 from .message_content_param import MessageContentParam as MessageContentParam

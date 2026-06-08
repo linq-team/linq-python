@@ -217,7 +217,7 @@ from linq.types import (
     ChatTypingIndicatorStartedWebhookEvent,
     ChatTypingIndicatorStoppedWebhookEvent,
     PhoneNumberStatusUpdatedWebhookEvent,
-    EventsWebhookEvent,
+    UnwrapWebhookEvent,
 )
 ```
 

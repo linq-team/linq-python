@@ -73,11 +73,13 @@ __all__ = [
 class LinqAPIV3(SyncAPIClient):
     # client options
     api_key: str
+    webhook_secret: str | None
 
     def __init__(
         self,
         *,
         api_key: str | None = None,
+        webhook_secret: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = not_given,
         max_retries: int = DEFAULT_MAX_RETRIES,
@@ -99,7 +101,9 @@ class LinqAPIV3(SyncAPIClient):
     ) -> None:
         """Construct a new synchronous LinqAPIV3 client instance.
 
-        This automatically infers the `api_key` argument from the `LINQ_API_V3_API_KEY` environment variable if it is not provided.
+        This automatically infers the following arguments from their corresponding environment variables if they are not provided:
+        - `api_key` from `LINQ_API_V3_API_KEY`
+        - `webhook_secret` from `LINQ_WEBHOOK_SECRET`
         """
         if api_key is None:
             api_key = os.environ.get("LINQ_API_V3_API_KEY")
@@ -108,6 +112,10 @@ class LinqAPIV3(SyncAPIClient):
                 "The api_key client option must be set either by passing api_key to the client or by setting the LINQ_API_V3_API_KEY environment variable"
             )
         self.api_key = api_key
+
+        if webhook_secret is None:
+            webhook_secret = os.environ.get("LINQ_WEBHOOK_SECRET")
+        self.webhook_secret = webhook_secret
 
         if base_url is None:
             base_url = os.environ.get("LINQ_API_V3_BASE_URL")
@@ -712,6 +720,7 @@ class LinqAPIV3(SyncAPIClient):
         self,
         *,
         api_key: str | None = None,
+        webhook_secret: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = not_given,
         http_client: httpx.Client | None = None,
@@ -746,6 +755,7 @@ class LinqAPIV3(SyncAPIClient):
         http_client = http_client or self._client
         return self.__class__(
             api_key=api_key or self.api_key,
+            webhook_secret=webhook_secret or self.webhook_secret,
             base_url=base_url or self.base_url,
             timeout=self.timeout if isinstance(timeout, NotGiven) else timeout,
             http_client=http_client,
@@ -796,11 +806,13 @@ class LinqAPIV3(SyncAPIClient):
 class AsyncLinqAPIV3(AsyncAPIClient):
     # client options
     api_key: str
+    webhook_secret: str | None
 
     def __init__(
         self,
         *,
         api_key: str | None = None,
+        webhook_secret: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = not_given,
         max_retries: int = DEFAULT_MAX_RETRIES,
@@ -822,7 +834,9 @@ class AsyncLinqAPIV3(AsyncAPIClient):
     ) -> None:
         """Construct a new async AsyncLinqAPIV3 client instance.
 
-        This automatically infers the `api_key` argument from the `LINQ_API_V3_API_KEY` environment variable if it is not provided.
+        This automatically infers the following arguments from their corresponding environment variables if they are not provided:
+        - `api_key` from `LINQ_API_V3_API_KEY`
+        - `webhook_secret` from `LINQ_WEBHOOK_SECRET`
         """
         if api_key is None:
             api_key = os.environ.get("LINQ_API_V3_API_KEY")
@@ -831,6 +845,10 @@ class AsyncLinqAPIV3(AsyncAPIClient):
                 "The api_key client option must be set either by passing api_key to the client or by setting the LINQ_API_V3_API_KEY environment variable"
             )
         self.api_key = api_key
+
+        if webhook_secret is None:
+            webhook_secret = os.environ.get("LINQ_WEBHOOK_SECRET")
+        self.webhook_secret = webhook_secret
 
         if base_url is None:
             base_url = os.environ.get("LINQ_API_V3_BASE_URL")
@@ -1435,6 +1453,7 @@ class AsyncLinqAPIV3(AsyncAPIClient):
         self,
         *,
         api_key: str | None = None,
+        webhook_secret: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = not_given,
         http_client: httpx.AsyncClient | None = None,
@@ -1469,6 +1488,7 @@ class AsyncLinqAPIV3(AsyncAPIClient):
         http_client = http_client or self._client
         return self.__class__(
             api_key=api_key or self.api_key,
+            webhook_secret=webhook_secret or self.webhook_secret,
             base_url=base_url or self.base_url,
             timeout=self.timeout if isinstance(timeout, NotGiven) else timeout,
             http_client=http_client,
