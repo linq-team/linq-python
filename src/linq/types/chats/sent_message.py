@@ -27,11 +27,14 @@ class SentMessage(BaseModel):
     created_at: datetime
     """When the message was created"""
 
-    delivery_status: Literal["pending", "queued", "sent", "delivered", "failed"]
+    delivery_status: Literal["pending", "queued", "sent", "delivered", "received", "read", "failed"]
     """Current delivery status of a message"""
 
     is_read: bool
-    """Whether the message has been read"""
+    """DEPRECATED: Use `delivery_status == "read"` instead.
+
+    Whether the message has been read.
+    """
 
     parts: List[Part]
     """Message parts in order (text, media, and link)"""

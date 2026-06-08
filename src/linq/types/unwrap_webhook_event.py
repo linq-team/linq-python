@@ -23,9 +23,9 @@ from .chat_group_name_update_failed_webhook_event import ChatGroupNameUpdateFail
 from .chat_typing_indicator_started_webhook_event import ChatTypingIndicatorStartedWebhookEvent
 from .chat_typing_indicator_stopped_webhook_event import ChatTypingIndicatorStoppedWebhookEvent
 
-__all__ = ["EventsWebhookEvent"]
+__all__ = ["UnwrapWebhookEvent"]
 
-EventsWebhookEvent: TypeAlias = Annotated[
+UnwrapWebhookEvent: TypeAlias = Annotated[
     Union[
         MessageSentWebhookEvent,
         MessageReceivedWebhookEvent,

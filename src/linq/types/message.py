@@ -2,7 +2,7 @@
 
 from typing import List, Union, Optional
 from datetime import datetime
-from typing_extensions import TypeAlias
+from typing_extensions import Literal, TypeAlias
 
 from pydantic import Field as FieldInfo
 
@@ -30,14 +30,23 @@ class Message(BaseModel):
     created_at: datetime
     """When the message was created"""
 
+    delivery_status: Literal["pending", "queued", "sent", "delivered", "received", "read", "failed"]
+    """Current delivery status of a message"""
+
     is_delivered: bool
-    """Whether the message has been delivered"""
+    """
+    DEPRECATED: Use `delivery_status` instead (true when `delivery_status` is
+    `delivered` or `read`). Whether the message has been delivered.
+    """
 
     is_from_me: bool
     """Whether this message was sent by the authenticated user"""
 
     is_read: bool
-    """Whether the message has been read"""
+    """DEPRECATED: Use `delivery_status == "read"` instead.
+
+    Whether the message has been read.
+    """
 
     updated_at: datetime
     """When the message was last updated"""
