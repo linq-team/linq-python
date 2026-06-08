@@ -75,6 +75,19 @@ Methods:
 - <code title="get /v3/chats/{chatId}/messages">client.chats.messages.<a href="./src/linq/resources/chats/messages.py">list</a>(chat_id, \*\*<a href="src/linq/types/chats/message_list_params.py">params</a>) -> <a href="./src/linq/types/message.py">SyncListMessagesPagination[Message]</a></code>
 - <code title="post /v3/chats/{chatId}/messages">client.chats.messages.<a href="./src/linq/resources/chats/messages.py">send</a>(chat_id, \*\*<a href="src/linq/types/chats/message_send_params.py">params</a>) -> <a href="./src/linq/types/chats/message_send_response.py">MessageSendResponse</a></code>
 
+## Location
+
+Types:
+
+```python
+from linq.types.chats import GetChatLocationResponse, LocationRequestResponse
+```
+
+Methods:
+
+- <code title="get /v3/chats/{chatId}/location">client.chats.location.<a href="./src/linq/resources/chats/location.py">retrieve</a>(chat_id) -> <a href="./src/linq/types/chats/get_chat_location_response.py">GetChatLocationResponse</a></code>
+- <code title="post /v3/chats/{chatId}/location/request">client.chats.location.<a href="./src/linq/resources/chats/location.py">request</a>(chat_id) -> <a href="./src/linq/types/chats/location_request_response.py">LocationRequestResponse</a></code>
+
 # Messages
 
 Types:

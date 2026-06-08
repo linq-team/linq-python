@@ -16,6 +16,14 @@ from .typing import (
     TypingResourceWithStreamingResponse,
     AsyncTypingResourceWithStreamingResponse,
 )
+from .location import (
+    LocationResource,
+    AsyncLocationResource,
+    LocationResourceWithRawResponse,
+    AsyncLocationResourceWithRawResponse,
+    LocationResourceWithStreamingResponse,
+    AsyncLocationResourceWithStreamingResponse,
+)
 from .messages import (
     MessagesResource,
     AsyncMessagesResource,
@@ -52,6 +60,12 @@ __all__ = [
     "AsyncMessagesResourceWithRawResponse",
     "MessagesResourceWithStreamingResponse",
     "AsyncMessagesResourceWithStreamingResponse",
+    "LocationResource",
+    "AsyncLocationResource",
+    "LocationResourceWithRawResponse",
+    "AsyncLocationResourceWithRawResponse",
+    "LocationResourceWithStreamingResponse",
+    "AsyncLocationResourceWithStreamingResponse",
     "ChatsResource",
     "AsyncChatsResource",
     "ChatsResourceWithRawResponse",

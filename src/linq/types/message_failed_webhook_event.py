@@ -16,7 +16,7 @@ class Data(BaseModel):
     """
 
     code: int
-    """Error codes in webhook failure events (3007, 4001)."""
+    """Error codes in webhook failure events (3007, 4001, 4005)."""
 
     failed_at: datetime
     """When the failure was detected"""
