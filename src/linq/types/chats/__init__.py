@@ -8,5 +8,7 @@ from .message_send_params import MessageSendParams as MessageSendParams
 from .message_send_response import MessageSendResponse as MessageSendResponse
 from .participant_add_params import ParticipantAddParams as ParticipantAddParams
 from .participant_add_response import ParticipantAddResponse as ParticipantAddResponse
+from .location_request_response import LocationRequestResponse as LocationRequestResponse
 from .participant_remove_params import ParticipantRemoveParams as ParticipantRemoveParams
+from .get_chat_location_response import GetChatLocationResponse as GetChatLocationResponse
 from .participant_remove_response import ParticipantRemoveResponse as ParticipantRemoveResponse

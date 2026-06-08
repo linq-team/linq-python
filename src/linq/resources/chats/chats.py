@@ -20,6 +20,14 @@ from ...types import (
 )
 from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, SequenceNotStr, omit, not_given
 from ..._utils import path_template, maybe_transform, async_maybe_transform
+from .location import (
+    LocationResource,
+    AsyncLocationResource,
+    LocationResourceWithRawResponse,
+    AsyncLocationResourceWithRawResponse,
+    LocationResourceWithStreamingResponse,
+    AsyncLocationResourceWithStreamingResponse,
+)
 from .messages import (
     MessagesResource,
     AsyncMessagesResource,
@@ -121,6 +129,19 @@ class ChatsResource(SyncAPIResource):
         - Maximum URL length: 2,048 characters.
         """
         return MessagesResource(self._client)
+
+    @cached_property
+    def location(self) -> LocationResource:
+        """Request and retrieve real-time location data via iMessage.
+
+        Use these endpoints to request a contact's location, retrieve location data
+        for contacts who are sharing with you, and subscribe to webhooks when someone
+        starts or stops sharing their location.
+
+        **Coordinates** are returned in [GeoJSON](https://datatracker.ietf.org/doc/html/rfc7946) format:
+        `[longitude, latitude]` or `[longitude, latitude, altitude]` if altitude is available.
+        """
+        return LocationResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> ChatsResourceWithRawResponse:
@@ -660,6 +681,19 @@ class AsyncChatsResource(AsyncAPIResource):
         - Maximum URL length: 2,048 characters.
         """
         return AsyncMessagesResource(self._client)
+
+    @cached_property
+    def location(self) -> AsyncLocationResource:
+        """Request and retrieve real-time location data via iMessage.
+
+        Use these endpoints to request a contact's location, retrieve location data
+        for contacts who are sharing with you, and subscribe to webhooks when someone
+        starts or stops sharing their location.
+
+        **Coordinates** are returned in [GeoJSON](https://datatracker.ietf.org/doc/html/rfc7946) format:
+        `[longitude, latitude]` or `[longitude, latitude, altitude]` if altitude is available.
+        """
+        return AsyncLocationResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> AsyncChatsResourceWithRawResponse:
@@ -1228,6 +1262,19 @@ class ChatsResourceWithRawResponse:
         """
         return MessagesResourceWithRawResponse(self._chats.messages)
 
+    @cached_property
+    def location(self) -> LocationResourceWithRawResponse:
+        """Request and retrieve real-time location data via iMessage.
+
+        Use these endpoints to request a contact's location, retrieve location data
+        for contacts who are sharing with you, and subscribe to webhooks when someone
+        starts or stops sharing their location.
+
+        **Coordinates** are returned in [GeoJSON](https://datatracker.ietf.org/doc/html/rfc7946) format:
+        `[longitude, latitude]` or `[longitude, latitude, altitude]` if altitude is available.
+        """
+        return LocationResourceWithRawResponse(self._chats.location)
+
 
 class AsyncChatsResourceWithRawResponse:
     def __init__(self, chats: AsyncChatsResource) -> None:
@@ -1322,6 +1369,19 @@ class AsyncChatsResourceWithRawResponse:
         - Maximum URL length: 2,048 characters.
         """
         return AsyncMessagesResourceWithRawResponse(self._chats.messages)
+
+    @cached_property
+    def location(self) -> AsyncLocationResourceWithRawResponse:
+        """Request and retrieve real-time location data via iMessage.
+
+        Use these endpoints to request a contact's location, retrieve location data
+        for contacts who are sharing with you, and subscribe to webhooks when someone
+        starts or stops sharing their location.
+
+        **Coordinates** are returned in [GeoJSON](https://datatracker.ietf.org/doc/html/rfc7946) format:
+        `[longitude, latitude]` or `[longitude, latitude, altitude]` if altitude is available.
+        """
+        return AsyncLocationResourceWithRawResponse(self._chats.location)
 
 
 class ChatsResourceWithStreamingResponse:
@@ -1418,6 +1478,19 @@ class ChatsResourceWithStreamingResponse:
         """
         return MessagesResourceWithStreamingResponse(self._chats.messages)
 
+    @cached_property
+    def location(self) -> LocationResourceWithStreamingResponse:
+        """Request and retrieve real-time location data via iMessage.
+
+        Use these endpoints to request a contact's location, retrieve location data
+        for contacts who are sharing with you, and subscribe to webhooks when someone
+        starts or stops sharing their location.
+
+        **Coordinates** are returned in [GeoJSON](https://datatracker.ietf.org/doc/html/rfc7946) format:
+        `[longitude, latitude]` or `[longitude, latitude, altitude]` if altitude is available.
+        """
+        return LocationResourceWithStreamingResponse(self._chats.location)
+
 
 class AsyncChatsResourceWithStreamingResponse:
     def __init__(self, chats: AsyncChatsResource) -> None:
@@ -1512,3 +1585,16 @@ class AsyncChatsResourceWithStreamingResponse:
         - Maximum URL length: 2,048 characters.
         """
         return AsyncMessagesResourceWithStreamingResponse(self._chats.messages)
+
+    @cached_property
+    def location(self) -> AsyncLocationResourceWithStreamingResponse:
+        """Request and retrieve real-time location data via iMessage.
+
+        Use these endpoints to request a contact's location, retrieve location data
+        for contacts who are sharing with you, and subscribe to webhooks when someone
+        starts or stops sharing their location.
+
+        **Coordinates** are returned in [GeoJSON](https://datatracker.ietf.org/doc/html/rfc7946) format:
+        `[longitude, latitude]` or `[longitude, latitude, altitude]` if altitude is available.
+        """
+        return AsyncLocationResourceWithStreamingResponse(self._chats.location)

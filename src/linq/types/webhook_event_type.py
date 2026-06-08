@@ -30,4 +30,6 @@ WebhookEventType: TypeAlias = Literal[
     "call.failed",
     "call.declined",
     "call.no_answer",
+    "location.sharing.started",
+    "location.sharing.stopped",
 ]

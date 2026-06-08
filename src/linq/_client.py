@@ -394,52 +394,81 @@ class LinqAPIV3(SyncAPIClient):
 
         ## Webhook Headers
 
-        Each webhook request includes the following headers:
+        All webhook requests include two sets of headers. **If you have an existing integration
+        using the `X-Webhook-*` headers, nothing changes** — those headers are still sent on
+        every delivery and work exactly as before. The new `webhook-*` headers follow the
+        [Standard Webhooks](https://github.com/standard-webhooks/standard-webhooks) specification.
+        You can safely ignore them if your current verification code works and you don't want to use this convention.
+
+        ### Standard Webhooks Headers (Recommended)
+
+        Used by [our SDK](https://github.com/linq-team/linq-node) and any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks).
 
         | Header | Description |
         |--------|-------------|
-        | `X-Webhook-Event` | The event type (e.g., `message.sent`, `message.received`) |
-        | `X-Webhook-Subscription-ID` | Your webhook subscription ID |
-        | `X-Webhook-Timestamp` | Unix timestamp (seconds) when the webhook was sent |
-        | `X-Webhook-Signature` | HMAC-SHA256 signature for verification |
+        | `webhook-id` | Unique event identifier (use as idempotency key) |
+        | `webhook-timestamp` | Unix timestamp (seconds) when the webhook was sent |
+        | `webhook-signature` | Standard Webhooks signature (`v1,{base64}` format) |
+
+        ### Legacy Headers (Deprecated)
+
+        Still sent on every delivery for backwards compatibility. Existing verification code
+        using these headers continues to work — no changes required.
+
+        | Header | Description |
+        |--------|-------------|
+        | `X-Webhook-Event` | *(deprecated)* Event type (e.g., `message.sent`) |
+        | `X-Webhook-Subscription-ID` | *(deprecated)* Webhook subscription ID |
+        | `X-Webhook-Timestamp` | *(deprecated)* Unix timestamp (seconds) |
+        | `X-Webhook-Signature` | *(deprecated)* HMAC-SHA256 signature (hex-encoded) |
+
+        ## Signing Secrets
+
+        Signing secrets use the Standard Webhooks format: a `whsec_` prefix followed
+        by base64-encoded random bytes (e.g., `whsec_MfKQ9r8GKYqrTwjUPD8ILPZIo2LaLaSw7Jxx2Oll+OE=`).
+
+        Strip the `whsec_` prefix and base64-decode the remainder to get the raw key bytes.
 
         ## Verifying Webhook Signatures
 
-        All webhooks are signed using HMAC-SHA256. You should always verify the signature
-        to ensure the webhook originated from Linq and hasn't been tampered with.
+        Webhooks are signed following the [Standard Webhooks specification](https://github.com/standard-webhooks/standard-webhooks).
+        You can use any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks) to verify
+        signatures, or implement verification manually:
 
-        **Signature Construction:**
-
-        The signature is computed over a concatenation of the timestamp and payload:
-
-        ```
-        {timestamp}.{payload}
-        ```
-
-        Where:
-        - `timestamp` is the value from the `X-Webhook-Timestamp` header
-        - `payload` is the raw JSON request body (exact bytes, not re-serialized)
+        **Signed content:** `{webhook-id}.{webhook-timestamp}.{body}`
 
         **Verification Steps:**
 
-        1. Extract the `X-Webhook-Timestamp` and `X-Webhook-Signature` headers
-        2. Get the raw request body bytes (do not parse and re-serialize)
-        3. Concatenate: `"{timestamp}.{payload}"`
-        4. Compute HMAC-SHA256 using your signing secret as the key
-        5. Hex-encode the result and compare with `X-Webhook-Signature`
-        6. Use constant-time comparison to prevent timing attacks
+        1. Extract the `webhook-id`, `webhook-timestamp`, and `webhook-signature` headers
+        2. Reject if the timestamp is more than 5 minutes old (replay protection)
+        3. Get the raw request body bytes (do not parse and re-serialize)
+        4. Construct signed content: `"{webhook-id}.{webhook-timestamp}.{body}"`
+        5. Strip the `whsec_` prefix from your secret and base64-decode to get key bytes
+        6. Compute HMAC-SHA256 using the key bytes over the signed content
+        7. Base64-encode the result and compare with the value after `v1,` in `webhook-signature`
+        8. Use constant-time comparison to prevent timing attacks
 
         **Example (Python):**
 
         ```python
-        import hmac
-        import hashlib
+        import base64, hmac, hashlib
 
 
-        def verify_webhook(signing_secret, payload, timestamp, signature):
-            message = f"{timestamp}.{payload.decode('utf-8')}"
-            expected = hmac.new(signing_secret.encode("utf-8"), message.encode("utf-8"), hashlib.sha256).hexdigest()
-            return hmac.compare_digest(expected, signature)
+        def verify_webhook(secret, body, headers):
+            msg_id = headers["webhook-id"]
+            timestamp = headers["webhook-timestamp"]
+            signature = headers["webhook-signature"]
+
+            secret_str = secret.removeprefix("whsec_")
+            key = base64.b64decode(secret_str)
+
+            signed_content = f"{msg_id}.{timestamp}.{body}"
+            expected = base64.b64encode(hmac.new(key, signed_content.encode(), hashlib.sha256).digest()).decode()
+
+            for sig in signature.split(" "):
+                if sig.startswith("v1,") and hmac.compare_digest(expected, sig[3:]):
+                    return True
+            return False
         ```
 
         **Example (Node.js):**
@@ -447,16 +476,28 @@ class LinqAPIV3(SyncAPIClient):
         ```javascript
         const crypto = require('crypto');
 
-        function verifyWebhook(signingSecret, payload, timestamp, signature) {
-          const message = `${timestamp}.${payload}`;
+        function verifyWebhook(secret, rawBody, headers) {
+          const msgId = headers['webhook-id'];
+          const timestamp = headers['webhook-timestamp'];
+          const signature = headers['webhook-signature'];
+
+          const secretStr = secret.startsWith('whsec_') ? secret.slice(6) : secret;
+          const keyBytes = Buffer.from(secretStr, 'base64');
+          const signedContent = `${msgId}.${timestamp}.${rawBody}`;
           const expected = crypto
-            .createHmac('sha256', signingSecret)
-            .update(message)
-            .digest('hex');
-          return crypto.timingSafeEqual(
-            Buffer.from(expected),
-            Buffer.from(signature)
-          );
+            .createHmac('sha256', keyBytes)
+            .update(signedContent)
+            .digest('base64');
+
+          return signature.split(' ').some(sig => {
+            if (!sig.startsWith('v1,')) return false;
+            try {
+              return crypto.timingSafeEqual(
+                Buffer.from(expected, 'base64'),
+                Buffer.from(sig.slice(3), 'base64')
+              );
+            } catch { return false; }
+          });
         }
         ```
 
@@ -486,52 +527,81 @@ class LinqAPIV3(SyncAPIClient):
 
         ## Webhook Headers
 
-        Each webhook request includes the following headers:
+        All webhook requests include two sets of headers. **If you have an existing integration
+        using the `X-Webhook-*` headers, nothing changes** — those headers are still sent on
+        every delivery and work exactly as before. The new `webhook-*` headers follow the
+        [Standard Webhooks](https://github.com/standard-webhooks/standard-webhooks) specification.
+        You can safely ignore them if your current verification code works and you don't want to use this convention.
+
+        ### Standard Webhooks Headers (Recommended)
+
+        Used by [our SDK](https://github.com/linq-team/linq-node) and any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks).
 
         | Header | Description |
         |--------|-------------|
-        | `X-Webhook-Event` | The event type (e.g., `message.sent`, `message.received`) |
-        | `X-Webhook-Subscription-ID` | Your webhook subscription ID |
-        | `X-Webhook-Timestamp` | Unix timestamp (seconds) when the webhook was sent |
-        | `X-Webhook-Signature` | HMAC-SHA256 signature for verification |
+        | `webhook-id` | Unique event identifier (use as idempotency key) |
+        | `webhook-timestamp` | Unix timestamp (seconds) when the webhook was sent |
+        | `webhook-signature` | Standard Webhooks signature (`v1,{base64}` format) |
+
+        ### Legacy Headers (Deprecated)
+
+        Still sent on every delivery for backwards compatibility. Existing verification code
+        using these headers continues to work — no changes required.
+
+        | Header | Description |
+        |--------|-------------|
+        | `X-Webhook-Event` | *(deprecated)* Event type (e.g., `message.sent`) |
+        | `X-Webhook-Subscription-ID` | *(deprecated)* Webhook subscription ID |
+        | `X-Webhook-Timestamp` | *(deprecated)* Unix timestamp (seconds) |
+        | `X-Webhook-Signature` | *(deprecated)* HMAC-SHA256 signature (hex-encoded) |
+
+        ## Signing Secrets
+
+        Signing secrets use the Standard Webhooks format: a `whsec_` prefix followed
+        by base64-encoded random bytes (e.g., `whsec_MfKQ9r8GKYqrTwjUPD8ILPZIo2LaLaSw7Jxx2Oll+OE=`).
+
+        Strip the `whsec_` prefix and base64-decode the remainder to get the raw key bytes.
 
         ## Verifying Webhook Signatures
 
-        All webhooks are signed using HMAC-SHA256. You should always verify the signature
-        to ensure the webhook originated from Linq and hasn't been tampered with.
+        Webhooks are signed following the [Standard Webhooks specification](https://github.com/standard-webhooks/standard-webhooks).
+        You can use any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks) to verify
+        signatures, or implement verification manually:
 
-        **Signature Construction:**
-
-        The signature is computed over a concatenation of the timestamp and payload:
-
-        ```
-        {timestamp}.{payload}
-        ```
-
-        Where:
-        - `timestamp` is the value from the `X-Webhook-Timestamp` header
-        - `payload` is the raw JSON request body (exact bytes, not re-serialized)
+        **Signed content:** `{webhook-id}.{webhook-timestamp}.{body}`
 
         **Verification Steps:**
 
-        1. Extract the `X-Webhook-Timestamp` and `X-Webhook-Signature` headers
-        2. Get the raw request body bytes (do not parse and re-serialize)
-        3. Concatenate: `"{timestamp}.{payload}"`
-        4. Compute HMAC-SHA256 using your signing secret as the key
-        5. Hex-encode the result and compare with `X-Webhook-Signature`
-        6. Use constant-time comparison to prevent timing attacks
+        1. Extract the `webhook-id`, `webhook-timestamp`, and `webhook-signature` headers
+        2. Reject if the timestamp is more than 5 minutes old (replay protection)
+        3. Get the raw request body bytes (do not parse and re-serialize)
+        4. Construct signed content: `"{webhook-id}.{webhook-timestamp}.{body}"`
+        5. Strip the `whsec_` prefix from your secret and base64-decode to get key bytes
+        6. Compute HMAC-SHA256 using the key bytes over the signed content
+        7. Base64-encode the result and compare with the value after `v1,` in `webhook-signature`
+        8. Use constant-time comparison to prevent timing attacks
 
         **Example (Python):**
 
         ```python
-        import hmac
-        import hashlib
+        import base64, hmac, hashlib
 
 
-        def verify_webhook(signing_secret, payload, timestamp, signature):
-            message = f"{timestamp}.{payload.decode('utf-8')}"
-            expected = hmac.new(signing_secret.encode("utf-8"), message.encode("utf-8"), hashlib.sha256).hexdigest()
-            return hmac.compare_digest(expected, signature)
+        def verify_webhook(secret, body, headers):
+            msg_id = headers["webhook-id"]
+            timestamp = headers["webhook-timestamp"]
+            signature = headers["webhook-signature"]
+
+            secret_str = secret.removeprefix("whsec_")
+            key = base64.b64decode(secret_str)
+
+            signed_content = f"{msg_id}.{timestamp}.{body}"
+            expected = base64.b64encode(hmac.new(key, signed_content.encode(), hashlib.sha256).digest()).decode()
+
+            for sig in signature.split(" "):
+                if sig.startswith("v1,") and hmac.compare_digest(expected, sig[3:]):
+                    return True
+            return False
         ```
 
         **Example (Node.js):**
@@ -539,16 +609,28 @@ class LinqAPIV3(SyncAPIClient):
         ```javascript
         const crypto = require('crypto');
 
-        function verifyWebhook(signingSecret, payload, timestamp, signature) {
-          const message = `${timestamp}.${payload}`;
+        function verifyWebhook(secret, rawBody, headers) {
+          const msgId = headers['webhook-id'];
+          const timestamp = headers['webhook-timestamp'];
+          const signature = headers['webhook-signature'];
+
+          const secretStr = secret.startsWith('whsec_') ? secret.slice(6) : secret;
+          const keyBytes = Buffer.from(secretStr, 'base64');
+          const signedContent = `${msgId}.${timestamp}.${rawBody}`;
           const expected = crypto
-            .createHmac('sha256', signingSecret)
-            .update(message)
-            .digest('hex');
-          return crypto.timingSafeEqual(
-            Buffer.from(expected),
-            Buffer.from(signature)
-          );
+            .createHmac('sha256', keyBytes)
+            .update(signedContent)
+            .digest('base64');
+
+          return signature.split(' ').some(sig => {
+            if (!sig.startsWith('v1,')) return false;
+            try {
+              return crypto.timingSafeEqual(
+                Buffer.from(expected, 'base64'),
+                Buffer.from(sig.slice(3), 'base64')
+              );
+            } catch { return false; }
+          });
         }
         ```
 
@@ -1035,52 +1117,81 @@ class AsyncLinqAPIV3(AsyncAPIClient):
 
         ## Webhook Headers
 
-        Each webhook request includes the following headers:
+        All webhook requests include two sets of headers. **If you have an existing integration
+        using the `X-Webhook-*` headers, nothing changes** — those headers are still sent on
+        every delivery and work exactly as before. The new `webhook-*` headers follow the
+        [Standard Webhooks](https://github.com/standard-webhooks/standard-webhooks) specification.
+        You can safely ignore them if your current verification code works and you don't want to use this convention.
+
+        ### Standard Webhooks Headers (Recommended)
+
+        Used by [our SDK](https://github.com/linq-team/linq-node) and any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks).
 
         | Header | Description |
         |--------|-------------|
-        | `X-Webhook-Event` | The event type (e.g., `message.sent`, `message.received`) |
-        | `X-Webhook-Subscription-ID` | Your webhook subscription ID |
-        | `X-Webhook-Timestamp` | Unix timestamp (seconds) when the webhook was sent |
-        | `X-Webhook-Signature` | HMAC-SHA256 signature for verification |
+        | `webhook-id` | Unique event identifier (use as idempotency key) |
+        | `webhook-timestamp` | Unix timestamp (seconds) when the webhook was sent |
+        | `webhook-signature` | Standard Webhooks signature (`v1,{base64}` format) |
+
+        ### Legacy Headers (Deprecated)
+
+        Still sent on every delivery for backwards compatibility. Existing verification code
+        using these headers continues to work — no changes required.
+
+        | Header | Description |
+        |--------|-------------|
+        | `X-Webhook-Event` | *(deprecated)* Event type (e.g., `message.sent`) |
+        | `X-Webhook-Subscription-ID` | *(deprecated)* Webhook subscription ID |
+        | `X-Webhook-Timestamp` | *(deprecated)* Unix timestamp (seconds) |
+        | `X-Webhook-Signature` | *(deprecated)* HMAC-SHA256 signature (hex-encoded) |
+
+        ## Signing Secrets
+
+        Signing secrets use the Standard Webhooks format: a `whsec_` prefix followed
+        by base64-encoded random bytes (e.g., `whsec_MfKQ9r8GKYqrTwjUPD8ILPZIo2LaLaSw7Jxx2Oll+OE=`).
+
+        Strip the `whsec_` prefix and base64-decode the remainder to get the raw key bytes.
 
         ## Verifying Webhook Signatures
 
-        All webhooks are signed using HMAC-SHA256. You should always verify the signature
-        to ensure the webhook originated from Linq and hasn't been tampered with.
+        Webhooks are signed following the [Standard Webhooks specification](https://github.com/standard-webhooks/standard-webhooks).
+        You can use any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks) to verify
+        signatures, or implement verification manually:
 
-        **Signature Construction:**
-
-        The signature is computed over a concatenation of the timestamp and payload:
-
-        ```
-        {timestamp}.{payload}
-        ```
-
-        Where:
-        - `timestamp` is the value from the `X-Webhook-Timestamp` header
-        - `payload` is the raw JSON request body (exact bytes, not re-serialized)
+        **Signed content:** `{webhook-id}.{webhook-timestamp}.{body}`
 
         **Verification Steps:**
 
-        1. Extract the `X-Webhook-Timestamp` and `X-Webhook-Signature` headers
-        2. Get the raw request body bytes (do not parse and re-serialize)
-        3. Concatenate: `"{timestamp}.{payload}"`
-        4. Compute HMAC-SHA256 using your signing secret as the key
-        5. Hex-encode the result and compare with `X-Webhook-Signature`
-        6. Use constant-time comparison to prevent timing attacks
+        1. Extract the `webhook-id`, `webhook-timestamp`, and `webhook-signature` headers
+        2. Reject if the timestamp is more than 5 minutes old (replay protection)
+        3. Get the raw request body bytes (do not parse and re-serialize)
+        4. Construct signed content: `"{webhook-id}.{webhook-timestamp}.{body}"`
+        5. Strip the `whsec_` prefix from your secret and base64-decode to get key bytes
+        6. Compute HMAC-SHA256 using the key bytes over the signed content
+        7. Base64-encode the result and compare with the value after `v1,` in `webhook-signature`
+        8. Use constant-time comparison to prevent timing attacks
 
         **Example (Python):**
 
         ```python
-        import hmac
-        import hashlib
+        import base64, hmac, hashlib
 
 
-        def verify_webhook(signing_secret, payload, timestamp, signature):
-            message = f"{timestamp}.{payload.decode('utf-8')}"
-            expected = hmac.new(signing_secret.encode("utf-8"), message.encode("utf-8"), hashlib.sha256).hexdigest()
-            return hmac.compare_digest(expected, signature)
+        def verify_webhook(secret, body, headers):
+            msg_id = headers["webhook-id"]
+            timestamp = headers["webhook-timestamp"]
+            signature = headers["webhook-signature"]
+
+            secret_str = secret.removeprefix("whsec_")
+            key = base64.b64decode(secret_str)
+
+            signed_content = f"{msg_id}.{timestamp}.{body}"
+            expected = base64.b64encode(hmac.new(key, signed_content.encode(), hashlib.sha256).digest()).decode()
+
+            for sig in signature.split(" "):
+                if sig.startswith("v1,") and hmac.compare_digest(expected, sig[3:]):
+                    return True
+            return False
         ```
 
         **Example (Node.js):**
@@ -1088,16 +1199,28 @@ class AsyncLinqAPIV3(AsyncAPIClient):
         ```javascript
         const crypto = require('crypto');
 
-        function verifyWebhook(signingSecret, payload, timestamp, signature) {
-          const message = `${timestamp}.${payload}`;
+        function verifyWebhook(secret, rawBody, headers) {
+          const msgId = headers['webhook-id'];
+          const timestamp = headers['webhook-timestamp'];
+          const signature = headers['webhook-signature'];
+
+          const secretStr = secret.startsWith('whsec_') ? secret.slice(6) : secret;
+          const keyBytes = Buffer.from(secretStr, 'base64');
+          const signedContent = `${msgId}.${timestamp}.${rawBody}`;
           const expected = crypto
-            .createHmac('sha256', signingSecret)
-            .update(message)
-            .digest('hex');
-          return crypto.timingSafeEqual(
-            Buffer.from(expected),
-            Buffer.from(signature)
-          );
+            .createHmac('sha256', keyBytes)
+            .update(signedContent)
+            .digest('base64');
+
+          return signature.split(' ').some(sig => {
+            if (!sig.startsWith('v1,')) return false;
+            try {
+              return crypto.timingSafeEqual(
+                Buffer.from(expected, 'base64'),
+                Buffer.from(sig.slice(3), 'base64')
+              );
+            } catch { return false; }
+          });
         }
         ```
 
@@ -1127,52 +1250,81 @@ class AsyncLinqAPIV3(AsyncAPIClient):
 
         ## Webhook Headers
 
-        Each webhook request includes the following headers:
+        All webhook requests include two sets of headers. **If you have an existing integration
+        using the `X-Webhook-*` headers, nothing changes** — those headers are still sent on
+        every delivery and work exactly as before. The new `webhook-*` headers follow the
+        [Standard Webhooks](https://github.com/standard-webhooks/standard-webhooks) specification.
+        You can safely ignore them if your current verification code works and you don't want to use this convention.
+
+        ### Standard Webhooks Headers (Recommended)
+
+        Used by [our SDK](https://github.com/linq-team/linq-node) and any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks).
 
         | Header | Description |
         |--------|-------------|
-        | `X-Webhook-Event` | The event type (e.g., `message.sent`, `message.received`) |
-        | `X-Webhook-Subscription-ID` | Your webhook subscription ID |
-        | `X-Webhook-Timestamp` | Unix timestamp (seconds) when the webhook was sent |
-        | `X-Webhook-Signature` | HMAC-SHA256 signature for verification |
+        | `webhook-id` | Unique event identifier (use as idempotency key) |
+        | `webhook-timestamp` | Unix timestamp (seconds) when the webhook was sent |
+        | `webhook-signature` | Standard Webhooks signature (`v1,{base64}` format) |
+
+        ### Legacy Headers (Deprecated)
+
+        Still sent on every delivery for backwards compatibility. Existing verification code
+        using these headers continues to work — no changes required.
+
+        | Header | Description |
+        |--------|-------------|
+        | `X-Webhook-Event` | *(deprecated)* Event type (e.g., `message.sent`) |
+        | `X-Webhook-Subscription-ID` | *(deprecated)* Webhook subscription ID |
+        | `X-Webhook-Timestamp` | *(deprecated)* Unix timestamp (seconds) |
+        | `X-Webhook-Signature` | *(deprecated)* HMAC-SHA256 signature (hex-encoded) |
+
+        ## Signing Secrets
+
+        Signing secrets use the Standard Webhooks format: a `whsec_` prefix followed
+        by base64-encoded random bytes (e.g., `whsec_MfKQ9r8GKYqrTwjUPD8ILPZIo2LaLaSw7Jxx2Oll+OE=`).
+
+        Strip the `whsec_` prefix and base64-decode the remainder to get the raw key bytes.
 
         ## Verifying Webhook Signatures
 
-        All webhooks are signed using HMAC-SHA256. You should always verify the signature
-        to ensure the webhook originated from Linq and hasn't been tampered with.
+        Webhooks are signed following the [Standard Webhooks specification](https://github.com/standard-webhooks/standard-webhooks).
+        You can use any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks) to verify
+        signatures, or implement verification manually:
 
-        **Signature Construction:**
-
-        The signature is computed over a concatenation of the timestamp and payload:
-
-        ```
-        {timestamp}.{payload}
-        ```
-
-        Where:
-        - `timestamp` is the value from the `X-Webhook-Timestamp` header
-        - `payload` is the raw JSON request body (exact bytes, not re-serialized)
+        **Signed content:** `{webhook-id}.{webhook-timestamp}.{body}`
 
         **Verification Steps:**
 
-        1. Extract the `X-Webhook-Timestamp` and `X-Webhook-Signature` headers
-        2. Get the raw request body bytes (do not parse and re-serialize)
-        3. Concatenate: `"{timestamp}.{payload}"`
-        4. Compute HMAC-SHA256 using your signing secret as the key
-        5. Hex-encode the result and compare with `X-Webhook-Signature`
-        6. Use constant-time comparison to prevent timing attacks
+        1. Extract the `webhook-id`, `webhook-timestamp`, and `webhook-signature` headers
+        2. Reject if the timestamp is more than 5 minutes old (replay protection)
+        3. Get the raw request body bytes (do not parse and re-serialize)
+        4. Construct signed content: `"{webhook-id}.{webhook-timestamp}.{body}"`
+        5. Strip the `whsec_` prefix from your secret and base64-decode to get key bytes
+        6. Compute HMAC-SHA256 using the key bytes over the signed content
+        7. Base64-encode the result and compare with the value after `v1,` in `webhook-signature`
+        8. Use constant-time comparison to prevent timing attacks
 
         **Example (Python):**
 
         ```python
-        import hmac
-        import hashlib
+        import base64, hmac, hashlib
 
 
-        def verify_webhook(signing_secret, payload, timestamp, signature):
-            message = f"{timestamp}.{payload.decode('utf-8')}"
-            expected = hmac.new(signing_secret.encode("utf-8"), message.encode("utf-8"), hashlib.sha256).hexdigest()
-            return hmac.compare_digest(expected, signature)
+        def verify_webhook(secret, body, headers):
+            msg_id = headers["webhook-id"]
+            timestamp = headers["webhook-timestamp"]
+            signature = headers["webhook-signature"]
+
+            secret_str = secret.removeprefix("whsec_")
+            key = base64.b64decode(secret_str)
+
+            signed_content = f"{msg_id}.{timestamp}.{body}"
+            expected = base64.b64encode(hmac.new(key, signed_content.encode(), hashlib.sha256).digest()).decode()
+
+            for sig in signature.split(" "):
+                if sig.startswith("v1,") and hmac.compare_digest(expected, sig[3:]):
+                    return True
+            return False
         ```
 
         **Example (Node.js):**
@@ -1180,16 +1332,28 @@ class AsyncLinqAPIV3(AsyncAPIClient):
         ```javascript
         const crypto = require('crypto');
 
-        function verifyWebhook(signingSecret, payload, timestamp, signature) {
-          const message = `${timestamp}.${payload}`;
+        function verifyWebhook(secret, rawBody, headers) {
+          const msgId = headers['webhook-id'];
+          const timestamp = headers['webhook-timestamp'];
+          const signature = headers['webhook-signature'];
+
+          const secretStr = secret.startsWith('whsec_') ? secret.slice(6) : secret;
+          const keyBytes = Buffer.from(secretStr, 'base64');
+          const signedContent = `${msgId}.${timestamp}.${rawBody}`;
           const expected = crypto
-            .createHmac('sha256', signingSecret)
-            .update(message)
-            .digest('hex');
-          return crypto.timingSafeEqual(
-            Buffer.from(expected),
-            Buffer.from(signature)
-          );
+            .createHmac('sha256', keyBytes)
+            .update(signedContent)
+            .digest('base64');
+
+          return signature.split(' ').some(sig => {
+            if (!sig.startsWith('v1,')) return false;
+            try {
+              return crypto.timingSafeEqual(
+                Buffer.from(expected, 'base64'),
+                Buffer.from(sig.slice(3), 'base64')
+              );
+            } catch { return false; }
+          });
         }
         ```
 
@@ -1618,52 +1782,81 @@ class LinqAPIV3WithRawResponse:
 
         ## Webhook Headers
 
-        Each webhook request includes the following headers:
+        All webhook requests include two sets of headers. **If you have an existing integration
+        using the `X-Webhook-*` headers, nothing changes** — those headers are still sent on
+        every delivery and work exactly as before. The new `webhook-*` headers follow the
+        [Standard Webhooks](https://github.com/standard-webhooks/standard-webhooks) specification.
+        You can safely ignore them if your current verification code works and you don't want to use this convention.
+
+        ### Standard Webhooks Headers (Recommended)
+
+        Used by [our SDK](https://github.com/linq-team/linq-node) and any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks).
 
         | Header | Description |
         |--------|-------------|
-        | `X-Webhook-Event` | The event type (e.g., `message.sent`, `message.received`) |
-        | `X-Webhook-Subscription-ID` | Your webhook subscription ID |
-        | `X-Webhook-Timestamp` | Unix timestamp (seconds) when the webhook was sent |
-        | `X-Webhook-Signature` | HMAC-SHA256 signature for verification |
+        | `webhook-id` | Unique event identifier (use as idempotency key) |
+        | `webhook-timestamp` | Unix timestamp (seconds) when the webhook was sent |
+        | `webhook-signature` | Standard Webhooks signature (`v1,{base64}` format) |
+
+        ### Legacy Headers (Deprecated)
+
+        Still sent on every delivery for backwards compatibility. Existing verification code
+        using these headers continues to work — no changes required.
+
+        | Header | Description |
+        |--------|-------------|
+        | `X-Webhook-Event` | *(deprecated)* Event type (e.g., `message.sent`) |
+        | `X-Webhook-Subscription-ID` | *(deprecated)* Webhook subscription ID |
+        | `X-Webhook-Timestamp` | *(deprecated)* Unix timestamp (seconds) |
+        | `X-Webhook-Signature` | *(deprecated)* HMAC-SHA256 signature (hex-encoded) |
+
+        ## Signing Secrets
+
+        Signing secrets use the Standard Webhooks format: a `whsec_` prefix followed
+        by base64-encoded random bytes (e.g., `whsec_MfKQ9r8GKYqrTwjUPD8ILPZIo2LaLaSw7Jxx2Oll+OE=`).
+
+        Strip the `whsec_` prefix and base64-decode the remainder to get the raw key bytes.
 
         ## Verifying Webhook Signatures
 
-        All webhooks are signed using HMAC-SHA256. You should always verify the signature
-        to ensure the webhook originated from Linq and hasn't been tampered with.
+        Webhooks are signed following the [Standard Webhooks specification](https://github.com/standard-webhooks/standard-webhooks).
+        You can use any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks) to verify
+        signatures, or implement verification manually:
 
-        **Signature Construction:**
-
-        The signature is computed over a concatenation of the timestamp and payload:
-
-        ```
-        {timestamp}.{payload}
-        ```
-
-        Where:
-        - `timestamp` is the value from the `X-Webhook-Timestamp` header
-        - `payload` is the raw JSON request body (exact bytes, not re-serialized)
+        **Signed content:** `{webhook-id}.{webhook-timestamp}.{body}`
 
         **Verification Steps:**
 
-        1. Extract the `X-Webhook-Timestamp` and `X-Webhook-Signature` headers
-        2. Get the raw request body bytes (do not parse and re-serialize)
-        3. Concatenate: `"{timestamp}.{payload}"`
-        4. Compute HMAC-SHA256 using your signing secret as the key
-        5. Hex-encode the result and compare with `X-Webhook-Signature`
-        6. Use constant-time comparison to prevent timing attacks
+        1. Extract the `webhook-id`, `webhook-timestamp`, and `webhook-signature` headers
+        2. Reject if the timestamp is more than 5 minutes old (replay protection)
+        3. Get the raw request body bytes (do not parse and re-serialize)
+        4. Construct signed content: `"{webhook-id}.{webhook-timestamp}.{body}"`
+        5. Strip the `whsec_` prefix from your secret and base64-decode to get key bytes
+        6. Compute HMAC-SHA256 using the key bytes over the signed content
+        7. Base64-encode the result and compare with the value after `v1,` in `webhook-signature`
+        8. Use constant-time comparison to prevent timing attacks
 
         **Example (Python):**
 
         ```python
-        import hmac
-        import hashlib
+        import base64, hmac, hashlib
 
 
-        def verify_webhook(signing_secret, payload, timestamp, signature):
-            message = f"{timestamp}.{payload.decode('utf-8')}"
-            expected = hmac.new(signing_secret.encode("utf-8"), message.encode("utf-8"), hashlib.sha256).hexdigest()
-            return hmac.compare_digest(expected, signature)
+        def verify_webhook(secret, body, headers):
+            msg_id = headers["webhook-id"]
+            timestamp = headers["webhook-timestamp"]
+            signature = headers["webhook-signature"]
+
+            secret_str = secret.removeprefix("whsec_")
+            key = base64.b64decode(secret_str)
+
+            signed_content = f"{msg_id}.{timestamp}.{body}"
+            expected = base64.b64encode(hmac.new(key, signed_content.encode(), hashlib.sha256).digest()).decode()
+
+            for sig in signature.split(" "):
+                if sig.startswith("v1,") and hmac.compare_digest(expected, sig[3:]):
+                    return True
+            return False
         ```
 
         **Example (Node.js):**
@@ -1671,16 +1864,28 @@ class LinqAPIV3WithRawResponse:
         ```javascript
         const crypto = require('crypto');
 
-        function verifyWebhook(signingSecret, payload, timestamp, signature) {
-          const message = `${timestamp}.${payload}`;
+        function verifyWebhook(secret, rawBody, headers) {
+          const msgId = headers['webhook-id'];
+          const timestamp = headers['webhook-timestamp'];
+          const signature = headers['webhook-signature'];
+
+          const secretStr = secret.startsWith('whsec_') ? secret.slice(6) : secret;
+          const keyBytes = Buffer.from(secretStr, 'base64');
+          const signedContent = `${msgId}.${timestamp}.${rawBody}`;
           const expected = crypto
-            .createHmac('sha256', signingSecret)
-            .update(message)
-            .digest('hex');
-          return crypto.timingSafeEqual(
-            Buffer.from(expected),
-            Buffer.from(signature)
-          );
+            .createHmac('sha256', keyBytes)
+            .update(signedContent)
+            .digest('base64');
+
+          return signature.split(' ').some(sig => {
+            if (!sig.startsWith('v1,')) return false;
+            try {
+              return crypto.timingSafeEqual(
+                Buffer.from(expected, 'base64'),
+                Buffer.from(sig.slice(3), 'base64')
+              );
+            } catch { return false; }
+          });
         }
         ```
 
@@ -1710,52 +1915,81 @@ class LinqAPIV3WithRawResponse:
 
         ## Webhook Headers
 
-        Each webhook request includes the following headers:
+        All webhook requests include two sets of headers. **If you have an existing integration
+        using the `X-Webhook-*` headers, nothing changes** — those headers are still sent on
+        every delivery and work exactly as before. The new `webhook-*` headers follow the
+        [Standard Webhooks](https://github.com/standard-webhooks/standard-webhooks) specification.
+        You can safely ignore them if your current verification code works and you don't want to use this convention.
+
+        ### Standard Webhooks Headers (Recommended)
+
+        Used by [our SDK](https://github.com/linq-team/linq-node) and any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks).
 
         | Header | Description |
         |--------|-------------|
-        | `X-Webhook-Event` | The event type (e.g., `message.sent`, `message.received`) |
-        | `X-Webhook-Subscription-ID` | Your webhook subscription ID |
-        | `X-Webhook-Timestamp` | Unix timestamp (seconds) when the webhook was sent |
-        | `X-Webhook-Signature` | HMAC-SHA256 signature for verification |
+        | `webhook-id` | Unique event identifier (use as idempotency key) |
+        | `webhook-timestamp` | Unix timestamp (seconds) when the webhook was sent |
+        | `webhook-signature` | Standard Webhooks signature (`v1,{base64}` format) |
+
+        ### Legacy Headers (Deprecated)
+
+        Still sent on every delivery for backwards compatibility. Existing verification code
+        using these headers continues to work — no changes required.
+
+        | Header | Description |
+        |--------|-------------|
+        | `X-Webhook-Event` | *(deprecated)* Event type (e.g., `message.sent`) |
+        | `X-Webhook-Subscription-ID` | *(deprecated)* Webhook subscription ID |
+        | `X-Webhook-Timestamp` | *(deprecated)* Unix timestamp (seconds) |
+        | `X-Webhook-Signature` | *(deprecated)* HMAC-SHA256 signature (hex-encoded) |
+
+        ## Signing Secrets
+
+        Signing secrets use the Standard Webhooks format: a `whsec_` prefix followed
+        by base64-encoded random bytes (e.g., `whsec_MfKQ9r8GKYqrTwjUPD8ILPZIo2LaLaSw7Jxx2Oll+OE=`).
+
+        Strip the `whsec_` prefix and base64-decode the remainder to get the raw key bytes.
 
         ## Verifying Webhook Signatures
 
-        All webhooks are signed using HMAC-SHA256. You should always verify the signature
-        to ensure the webhook originated from Linq and hasn't been tampered with.
+        Webhooks are signed following the [Standard Webhooks specification](https://github.com/standard-webhooks/standard-webhooks).
+        You can use any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks) to verify
+        signatures, or implement verification manually:
 
-        **Signature Construction:**
-
-        The signature is computed over a concatenation of the timestamp and payload:
-
-        ```
-        {timestamp}.{payload}
-        ```
-
-        Where:
-        - `timestamp` is the value from the `X-Webhook-Timestamp` header
-        - `payload` is the raw JSON request body (exact bytes, not re-serialized)
+        **Signed content:** `{webhook-id}.{webhook-timestamp}.{body}`
 
         **Verification Steps:**
 
-        1. Extract the `X-Webhook-Timestamp` and `X-Webhook-Signature` headers
-        2. Get the raw request body bytes (do not parse and re-serialize)
-        3. Concatenate: `"{timestamp}.{payload}"`
-        4. Compute HMAC-SHA256 using your signing secret as the key
-        5. Hex-encode the result and compare with `X-Webhook-Signature`
-        6. Use constant-time comparison to prevent timing attacks
+        1. Extract the `webhook-id`, `webhook-timestamp`, and `webhook-signature` headers
+        2. Reject if the timestamp is more than 5 minutes old (replay protection)
+        3. Get the raw request body bytes (do not parse and re-serialize)
+        4. Construct signed content: `"{webhook-id}.{webhook-timestamp}.{body}"`
+        5. Strip the `whsec_` prefix from your secret and base64-decode to get key bytes
+        6. Compute HMAC-SHA256 using the key bytes over the signed content
+        7. Base64-encode the result and compare with the value after `v1,` in `webhook-signature`
+        8. Use constant-time comparison to prevent timing attacks
 
         **Example (Python):**
 
         ```python
-        import hmac
-        import hashlib
+        import base64, hmac, hashlib
 
 
-        def verify_webhook(signing_secret, payload, timestamp, signature):
-            message = f"{timestamp}.{payload.decode('utf-8')}"
-            expected = hmac.new(signing_secret.encode("utf-8"), message.encode("utf-8"), hashlib.sha256).hexdigest()
-            return hmac.compare_digest(expected, signature)
+        def verify_webhook(secret, body, headers):
+            msg_id = headers["webhook-id"]
+            timestamp = headers["webhook-timestamp"]
+            signature = headers["webhook-signature"]
+
+            secret_str = secret.removeprefix("whsec_")
+            key = base64.b64decode(secret_str)
+
+            signed_content = f"{msg_id}.{timestamp}.{body}"
+            expected = base64.b64encode(hmac.new(key, signed_content.encode(), hashlib.sha256).digest()).decode()
+
+            for sig in signature.split(" "):
+                if sig.startswith("v1,") and hmac.compare_digest(expected, sig[3:]):
+                    return True
+            return False
         ```
 
         **Example (Node.js):**
@@ -1763,16 +1997,28 @@ class LinqAPIV3WithRawResponse:
         ```javascript
         const crypto = require('crypto');
 
-        function verifyWebhook(signingSecret, payload, timestamp, signature) {
-          const message = `${timestamp}.${payload}`;
+        function verifyWebhook(secret, rawBody, headers) {
+          const msgId = headers['webhook-id'];
+          const timestamp = headers['webhook-timestamp'];
+          const signature = headers['webhook-signature'];
+
+          const secretStr = secret.startsWith('whsec_') ? secret.slice(6) : secret;
+          const keyBytes = Buffer.from(secretStr, 'base64');
+          const signedContent = `${msgId}.${timestamp}.${rawBody}`;
           const expected = crypto
-            .createHmac('sha256', signingSecret)
-            .update(message)
-            .digest('hex');
-          return crypto.timingSafeEqual(
-            Buffer.from(expected),
-            Buffer.from(signature)
-          );
+            .createHmac('sha256', keyBytes)
+            .update(signedContent)
+            .digest('base64');
+
+          return signature.split(' ').some(sig => {
+            if (!sig.startsWith('v1,')) return false;
+            try {
+              return crypto.timingSafeEqual(
+                Buffer.from(expected, 'base64'),
+                Buffer.from(sig.slice(3), 'base64')
+              );
+            } catch { return false; }
+          });
         }
         ```
 
@@ -2078,52 +2324,81 @@ class AsyncLinqAPIV3WithRawResponse:
 
         ## Webhook Headers
 
-        Each webhook request includes the following headers:
+        All webhook requests include two sets of headers. **If you have an existing integration
+        using the `X-Webhook-*` headers, nothing changes** — those headers are still sent on
+        every delivery and work exactly as before. The new `webhook-*` headers follow the
+        [Standard Webhooks](https://github.com/standard-webhooks/standard-webhooks) specification.
+        You can safely ignore them if your current verification code works and you don't want to use this convention.
+
+        ### Standard Webhooks Headers (Recommended)
+
+        Used by [our SDK](https://github.com/linq-team/linq-node) and any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks).
 
         | Header | Description |
         |--------|-------------|
-        | `X-Webhook-Event` | The event type (e.g., `message.sent`, `message.received`) |
-        | `X-Webhook-Subscription-ID` | Your webhook subscription ID |
-        | `X-Webhook-Timestamp` | Unix timestamp (seconds) when the webhook was sent |
-        | `X-Webhook-Signature` | HMAC-SHA256 signature for verification |
+        | `webhook-id` | Unique event identifier (use as idempotency key) |
+        | `webhook-timestamp` | Unix timestamp (seconds) when the webhook was sent |
+        | `webhook-signature` | Standard Webhooks signature (`v1,{base64}` format) |
+
+        ### Legacy Headers (Deprecated)
+
+        Still sent on every delivery for backwards compatibility. Existing verification code
+        using these headers continues to work — no changes required.
+
+        | Header | Description |
+        |--------|-------------|
+        | `X-Webhook-Event` | *(deprecated)* Event type (e.g., `message.sent`) |
+        | `X-Webhook-Subscription-ID` | *(deprecated)* Webhook subscription ID |
+        | `X-Webhook-Timestamp` | *(deprecated)* Unix timestamp (seconds) |
+        | `X-Webhook-Signature` | *(deprecated)* HMAC-SHA256 signature (hex-encoded) |
+
+        ## Signing Secrets
+
+        Signing secrets use the Standard Webhooks format: a `whsec_` prefix followed
+        by base64-encoded random bytes (e.g., `whsec_MfKQ9r8GKYqrTwjUPD8ILPZIo2LaLaSw7Jxx2Oll+OE=`).
+
+        Strip the `whsec_` prefix and base64-decode the remainder to get the raw key bytes.
 
         ## Verifying Webhook Signatures
 
-        All webhooks are signed using HMAC-SHA256. You should always verify the signature
-        to ensure the webhook originated from Linq and hasn't been tampered with.
+        Webhooks are signed following the [Standard Webhooks specification](https://github.com/standard-webhooks/standard-webhooks).
+        You can use any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks) to verify
+        signatures, or implement verification manually:
 
-        **Signature Construction:**
-
-        The signature is computed over a concatenation of the timestamp and payload:
-
-        ```
-        {timestamp}.{payload}
-        ```
-
-        Where:
-        - `timestamp` is the value from the `X-Webhook-Timestamp` header
-        - `payload` is the raw JSON request body (exact bytes, not re-serialized)
+        **Signed content:** `{webhook-id}.{webhook-timestamp}.{body}`
 
         **Verification Steps:**
 
-        1. Extract the `X-Webhook-Timestamp` and `X-Webhook-Signature` headers
-        2. Get the raw request body bytes (do not parse and re-serialize)
-        3. Concatenate: `"{timestamp}.{payload}"`
-        4. Compute HMAC-SHA256 using your signing secret as the key
-        5. Hex-encode the result and compare with `X-Webhook-Signature`
-        6. Use constant-time comparison to prevent timing attacks
+        1. Extract the `webhook-id`, `webhook-timestamp`, and `webhook-signature` headers
+        2. Reject if the timestamp is more than 5 minutes old (replay protection)
+        3. Get the raw request body bytes (do not parse and re-serialize)
+        4. Construct signed content: `"{webhook-id}.{webhook-timestamp}.{body}"`
+        5. Strip the `whsec_` prefix from your secret and base64-decode to get key bytes
+        6. Compute HMAC-SHA256 using the key bytes over the signed content
+        7. Base64-encode the result and compare with the value after `v1,` in `webhook-signature`
+        8. Use constant-time comparison to prevent timing attacks
 
         **Example (Python):**
 
         ```python
-        import hmac
-        import hashlib
+        import base64, hmac, hashlib
 
 
-        def verify_webhook(signing_secret, payload, timestamp, signature):
-            message = f"{timestamp}.{payload.decode('utf-8')}"
-            expected = hmac.new(signing_secret.encode("utf-8"), message.encode("utf-8"), hashlib.sha256).hexdigest()
-            return hmac.compare_digest(expected, signature)
+        def verify_webhook(secret, body, headers):
+            msg_id = headers["webhook-id"]
+            timestamp = headers["webhook-timestamp"]
+            signature = headers["webhook-signature"]
+
+            secret_str = secret.removeprefix("whsec_")
+            key = base64.b64decode(secret_str)
+
+            signed_content = f"{msg_id}.{timestamp}.{body}"
+            expected = base64.b64encode(hmac.new(key, signed_content.encode(), hashlib.sha256).digest()).decode()
+
+            for sig in signature.split(" "):
+                if sig.startswith("v1,") and hmac.compare_digest(expected, sig[3:]):
+                    return True
+            return False
         ```
 
         **Example (Node.js):**
@@ -2131,16 +2406,28 @@ class AsyncLinqAPIV3WithRawResponse:
         ```javascript
         const crypto = require('crypto');
 
-        function verifyWebhook(signingSecret, payload, timestamp, signature) {
-          const message = `${timestamp}.${payload}`;
+        function verifyWebhook(secret, rawBody, headers) {
+          const msgId = headers['webhook-id'];
+          const timestamp = headers['webhook-timestamp'];
+          const signature = headers['webhook-signature'];
+
+          const secretStr = secret.startsWith('whsec_') ? secret.slice(6) : secret;
+          const keyBytes = Buffer.from(secretStr, 'base64');
+          const signedContent = `${msgId}.${timestamp}.${rawBody}`;
           const expected = crypto
-            .createHmac('sha256', signingSecret)
-            .update(message)
-            .digest('hex');
-          return crypto.timingSafeEqual(
-            Buffer.from(expected),
-            Buffer.from(signature)
-          );
+            .createHmac('sha256', keyBytes)
+            .update(signedContent)
+            .digest('base64');
+
+          return signature.split(' ').some(sig => {
+            if (!sig.startsWith('v1,')) return false;
+            try {
+              return crypto.timingSafeEqual(
+                Buffer.from(expected, 'base64'),
+                Buffer.from(sig.slice(3), 'base64')
+              );
+            } catch { return false; }
+          });
         }
         ```
 
@@ -2170,52 +2457,81 @@ class AsyncLinqAPIV3WithRawResponse:
 
         ## Webhook Headers
 
-        Each webhook request includes the following headers:
+        All webhook requests include two sets of headers. **If you have an existing integration
+        using the `X-Webhook-*` headers, nothing changes** — those headers are still sent on
+        every delivery and work exactly as before. The new `webhook-*` headers follow the
+        [Standard Webhooks](https://github.com/standard-webhooks/standard-webhooks) specification.
+        You can safely ignore them if your current verification code works and you don't want to use this convention.
+
+        ### Standard Webhooks Headers (Recommended)
+
+        Used by [our SDK](https://github.com/linq-team/linq-node) and any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks).
 
         | Header | Description |
         |--------|-------------|
-        | `X-Webhook-Event` | The event type (e.g., `message.sent`, `message.received`) |
-        | `X-Webhook-Subscription-ID` | Your webhook subscription ID |
-        | `X-Webhook-Timestamp` | Unix timestamp (seconds) when the webhook was sent |
-        | `X-Webhook-Signature` | HMAC-SHA256 signature for verification |
+        | `webhook-id` | Unique event identifier (use as idempotency key) |
+        | `webhook-timestamp` | Unix timestamp (seconds) when the webhook was sent |
+        | `webhook-signature` | Standard Webhooks signature (`v1,{base64}` format) |
+
+        ### Legacy Headers (Deprecated)
+
+        Still sent on every delivery for backwards compatibility. Existing verification code
+        using these headers continues to work — no changes required.
+
+        | Header | Description |
+        |--------|-------------|
+        | `X-Webhook-Event` | *(deprecated)* Event type (e.g., `message.sent`) |
+        | `X-Webhook-Subscription-ID` | *(deprecated)* Webhook subscription ID |
+        | `X-Webhook-Timestamp` | *(deprecated)* Unix timestamp (seconds) |
+        | `X-Webhook-Signature` | *(deprecated)* HMAC-SHA256 signature (hex-encoded) |
+
+        ## Signing Secrets
+
+        Signing secrets use the Standard Webhooks format: a `whsec_` prefix followed
+        by base64-encoded random bytes (e.g., `whsec_MfKQ9r8GKYqrTwjUPD8ILPZIo2LaLaSw7Jxx2Oll+OE=`).
+
+        Strip the `whsec_` prefix and base64-decode the remainder to get the raw key bytes.
 
         ## Verifying Webhook Signatures
 
-        All webhooks are signed using HMAC-SHA256. You should always verify the signature
-        to ensure the webhook originated from Linq and hasn't been tampered with.
+        Webhooks are signed following the [Standard Webhooks specification](https://github.com/standard-webhooks/standard-webhooks).
+        You can use any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks) to verify
+        signatures, or implement verification manually:
 
-        **Signature Construction:**
-
-        The signature is computed over a concatenation of the timestamp and payload:
-
-        ```
-        {timestamp}.{payload}
-        ```
-
-        Where:
-        - `timestamp` is the value from the `X-Webhook-Timestamp` header
-        - `payload` is the raw JSON request body (exact bytes, not re-serialized)
+        **Signed content:** `{webhook-id}.{webhook-timestamp}.{body}`
 
         **Verification Steps:**
 
-        1. Extract the `X-Webhook-Timestamp` and `X-Webhook-Signature` headers
-        2. Get the raw request body bytes (do not parse and re-serialize)
-        3. Concatenate: `"{timestamp}.{payload}"`
-        4. Compute HMAC-SHA256 using your signing secret as the key
-        5. Hex-encode the result and compare with `X-Webhook-Signature`
-        6. Use constant-time comparison to prevent timing attacks
+        1. Extract the `webhook-id`, `webhook-timestamp`, and `webhook-signature` headers
+        2. Reject if the timestamp is more than 5 minutes old (replay protection)
+        3. Get the raw request body bytes (do not parse and re-serialize)
+        4. Construct signed content: `"{webhook-id}.{webhook-timestamp}.{body}"`
+        5. Strip the `whsec_` prefix from your secret and base64-decode to get key bytes
+        6. Compute HMAC-SHA256 using the key bytes over the signed content
+        7. Base64-encode the result and compare with the value after `v1,` in `webhook-signature`
+        8. Use constant-time comparison to prevent timing attacks
 
         **Example (Python):**
 
         ```python
-        import hmac
-        import hashlib
+        import base64, hmac, hashlib
 
 
-        def verify_webhook(signing_secret, payload, timestamp, signature):
-            message = f"{timestamp}.{payload.decode('utf-8')}"
-            expected = hmac.new(signing_secret.encode("utf-8"), message.encode("utf-8"), hashlib.sha256).hexdigest()
-            return hmac.compare_digest(expected, signature)
+        def verify_webhook(secret, body, headers):
+            msg_id = headers["webhook-id"]
+            timestamp = headers["webhook-timestamp"]
+            signature = headers["webhook-signature"]
+
+            secret_str = secret.removeprefix("whsec_")
+            key = base64.b64decode(secret_str)
+
+            signed_content = f"{msg_id}.{timestamp}.{body}"
+            expected = base64.b64encode(hmac.new(key, signed_content.encode(), hashlib.sha256).digest()).decode()
+
+            for sig in signature.split(" "):
+                if sig.startswith("v1,") and hmac.compare_digest(expected, sig[3:]):
+                    return True
+            return False
         ```
 
         **Example (Node.js):**
@@ -2223,16 +2539,28 @@ class AsyncLinqAPIV3WithRawResponse:
         ```javascript
         const crypto = require('crypto');
 
-        function verifyWebhook(signingSecret, payload, timestamp, signature) {
-          const message = `${timestamp}.${payload}`;
+        function verifyWebhook(secret, rawBody, headers) {
+          const msgId = headers['webhook-id'];
+          const timestamp = headers['webhook-timestamp'];
+          const signature = headers['webhook-signature'];
+
+          const secretStr = secret.startsWith('whsec_') ? secret.slice(6) : secret;
+          const keyBytes = Buffer.from(secretStr, 'base64');
+          const signedContent = `${msgId}.${timestamp}.${rawBody}`;
           const expected = crypto
-            .createHmac('sha256', signingSecret)
-            .update(message)
-            .digest('hex');
-          return crypto.timingSafeEqual(
-            Buffer.from(expected),
-            Buffer.from(signature)
-          );
+            .createHmac('sha256', keyBytes)
+            .update(signedContent)
+            .digest('base64');
+
+          return signature.split(' ').some(sig => {
+            if (!sig.startsWith('v1,')) return false;
+            try {
+              return crypto.timingSafeEqual(
+                Buffer.from(expected, 'base64'),
+                Buffer.from(sig.slice(3), 'base64')
+              );
+            } catch { return false; }
+          });
         }
         ```
 
@@ -2538,52 +2866,81 @@ class LinqAPIV3WithStreamedResponse:
 
         ## Webhook Headers
 
-        Each webhook request includes the following headers:
+        All webhook requests include two sets of headers. **If you have an existing integration
+        using the `X-Webhook-*` headers, nothing changes** — those headers are still sent on
+        every delivery and work exactly as before. The new `webhook-*` headers follow the
+        [Standard Webhooks](https://github.com/standard-webhooks/standard-webhooks) specification.
+        You can safely ignore them if your current verification code works and you don't want to use this convention.
+
+        ### Standard Webhooks Headers (Recommended)
+
+        Used by [our SDK](https://github.com/linq-team/linq-node) and any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks).
 
         | Header | Description |
         |--------|-------------|
-        | `X-Webhook-Event` | The event type (e.g., `message.sent`, `message.received`) |
-        | `X-Webhook-Subscription-ID` | Your webhook subscription ID |
-        | `X-Webhook-Timestamp` | Unix timestamp (seconds) when the webhook was sent |
-        | `X-Webhook-Signature` | HMAC-SHA256 signature for verification |
+        | `webhook-id` | Unique event identifier (use as idempotency key) |
+        | `webhook-timestamp` | Unix timestamp (seconds) when the webhook was sent |
+        | `webhook-signature` | Standard Webhooks signature (`v1,{base64}` format) |
+
+        ### Legacy Headers (Deprecated)
+
+        Still sent on every delivery for backwards compatibility. Existing verification code
+        using these headers continues to work — no changes required.
+
+        | Header | Description |
+        |--------|-------------|
+        | `X-Webhook-Event` | *(deprecated)* Event type (e.g., `message.sent`) |
+        | `X-Webhook-Subscription-ID` | *(deprecated)* Webhook subscription ID |
+        | `X-Webhook-Timestamp` | *(deprecated)* Unix timestamp (seconds) |
+        | `X-Webhook-Signature` | *(deprecated)* HMAC-SHA256 signature (hex-encoded) |
+
+        ## Signing Secrets
+
+        Signing secrets use the Standard Webhooks format: a `whsec_` prefix followed
+        by base64-encoded random bytes (e.g., `whsec_MfKQ9r8GKYqrTwjUPD8ILPZIo2LaLaSw7Jxx2Oll+OE=`).
+
+        Strip the `whsec_` prefix and base64-decode the remainder to get the raw key bytes.
 
         ## Verifying Webhook Signatures
 
-        All webhooks are signed using HMAC-SHA256. You should always verify the signature
-        to ensure the webhook originated from Linq and hasn't been tampered with.
+        Webhooks are signed following the [Standard Webhooks specification](https://github.com/standard-webhooks/standard-webhooks).
+        You can use any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks) to verify
+        signatures, or implement verification manually:
 
-        **Signature Construction:**
-
-        The signature is computed over a concatenation of the timestamp and payload:
-
-        ```
-        {timestamp}.{payload}
-        ```
-
-        Where:
-        - `timestamp` is the value from the `X-Webhook-Timestamp` header
-        - `payload` is the raw JSON request body (exact bytes, not re-serialized)
+        **Signed content:** `{webhook-id}.{webhook-timestamp}.{body}`
 
         **Verification Steps:**
 
-        1. Extract the `X-Webhook-Timestamp` and `X-Webhook-Signature` headers
-        2. Get the raw request body bytes (do not parse and re-serialize)
-        3. Concatenate: `"{timestamp}.{payload}"`
-        4. Compute HMAC-SHA256 using your signing secret as the key
-        5. Hex-encode the result and compare with `X-Webhook-Signature`
-        6. Use constant-time comparison to prevent timing attacks
+        1. Extract the `webhook-id`, `webhook-timestamp`, and `webhook-signature` headers
+        2. Reject if the timestamp is more than 5 minutes old (replay protection)
+        3. Get the raw request body bytes (do not parse and re-serialize)
+        4. Construct signed content: `"{webhook-id}.{webhook-timestamp}.{body}"`
+        5. Strip the `whsec_` prefix from your secret and base64-decode to get key bytes
+        6. Compute HMAC-SHA256 using the key bytes over the signed content
+        7. Base64-encode the result and compare with the value after `v1,` in `webhook-signature`
+        8. Use constant-time comparison to prevent timing attacks
 
         **Example (Python):**
 
         ```python
-        import hmac
-        import hashlib
+        import base64, hmac, hashlib
 
 
-        def verify_webhook(signing_secret, payload, timestamp, signature):
-            message = f"{timestamp}.{payload.decode('utf-8')}"
-            expected = hmac.new(signing_secret.encode("utf-8"), message.encode("utf-8"), hashlib.sha256).hexdigest()
-            return hmac.compare_digest(expected, signature)
+        def verify_webhook(secret, body, headers):
+            msg_id = headers["webhook-id"]
+            timestamp = headers["webhook-timestamp"]
+            signature = headers["webhook-signature"]
+
+            secret_str = secret.removeprefix("whsec_")
+            key = base64.b64decode(secret_str)
+
+            signed_content = f"{msg_id}.{timestamp}.{body}"
+            expected = base64.b64encode(hmac.new(key, signed_content.encode(), hashlib.sha256).digest()).decode()
+
+            for sig in signature.split(" "):
+                if sig.startswith("v1,") and hmac.compare_digest(expected, sig[3:]):
+                    return True
+            return False
         ```
 
         **Example (Node.js):**
@@ -2591,16 +2948,28 @@ class LinqAPIV3WithStreamedResponse:
         ```javascript
         const crypto = require('crypto');
 
-        function verifyWebhook(signingSecret, payload, timestamp, signature) {
-          const message = `${timestamp}.${payload}`;
+        function verifyWebhook(secret, rawBody, headers) {
+          const msgId = headers['webhook-id'];
+          const timestamp = headers['webhook-timestamp'];
+          const signature = headers['webhook-signature'];
+
+          const secretStr = secret.startsWith('whsec_') ? secret.slice(6) : secret;
+          const keyBytes = Buffer.from(secretStr, 'base64');
+          const signedContent = `${msgId}.${timestamp}.${rawBody}`;
           const expected = crypto
-            .createHmac('sha256', signingSecret)
-            .update(message)
-            .digest('hex');
-          return crypto.timingSafeEqual(
-            Buffer.from(expected),
-            Buffer.from(signature)
-          );
+            .createHmac('sha256', keyBytes)
+            .update(signedContent)
+            .digest('base64');
+
+          return signature.split(' ').some(sig => {
+            if (!sig.startsWith('v1,')) return false;
+            try {
+              return crypto.timingSafeEqual(
+                Buffer.from(expected, 'base64'),
+                Buffer.from(sig.slice(3), 'base64')
+              );
+            } catch { return false; }
+          });
         }
         ```
 
@@ -2630,52 +2999,81 @@ class LinqAPIV3WithStreamedResponse:
 
         ## Webhook Headers
 
-        Each webhook request includes the following headers:
+        All webhook requests include two sets of headers. **If you have an existing integration
+        using the `X-Webhook-*` headers, nothing changes** — those headers are still sent on
+        every delivery and work exactly as before. The new `webhook-*` headers follow the
+        [Standard Webhooks](https://github.com/standard-webhooks/standard-webhooks) specification.
+        You can safely ignore them if your current verification code works and you don't want to use this convention.
+
+        ### Standard Webhooks Headers (Recommended)
+
+        Used by [our SDK](https://github.com/linq-team/linq-node) and any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks).
 
         | Header | Description |
         |--------|-------------|
-        | `X-Webhook-Event` | The event type (e.g., `message.sent`, `message.received`) |
-        | `X-Webhook-Subscription-ID` | Your webhook subscription ID |
-        | `X-Webhook-Timestamp` | Unix timestamp (seconds) when the webhook was sent |
-        | `X-Webhook-Signature` | HMAC-SHA256 signature for verification |
+        | `webhook-id` | Unique event identifier (use as idempotency key) |
+        | `webhook-timestamp` | Unix timestamp (seconds) when the webhook was sent |
+        | `webhook-signature` | Standard Webhooks signature (`v1,{base64}` format) |
+
+        ### Legacy Headers (Deprecated)
+
+        Still sent on every delivery for backwards compatibility. Existing verification code
+        using these headers continues to work — no changes required.
+
+        | Header | Description |
+        |--------|-------------|
+        | `X-Webhook-Event` | *(deprecated)* Event type (e.g., `message.sent`) |
+        | `X-Webhook-Subscription-ID` | *(deprecated)* Webhook subscription ID |
+        | `X-Webhook-Timestamp` | *(deprecated)* Unix timestamp (seconds) |
+        | `X-Webhook-Signature` | *(deprecated)* HMAC-SHA256 signature (hex-encoded) |
+
+        ## Signing Secrets
+
+        Signing secrets use the Standard Webhooks format: a `whsec_` prefix followed
+        by base64-encoded random bytes (e.g., `whsec_MfKQ9r8GKYqrTwjUPD8ILPZIo2LaLaSw7Jxx2Oll+OE=`).
+
+        Strip the `whsec_` prefix and base64-decode the remainder to get the raw key bytes.
 
         ## Verifying Webhook Signatures
 
-        All webhooks are signed using HMAC-SHA256. You should always verify the signature
-        to ensure the webhook originated from Linq and hasn't been tampered with.
+        Webhooks are signed following the [Standard Webhooks specification](https://github.com/standard-webhooks/standard-webhooks).
+        You can use any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks) to verify
+        signatures, or implement verification manually:
 
-        **Signature Construction:**
-
-        The signature is computed over a concatenation of the timestamp and payload:
-
-        ```
-        {timestamp}.{payload}
-        ```
-
-        Where:
-        - `timestamp` is the value from the `X-Webhook-Timestamp` header
-        - `payload` is the raw JSON request body (exact bytes, not re-serialized)
+        **Signed content:** `{webhook-id}.{webhook-timestamp}.{body}`
 
         **Verification Steps:**
 
-        1. Extract the `X-Webhook-Timestamp` and `X-Webhook-Signature` headers
-        2. Get the raw request body bytes (do not parse and re-serialize)
-        3. Concatenate: `"{timestamp}.{payload}"`
-        4. Compute HMAC-SHA256 using your signing secret as the key
-        5. Hex-encode the result and compare with `X-Webhook-Signature`
-        6. Use constant-time comparison to prevent timing attacks
+        1. Extract the `webhook-id`, `webhook-timestamp`, and `webhook-signature` headers
+        2. Reject if the timestamp is more than 5 minutes old (replay protection)
+        3. Get the raw request body bytes (do not parse and re-serialize)
+        4. Construct signed content: `"{webhook-id}.{webhook-timestamp}.{body}"`
+        5. Strip the `whsec_` prefix from your secret and base64-decode to get key bytes
+        6. Compute HMAC-SHA256 using the key bytes over the signed content
+        7. Base64-encode the result and compare with the value after `v1,` in `webhook-signature`
+        8. Use constant-time comparison to prevent timing attacks
 
         **Example (Python):**
 
         ```python
-        import hmac
-        import hashlib
+        import base64, hmac, hashlib
 
 
-        def verify_webhook(signing_secret, payload, timestamp, signature):
-            message = f"{timestamp}.{payload.decode('utf-8')}"
-            expected = hmac.new(signing_secret.encode("utf-8"), message.encode("utf-8"), hashlib.sha256).hexdigest()
-            return hmac.compare_digest(expected, signature)
+        def verify_webhook(secret, body, headers):
+            msg_id = headers["webhook-id"]
+            timestamp = headers["webhook-timestamp"]
+            signature = headers["webhook-signature"]
+
+            secret_str = secret.removeprefix("whsec_")
+            key = base64.b64decode(secret_str)
+
+            signed_content = f"{msg_id}.{timestamp}.{body}"
+            expected = base64.b64encode(hmac.new(key, signed_content.encode(), hashlib.sha256).digest()).decode()
+
+            for sig in signature.split(" "):
+                if sig.startswith("v1,") and hmac.compare_digest(expected, sig[3:]):
+                    return True
+            return False
         ```
 
         **Example (Node.js):**
@@ -2683,16 +3081,28 @@ class LinqAPIV3WithStreamedResponse:
         ```javascript
         const crypto = require('crypto');
 
-        function verifyWebhook(signingSecret, payload, timestamp, signature) {
-          const message = `${timestamp}.${payload}`;
+        function verifyWebhook(secret, rawBody, headers) {
+          const msgId = headers['webhook-id'];
+          const timestamp = headers['webhook-timestamp'];
+          const signature = headers['webhook-signature'];
+
+          const secretStr = secret.startsWith('whsec_') ? secret.slice(6) : secret;
+          const keyBytes = Buffer.from(secretStr, 'base64');
+          const signedContent = `${msgId}.${timestamp}.${rawBody}`;
           const expected = crypto
-            .createHmac('sha256', signingSecret)
-            .update(message)
-            .digest('hex');
-          return crypto.timingSafeEqual(
-            Buffer.from(expected),
-            Buffer.from(signature)
-          );
+            .createHmac('sha256', keyBytes)
+            .update(signedContent)
+            .digest('base64');
+
+          return signature.split(' ').some(sig => {
+            if (!sig.startsWith('v1,')) return false;
+            try {
+              return crypto.timingSafeEqual(
+                Buffer.from(expected, 'base64'),
+                Buffer.from(sig.slice(3), 'base64')
+              );
+            } catch { return false; }
+          });
         }
         ```
 
@@ -2998,52 +3408,81 @@ class AsyncLinqAPIV3WithStreamedResponse:
 
         ## Webhook Headers
 
-        Each webhook request includes the following headers:
+        All webhook requests include two sets of headers. **If you have an existing integration
+        using the `X-Webhook-*` headers, nothing changes** — those headers are still sent on
+        every delivery and work exactly as before. The new `webhook-*` headers follow the
+        [Standard Webhooks](https://github.com/standard-webhooks/standard-webhooks) specification.
+        You can safely ignore them if your current verification code works and you don't want to use this convention.
+
+        ### Standard Webhooks Headers (Recommended)
+
+        Used by [our SDK](https://github.com/linq-team/linq-node) and any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks).
 
         | Header | Description |
         |--------|-------------|
-        | `X-Webhook-Event` | The event type (e.g., `message.sent`, `message.received`) |
-        | `X-Webhook-Subscription-ID` | Your webhook subscription ID |
-        | `X-Webhook-Timestamp` | Unix timestamp (seconds) when the webhook was sent |
-        | `X-Webhook-Signature` | HMAC-SHA256 signature for verification |
+        | `webhook-id` | Unique event identifier (use as idempotency key) |
+        | `webhook-timestamp` | Unix timestamp (seconds) when the webhook was sent |
+        | `webhook-signature` | Standard Webhooks signature (`v1,{base64}` format) |
+
+        ### Legacy Headers (Deprecated)
+
+        Still sent on every delivery for backwards compatibility. Existing verification code
+        using these headers continues to work — no changes required.
+
+        | Header | Description |
+        |--------|-------------|
+        | `X-Webhook-Event` | *(deprecated)* Event type (e.g., `message.sent`) |
+        | `X-Webhook-Subscription-ID` | *(deprecated)* Webhook subscription ID |
+        | `X-Webhook-Timestamp` | *(deprecated)* Unix timestamp (seconds) |
+        | `X-Webhook-Signature` | *(deprecated)* HMAC-SHA256 signature (hex-encoded) |
+
+        ## Signing Secrets
+
+        Signing secrets use the Standard Webhooks format: a `whsec_` prefix followed
+        by base64-encoded random bytes (e.g., `whsec_MfKQ9r8GKYqrTwjUPD8ILPZIo2LaLaSw7Jxx2Oll+OE=`).
+
+        Strip the `whsec_` prefix and base64-decode the remainder to get the raw key bytes.
 
         ## Verifying Webhook Signatures
 
-        All webhooks are signed using HMAC-SHA256. You should always verify the signature
-        to ensure the webhook originated from Linq and hasn't been tampered with.
+        Webhooks are signed following the [Standard Webhooks specification](https://github.com/standard-webhooks/standard-webhooks).
+        You can use any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks) to verify
+        signatures, or implement verification manually:
 
-        **Signature Construction:**
-
-        The signature is computed over a concatenation of the timestamp and payload:
-
-        ```
-        {timestamp}.{payload}
-        ```
-
-        Where:
-        - `timestamp` is the value from the `X-Webhook-Timestamp` header
-        - `payload` is the raw JSON request body (exact bytes, not re-serialized)
+        **Signed content:** `{webhook-id}.{webhook-timestamp}.{body}`
 
         **Verification Steps:**
 
-        1. Extract the `X-Webhook-Timestamp` and `X-Webhook-Signature` headers
-        2. Get the raw request body bytes (do not parse and re-serialize)
-        3. Concatenate: `"{timestamp}.{payload}"`
-        4. Compute HMAC-SHA256 using your signing secret as the key
-        5. Hex-encode the result and compare with `X-Webhook-Signature`
-        6. Use constant-time comparison to prevent timing attacks
+        1. Extract the `webhook-id`, `webhook-timestamp`, and `webhook-signature` headers
+        2. Reject if the timestamp is more than 5 minutes old (replay protection)
+        3. Get the raw request body bytes (do not parse and re-serialize)
+        4. Construct signed content: `"{webhook-id}.{webhook-timestamp}.{body}"`
+        5. Strip the `whsec_` prefix from your secret and base64-decode to get key bytes
+        6. Compute HMAC-SHA256 using the key bytes over the signed content
+        7. Base64-encode the result and compare with the value after `v1,` in `webhook-signature`
+        8. Use constant-time comparison to prevent timing attacks
 
         **Example (Python):**
 
         ```python
-        import hmac
-        import hashlib
+        import base64, hmac, hashlib
 
 
-        def verify_webhook(signing_secret, payload, timestamp, signature):
-            message = f"{timestamp}.{payload.decode('utf-8')}"
-            expected = hmac.new(signing_secret.encode("utf-8"), message.encode("utf-8"), hashlib.sha256).hexdigest()
-            return hmac.compare_digest(expected, signature)
+        def verify_webhook(secret, body, headers):
+            msg_id = headers["webhook-id"]
+            timestamp = headers["webhook-timestamp"]
+            signature = headers["webhook-signature"]
+
+            secret_str = secret.removeprefix("whsec_")
+            key = base64.b64decode(secret_str)
+
+            signed_content = f"{msg_id}.{timestamp}.{body}"
+            expected = base64.b64encode(hmac.new(key, signed_content.encode(), hashlib.sha256).digest()).decode()
+
+            for sig in signature.split(" "):
+                if sig.startswith("v1,") and hmac.compare_digest(expected, sig[3:]):
+                    return True
+            return False
         ```
 
         **Example (Node.js):**
@@ -3051,16 +3490,28 @@ class AsyncLinqAPIV3WithStreamedResponse:
         ```javascript
         const crypto = require('crypto');
 
-        function verifyWebhook(signingSecret, payload, timestamp, signature) {
-          const message = `${timestamp}.${payload}`;
+        function verifyWebhook(secret, rawBody, headers) {
+          const msgId = headers['webhook-id'];
+          const timestamp = headers['webhook-timestamp'];
+          const signature = headers['webhook-signature'];
+
+          const secretStr = secret.startsWith('whsec_') ? secret.slice(6) : secret;
+          const keyBytes = Buffer.from(secretStr, 'base64');
+          const signedContent = `${msgId}.${timestamp}.${rawBody}`;
           const expected = crypto
-            .createHmac('sha256', signingSecret)
-            .update(message)
-            .digest('hex');
-          return crypto.timingSafeEqual(
-            Buffer.from(expected),
-            Buffer.from(signature)
-          );
+            .createHmac('sha256', keyBytes)
+            .update(signedContent)
+            .digest('base64');
+
+          return signature.split(' ').some(sig => {
+            if (!sig.startsWith('v1,')) return false;
+            try {
+              return crypto.timingSafeEqual(
+                Buffer.from(expected, 'base64'),
+                Buffer.from(sig.slice(3), 'base64')
+              );
+            } catch { return false; }
+          });
         }
         ```
 
@@ -3090,52 +3541,81 @@ class AsyncLinqAPIV3WithStreamedResponse:
 
         ## Webhook Headers
 
-        Each webhook request includes the following headers:
+        All webhook requests include two sets of headers. **If you have an existing integration
+        using the `X-Webhook-*` headers, nothing changes** — those headers are still sent on
+        every delivery and work exactly as before. The new `webhook-*` headers follow the
+        [Standard Webhooks](https://github.com/standard-webhooks/standard-webhooks) specification.
+        You can safely ignore them if your current verification code works and you don't want to use this convention.
+
+        ### Standard Webhooks Headers (Recommended)
+
+        Used by [our SDK](https://github.com/linq-team/linq-node) and any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks).
 
         | Header | Description |
         |--------|-------------|
-        | `X-Webhook-Event` | The event type (e.g., `message.sent`, `message.received`) |
-        | `X-Webhook-Subscription-ID` | Your webhook subscription ID |
-        | `X-Webhook-Timestamp` | Unix timestamp (seconds) when the webhook was sent |
-        | `X-Webhook-Signature` | HMAC-SHA256 signature for verification |
+        | `webhook-id` | Unique event identifier (use as idempotency key) |
+        | `webhook-timestamp` | Unix timestamp (seconds) when the webhook was sent |
+        | `webhook-signature` | Standard Webhooks signature (`v1,{base64}` format) |
+
+        ### Legacy Headers (Deprecated)
+
+        Still sent on every delivery for backwards compatibility. Existing verification code
+        using these headers continues to work — no changes required.
+
+        | Header | Description |
+        |--------|-------------|
+        | `X-Webhook-Event` | *(deprecated)* Event type (e.g., `message.sent`) |
+        | `X-Webhook-Subscription-ID` | *(deprecated)* Webhook subscription ID |
+        | `X-Webhook-Timestamp` | *(deprecated)* Unix timestamp (seconds) |
+        | `X-Webhook-Signature` | *(deprecated)* HMAC-SHA256 signature (hex-encoded) |
+
+        ## Signing Secrets
+
+        Signing secrets use the Standard Webhooks format: a `whsec_` prefix followed
+        by base64-encoded random bytes (e.g., `whsec_MfKQ9r8GKYqrTwjUPD8ILPZIo2LaLaSw7Jxx2Oll+OE=`).
+
+        Strip the `whsec_` prefix and base64-decode the remainder to get the raw key bytes.
 
         ## Verifying Webhook Signatures
 
-        All webhooks are signed using HMAC-SHA256. You should always verify the signature
-        to ensure the webhook originated from Linq and hasn't been tampered with.
+        Webhooks are signed following the [Standard Webhooks specification](https://github.com/standard-webhooks/standard-webhooks).
+        You can use any [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks) to verify
+        signatures, or implement verification manually:
 
-        **Signature Construction:**
-
-        The signature is computed over a concatenation of the timestamp and payload:
-
-        ```
-        {timestamp}.{payload}
-        ```
-
-        Where:
-        - `timestamp` is the value from the `X-Webhook-Timestamp` header
-        - `payload` is the raw JSON request body (exact bytes, not re-serialized)
+        **Signed content:** `{webhook-id}.{webhook-timestamp}.{body}`
 
         **Verification Steps:**
 
-        1. Extract the `X-Webhook-Timestamp` and `X-Webhook-Signature` headers
-        2. Get the raw request body bytes (do not parse and re-serialize)
-        3. Concatenate: `"{timestamp}.{payload}"`
-        4. Compute HMAC-SHA256 using your signing secret as the key
-        5. Hex-encode the result and compare with `X-Webhook-Signature`
-        6. Use constant-time comparison to prevent timing attacks
+        1. Extract the `webhook-id`, `webhook-timestamp`, and `webhook-signature` headers
+        2. Reject if the timestamp is more than 5 minutes old (replay protection)
+        3. Get the raw request body bytes (do not parse and re-serialize)
+        4. Construct signed content: `"{webhook-id}.{webhook-timestamp}.{body}"`
+        5. Strip the `whsec_` prefix from your secret and base64-decode to get key bytes
+        6. Compute HMAC-SHA256 using the key bytes over the signed content
+        7. Base64-encode the result and compare with the value after `v1,` in `webhook-signature`
+        8. Use constant-time comparison to prevent timing attacks
 
         **Example (Python):**
 
         ```python
-        import hmac
-        import hashlib
+        import base64, hmac, hashlib
 
 
-        def verify_webhook(signing_secret, payload, timestamp, signature):
-            message = f"{timestamp}.{payload.decode('utf-8')}"
-            expected = hmac.new(signing_secret.encode("utf-8"), message.encode("utf-8"), hashlib.sha256).hexdigest()
-            return hmac.compare_digest(expected, signature)
+        def verify_webhook(secret, body, headers):
+            msg_id = headers["webhook-id"]
+            timestamp = headers["webhook-timestamp"]
+            signature = headers["webhook-signature"]
+
+            secret_str = secret.removeprefix("whsec_")
+            key = base64.b64decode(secret_str)
+
+            signed_content = f"{msg_id}.{timestamp}.{body}"
+            expected = base64.b64encode(hmac.new(key, signed_content.encode(), hashlib.sha256).digest()).decode()
+
+            for sig in signature.split(" "):
+                if sig.startswith("v1,") and hmac.compare_digest(expected, sig[3:]):
+                    return True
+            return False
         ```
 
         **Example (Node.js):**
@@ -3143,16 +3623,28 @@ class AsyncLinqAPIV3WithStreamedResponse:
         ```javascript
         const crypto = require('crypto');
 
-        function verifyWebhook(signingSecret, payload, timestamp, signature) {
-          const message = `${timestamp}.${payload}`;
+        function verifyWebhook(secret, rawBody, headers) {
+          const msgId = headers['webhook-id'];
+          const timestamp = headers['webhook-timestamp'];
+          const signature = headers['webhook-signature'];
+
+          const secretStr = secret.startsWith('whsec_') ? secret.slice(6) : secret;
+          const keyBytes = Buffer.from(secretStr, 'base64');
+          const signedContent = `${msgId}.${timestamp}.${rawBody}`;
           const expected = crypto
-            .createHmac('sha256', signingSecret)
-            .update(message)
-            .digest('hex');
-          return crypto.timingSafeEqual(
-            Buffer.from(expected),
-            Buffer.from(signature)
-          );
+            .createHmac('sha256', keyBytes)
+            .update(signedContent)
+            .digest('base64');
+
+          return signature.split(' ').some(sig => {
+            if (!sig.startsWith('v1,')) return false;
+            try {
+              return crypto.timingSafeEqual(
+                Buffer.from(expected, 'base64'),
+                Buffer.from(sig.slice(3), 'base64')
+              );
+            } catch { return false; }
+          });
         }
         ```
 

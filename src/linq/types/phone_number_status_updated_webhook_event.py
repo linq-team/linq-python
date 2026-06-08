@@ -71,6 +71,8 @@ class PhoneNumberStatusUpdatedWebhookEvent(BaseModel):
         "call.failed",
         "call.declined",
         "call.no_answer",
+        "location.sharing.started",
+        "location.sharing.stopped",
     ]
     """The type of event"""
 
