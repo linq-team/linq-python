@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from typing import Union, Iterable
-from typing_extensions import Required, TypeAlias, TypedDict
+from typing_extensions import Literal, Required, TypeAlias, TypedDict
 
 from .reply_to_param import ReplyToParam
 from .link_part_param import LinkPartParam
@@ -12,9 +12,106 @@ from .media_part_param import MediaPartParam
 from .shared.service_type import ServiceType
 from .message_effect_param import MessageEffectParam
 
-__all__ = ["MessageContentParam", "Part"]
+__all__ = ["MessageContentParam", "Part", "PartIMessageAppPart", "PartIMessageAppPartApp", "PartIMessageAppPartLayout"]
 
-Part: TypeAlias = Union[TextPartParam, MediaPartParam, LinkPartParam]
+
+class PartIMessageAppPartApp(TypedDict, total=False):
+    """Identifies the iMessage app (Messages app extension) that backs the card."""
+
+    bundle_id: Required[str]
+    """Bundle identifier of the Messages app extension. Must not contain `:`."""
+
+    name: Required[str]
+    """Display name of the app, shown by Messages' fallback UI."""
+
+    team_id: Required[str]
+    """The app's 10-character uppercase alphanumeric team identifier."""
+
+    app_store_id: int
+    """The owning app's App Store id (optional).
+
+    When set, recipients without the iMessage app installed see a "Get the app"
+    affordance.
+    """
+
+
+class PartIMessageAppPartLayout(TypedDict, total=False):
+    """Visible layout of the card.
+
+    At least one of
+    `caption`, `subcaption`, `trailing_caption`, `trailing_subcaption`, or `image_url` must be
+    set, otherwise the card renders as an empty bubble.
+    """
+
+    caption: str
+    """Primary label, top-left and bold."""
+
+    image_subtitle: str
+    """Overlay text shown below `image_title`. Requires `image_url`."""
+
+    image_title: str
+    """Overlay text shown above the image. Requires `image_url`."""
+
+    image_url: str
+    """Optional HTTPS URL of a preview image.
+
+    The server downloads it and embeds it in the card as JPEG (10MB max, same fetch
+    rules as media parts).
+    """
+
+    subcaption: str
+    """Secondary label, below `caption` on the left."""
+
+    trailing_caption: str
+    """Label shown top-right."""
+
+    trailing_subcaption: str
+    """Label shown below `trailing_caption`, on the right."""
+
+
+class PartIMessageAppPart(TypedDict, total=False):
+    """An iMessage app card, backed by a Messages app extension.
+
+    iMessage only —
+    an `imessage_app` part must be the **only** part in the message and is never delivered over
+    SMS/RCS. See the IMessageAppServiceUnsupported (2018) and RecipientUnsupportedMessageType
+    (4005) error codes.
+    """
+
+    app: Required[PartIMessageAppPartApp]
+    """Identifies the iMessage app (Messages app extension) that backs the card."""
+
+    layout: Required[PartIMessageAppPartLayout]
+    """Visible layout of the card.
+
+    At least one of `caption`, `subcaption`, `trailing_caption`,
+    `trailing_subcaption`, or `image_url` must be set, otherwise the card renders as
+    an empty bubble.
+    """
+
+    type: Required[Literal["imessage_app"]]
+    """Indicates this is an iMessage app card part."""
+
+    url: Required[str]
+    """
+    Absolute HTTPS URL delivered to the recipient's installed iMessage app when they
+    tap the card. Opaque to Messages.
+    """
+
+    fallback_text: str
+    """Text shown on surfaces that cannot render the card (notifications, lock screen).
+
+    Defaults to the caption when omitted.
+    """
+
+    session_id: str
+    """
+    Optional client-supplied identifier to correlate updatable/collaborative app
+    sessions (advanced). Not interpreted by Synapse.
+    """
+
+
+Part: TypeAlias = Union[TextPartParam, MediaPartParam, LinkPartParam, PartIMessageAppPart]
 
 
 class MessageContentParam(TypedDict, total=False):

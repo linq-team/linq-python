@@ -6,10 +6,10 @@ from typing_extensions import Required, Annotated, TypedDict
 
 from .._utils import PropertyInfo
 
-__all__ = ["CapabilityCheckiMessageParams"]
+__all__ = ["CapabilityCheckIMessageParams"]
 
 
-class CapabilityCheckiMessageParams(TypedDict, total=False):
+class CapabilityCheckIMessageParams(TypedDict, total=False):
     address: Required[str]
     """The recipient phone number or email address to check"""
 

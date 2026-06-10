@@ -7,15 +7,107 @@ from typing_extensions import Literal, TypeAlias
 from ..._models import BaseModel
 from ..reply_to import ReplyTo
 from ..message_effect import MessageEffect
+from ..shared.reaction import Reaction
 from ..shared.chat_handle import ChatHandle
 from ..shared.service_type import ServiceType
 from ..shared.link_part_response import LinkPartResponse
 from ..shared.text_part_response import TextPartResponse
 from ..shared.media_part_response import MediaPartResponse
 
-__all__ = ["SentMessage", "Part"]
+__all__ = [
+    "SentMessage",
+    "Part",
+    "PartIMessageAppPartResponse",
+    "PartIMessageAppPartResponseApp",
+    "PartIMessageAppPartResponseLayout",
+]
 
-Part: TypeAlias = Union[TextPartResponse, MediaPartResponse, LinkPartResponse]
+
+class PartIMessageAppPartResponseApp(BaseModel):
+    """Identifies the iMessage app (Messages app extension) that backs the card."""
+
+    bundle_id: str
+    """Bundle identifier of the Messages app extension. Must not contain `:`."""
+
+    name: str
+    """Display name of the app, shown by Messages' fallback UI."""
+
+    team_id: str
+    """The app's 10-character uppercase alphanumeric team identifier."""
+
+    app_store_id: Optional[int] = None
+    """The owning app's App Store id (optional).
+
+    When set, recipients without the iMessage app installed see a "Get the app"
+    affordance.
+    """
+
+
+class PartIMessageAppPartResponseLayout(BaseModel):
+    """Visible layout of the card.
+
+    At least one of
+    `caption`, `subcaption`, `trailing_caption`, `trailing_subcaption`, or `image_url` must be
+    set, otherwise the card renders as an empty bubble.
+    """
+
+    caption: Optional[str] = None
+    """Primary label, top-left and bold."""
+
+    image_subtitle: Optional[str] = None
+    """Overlay text shown below `image_title`. Requires `image_url`."""
+
+    image_title: Optional[str] = None
+    """Overlay text shown above the image. Requires `image_url`."""
+
+    image_url: Optional[str] = None
+    """Optional HTTPS URL of a preview image.
+
+    The server downloads it and embeds it in the card as JPEG (10MB max, same fetch
+    rules as media parts).
+    """
+
+    subcaption: Optional[str] = None
+    """Secondary label, below `caption` on the left."""
+
+    trailing_caption: Optional[str] = None
+    """Label shown top-right."""
+
+    trailing_subcaption: Optional[str] = None
+    """Label shown below `trailing_caption`, on the right."""
+
+
+class PartIMessageAppPartResponse(BaseModel):
+    """An iMessage app card part."""
+
+    app: PartIMessageAppPartResponseApp
+    """Identifies the iMessage app (Messages app extension) that backs the card."""
+
+    layout: PartIMessageAppPartResponseLayout
+    """Visible layout of the card.
+
+    At least one of `caption`, `subcaption`, `trailing_caption`,
+    `trailing_subcaption`, or `image_url` must be set, otherwise the card renders as
+    an empty bubble.
+    """
+
+    reactions: Optional[List[Reaction]] = None
+    """Reactions on this message part"""
+
+    type: Literal["imessage_app"]
+    """Indicates this is an iMessage app card part."""
+
+    url: str
+    """The URL delivered to the iMessage app on tap."""
+
+    fallback_text: Optional[str] = None
+    """Fallback text for surfaces that cannot render the card."""
+
+    session_id: Optional[str] = None
+    """Client-supplied session identifier, echoed back when provided."""
+
+
+Part: TypeAlias = Union[TextPartResponse, MediaPartResponse, LinkPartResponse, PartIMessageAppPartResponse]
 
 
 class SentMessage(BaseModel):
