@@ -82,7 +82,7 @@ class CapabilityResource(SyncAPIResource):
                     "address": address,
                     "from_": from_,
                 },
-                capability_check_i_message_params.CapabilityCheckiMessageParams,
+                capability_check_i_message_params.CapabilityCheckIMessageParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -196,7 +196,7 @@ class AsyncCapabilityResource(AsyncAPIResource):
                     "address": address,
                     "from_": from_,
                 },
-                capability_check_i_message_params.CapabilityCheckiMessageParams,
+                capability_check_i_message_params.CapabilityCheckIMessageParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout

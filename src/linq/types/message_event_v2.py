@@ -12,7 +12,17 @@ from .schemas_message_effect import SchemasMessageEffect
 from .schemas_text_part_response import SchemasTextPartResponse
 from .schemas_media_part_response import SchemasMediaPartResponse
 
-__all__ = ["MessageEventV2", "Chat", "ChatHealthStatus", "Part", "PartSchemasLinkPartResponse", "ReplyTo"]
+__all__ = [
+    "MessageEventV2",
+    "Chat",
+    "ChatHealthStatus",
+    "Part",
+    "PartSchemasLinkPartResponse",
+    "PartSchemasIMessageAppPartResponse",
+    "PartSchemasIMessageAppPartResponseApp",
+    "PartSchemasIMessageAppPartResponseLayout",
+    "ReplyTo",
+]
 
 
 class ChatHealthStatus(BaseModel):
@@ -77,8 +87,76 @@ class PartSchemasLinkPartResponse(BaseModel):
     """The URL"""
 
 
+class PartSchemasIMessageAppPartResponseApp(BaseModel):
+    """Identifies the iMessage app (Messages app extension) that backs the card."""
+
+    bundle_id: str
+    """Bundle identifier of the Messages app extension."""
+
+    name: str
+    """Display name of the app."""
+
+    team_id: str
+    """The app's 10-character team identifier."""
+
+    app_store_id: Optional[int] = None
+    """The owning app's App Store id, when known."""
+
+
+class PartSchemasIMessageAppPartResponseLayout(BaseModel):
+    """Visible layout of the card."""
+
+    caption: Optional[str] = None
+    """Primary label, top-left and bold."""
+
+    image_subtitle: Optional[str] = None
+    """Overlay text shown below image_title."""
+
+    image_title: Optional[str] = None
+    """Overlay text shown above the image."""
+
+    image_url: Optional[str] = None
+    """Presigned URL of the card preview image, when present."""
+
+    subcaption: Optional[str] = None
+    """Secondary label, below caption on the left."""
+
+    trailing_caption: Optional[str] = None
+    """Label shown top-right."""
+
+    trailing_subcaption: Optional[str] = None
+    """Label shown below trailing_caption."""
+
+
+class PartSchemasIMessageAppPartResponse(BaseModel):
+    """An iMessage app card part."""
+
+    app: PartSchemasIMessageAppPartResponseApp
+    """Identifies the iMessage app (Messages app extension) that backs the card."""
+
+    layout: PartSchemasIMessageAppPartResponseLayout
+    """Visible layout of the card."""
+
+    type: Literal["imessage_app"]
+    """Indicates this is an iMessage app card part."""
+
+    url: str
+    """The URL delivered to the iMessage app on tap."""
+
+    fallback_text: Optional[str] = None
+    """Fallback text for surfaces that cannot render the card."""
+
+    session_id: Optional[str] = None
+    """Client-supplied session identifier, echoed back when provided."""
+
+
 Part: TypeAlias = Annotated[
-    Union[SchemasTextPartResponse, SchemasMediaPartResponse, PartSchemasLinkPartResponse],
+    Union[
+        SchemasTextPartResponse,
+        SchemasMediaPartResponse,
+        PartSchemasLinkPartResponse,
+        PartSchemasIMessageAppPartResponse,
+    ],
     PropertyInfo(discriminator="type"),
 ]
 
