@@ -83,5 +83,11 @@ class Chat(BaseModel):
     updated_at: datetime
     """When the chat was last updated"""
 
+    group_chat_icon: Optional[str] = None
+    """URL of the group chat icon.
+
+    Only set for group chats that have an icon; `null` otherwise.
+    """
+
     service: Optional[ServiceType] = None
     """Messaging service type"""

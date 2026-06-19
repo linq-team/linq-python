@@ -15,7 +15,19 @@ class Data(BaseModel):
     """When the status change occurred"""
 
     new_health_status: Literal["HEALTHY", "AT_RISK", "CRITICAL"]
-    """The new line health status"""
+    """Current reputation of this phone line as assessed by risk-service.
+
+    - `HEALTHY` — No elevated risk detected.
+    - `AT_RISK` — Elevated risk indicators present; consider reducing send volume or
+      reviewing messaging patterns.
+    - `CRITICAL` — High risk; further sending may result in line flagging or
+      restriction.
+
+    Defaults to `HEALTHY` for lines that have not yet been scored.
+    """
+
+    new_reputation: Literal["HEALTHY", "AT_RISK", "CRITICAL"]
+    """The new line reputation"""
 
     new_status: Literal["ACTIVE", "FLAGGED"]
     """The new service status"""
@@ -24,7 +36,19 @@ class Data(BaseModel):
     """Phone number in E.164 format"""
 
     previous_health_status: Literal["HEALTHY", "AT_RISK", "CRITICAL"]
-    """The previous line health status"""
+    """Current reputation of this phone line as assessed by risk-service.
+
+    - `HEALTHY` — No elevated risk detected.
+    - `AT_RISK` — Elevated risk indicators present; consider reducing send volume or
+      reviewing messaging patterns.
+    - `CRITICAL` — High risk; further sending may result in line flagging or
+      restriction.
+
+    Defaults to `HEALTHY` for lines that have not yet been scored.
+    """
+
+    previous_reputation: Literal["HEALTHY", "AT_RISK", "CRITICAL"]
+    """The previous line reputation"""
 
     previous_status: Literal["ACTIVE", "FLAGGED"]
     """The previous service status"""

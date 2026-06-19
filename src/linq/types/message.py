@@ -49,25 +49,13 @@ class PartIMessageAppPartResponseLayout(BaseModel):
     """Visible layout of the card.
 
     At least one of
-    `caption`, `subcaption`, `trailing_caption`, `trailing_subcaption`, or `image_url` must be
-    set, otherwise the card renders as an empty bubble.
+    `caption`, `subcaption`, `trailing_caption`, or `trailing_subcaption` must be set, otherwise
+    the card renders as an empty bubble. Any image on the card is drawn by the recipient's
+    installed app extension; it cannot be supplied here.
     """
 
     caption: Optional[str] = None
     """Primary label, top-left and bold."""
-
-    image_subtitle: Optional[str] = None
-    """Overlay text shown below `image_title`. Requires `image_url`."""
-
-    image_title: Optional[str] = None
-    """Overlay text shown above the image. Requires `image_url`."""
-
-    image_url: Optional[str] = None
-    """Optional HTTPS URL of a preview image.
-
-    The server downloads it and embeds it in the card as JPEG (10MB max, same fetch
-    rules as media parts).
-    """
 
     subcaption: Optional[str] = None
     """Secondary label, below `caption` on the left."""
@@ -88,9 +76,10 @@ class PartIMessageAppPartResponse(BaseModel):
     layout: PartIMessageAppPartResponseLayout
     """Visible layout of the card.
 
-    At least one of `caption`, `subcaption`, `trailing_caption`,
-    `trailing_subcaption`, or `image_url` must be set, otherwise the card renders as
-    an empty bubble.
+    At least one of `caption`, `subcaption`, `trailing_caption`, or
+    `trailing_subcaption` must be set, otherwise the card renders as an empty
+    bubble. Any image on the card is drawn by the recipient's installed app
+    extension; it cannot be supplied here.
     """
 
     reactions: Optional[List[Reaction]] = None
@@ -104,9 +93,6 @@ class PartIMessageAppPartResponse(BaseModel):
 
     fallback_text: Optional[str] = None
     """Fallback text for surfaces that cannot render the card."""
-
-    session_id: Optional[str] = None
-    """Client-supplied session identifier, echoed back when provided."""
 
 
 Part: TypeAlias = Union[TextPartResponse, MediaPartResponse, LinkPartResponse, PartIMessageAppPartResponse]
