@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.0](https://github.com/linq-team/linq-python/compare/v0.14.0...v0.15.0) (2026-06-21)
+
+
+### Features
+
+* phone line reputation + group chat icon; remove iMessage app image layout & session_id ([#32](https://github.com/linq-team/linq-python/issues/32)) ([736fe20](https://github.com/linq-team/linq-python/commit/736fe201b71b3c3bf88c5621621a0a5fbee4ac56))
+
 ## [0.14.0](https://github.com/linq-team/linq-python/compare/v0.13.0...v0.14.0) (2026-06-10)
 
 
