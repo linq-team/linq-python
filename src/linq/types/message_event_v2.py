@@ -109,15 +109,6 @@ class PartSchemasIMessageAppPartResponseLayout(BaseModel):
     caption: Optional[str] = None
     """Primary label, top-left and bold."""
 
-    image_subtitle: Optional[str] = None
-    """Overlay text shown below image_title."""
-
-    image_title: Optional[str] = None
-    """Overlay text shown above the image."""
-
-    image_url: Optional[str] = None
-    """Presigned URL of the card preview image, when present."""
-
     subcaption: Optional[str] = None
     """Secondary label, below caption on the left."""
 
@@ -145,9 +136,6 @@ class PartSchemasIMessageAppPartResponse(BaseModel):
 
     fallback_text: Optional[str] = None
     """Fallback text for surfaces that cannot render the card."""
-
-    session_id: Optional[str] = None
-    """Client-supplied session identifier, echoed back when provided."""
 
 
 Part: TypeAlias = Annotated[
