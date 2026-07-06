@@ -93,16 +93,25 @@ Methods:
 Types:
 
 ```python
-from linq.types import Message, MessageEffect, ReplyTo, MessageAddReactionResponse
+from linq.types import (
+    Message,
+    MessageEffect,
+    ReplyTo,
+    MessageCreateResponse,
+    MessageAddReactionResponse,
+    MessageUpdateAppCardResponse,
+)
 ```
 
 Methods:
 
+- <code title="post /v3/messages">client.messages.<a href="./src/linq/resources/messages.py">create</a>(\*\*<a href="src/linq/types/message_create_params.py">params</a>) -> <a href="./src/linq/types/message_create_response.py">MessageCreateResponse</a></code>
 - <code title="get /v3/messages/{messageId}">client.messages.<a href="./src/linq/resources/messages.py">retrieve</a>(message_id) -> <a href="./src/linq/types/message.py">Message</a></code>
 - <code title="patch /v3/messages/{messageId}">client.messages.<a href="./src/linq/resources/messages.py">update</a>(message_id, \*\*<a href="src/linq/types/message_update_params.py">params</a>) -> <a href="./src/linq/types/message.py">Message</a></code>
 - <code title="delete /v3/messages/{messageId}">client.messages.<a href="./src/linq/resources/messages.py">delete</a>(message_id) -> None</code>
 - <code title="post /v3/messages/{messageId}/reactions">client.messages.<a href="./src/linq/resources/messages.py">add_reaction</a>(message_id, \*\*<a href="src/linq/types/message_add_reaction_params.py">params</a>) -> <a href="./src/linq/types/message_add_reaction_response.py">MessageAddReactionResponse</a></code>
 - <code title="get /v3/messages/{messageId}/thread">client.messages.<a href="./src/linq/resources/messages.py">list_messages_thread</a>(message_id, \*\*<a href="src/linq/types/message_list_messages_thread_params.py">params</a>) -> <a href="./src/linq/types/message.py">SyncListMessagesPagination[Message]</a></code>
+- <code title="post /v3/messages/{messageId}/update">client.messages.<a href="./src/linq/resources/messages.py">update_app_card</a>(message_id, \*\*<a href="src/linq/types/message_update_app_card_params.py">params</a>) -> <a href="./src/linq/types/message_update_app_card_response.py">MessageUpdateAppCardResponse</a></code>
 
 # Attachments
 
@@ -135,12 +144,25 @@ Methods:
 Types:
 
 ```python
-from linq.types import PhoneNumberListResponse
+from linq.types import PhoneNumberUpdateResponse, PhoneNumberListResponse
 ```
 
 Methods:
 
+- <code title="put /v3/phone_numbers/{phoneNumberId}">client.phone_numbers.<a href="./src/linq/resources/phone_numbers.py">update</a>(phone_number_id, \*\*<a href="src/linq/types/phone_number_update_params.py">params</a>) -> <a href="./src/linq/types/phone_number_update_response.py">PhoneNumberUpdateResponse</a></code>
 - <code title="get /v3/phone_numbers">client.phone_numbers.<a href="./src/linq/resources/phone_numbers.py">list</a>() -> <a href="./src/linq/types/phone_number_list_response.py">PhoneNumberListResponse</a></code>
+
+# AvailableNumber
+
+Types:
+
+```python
+from linq.types import AvailableNumberRetrieveResponse
+```
+
+Methods:
+
+- <code title="get /v3/available_number">client.available_number.<a href="./src/linq/resources/available_number.py">retrieve</a>(\*\*<a href="src/linq/types/available_number_retrieve_params.py">params</a>) -> <a href="./src/linq/types/available_number_retrieve_response.py">AvailableNumberRetrieveResponse</a></code>
 
 # WebhookEvents
 

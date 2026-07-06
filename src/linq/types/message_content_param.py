@@ -39,13 +39,43 @@ class PartIMessageAppPartLayout(TypedDict, total=False):
     """Visible layout of the card.
 
     At least one of
-    `caption`, `subcaption`, `trailing_caption`, or `trailing_subcaption` must be set, otherwise
-    the card renders as an empty bubble. Any image on the card is drawn by the recipient's
-    installed app extension; it cannot be supplied here.
+    `caption`, `subcaption`, `trailing_caption`, `trailing_subcaption`, or `image_url` must be
+    set, otherwise the card renders as an empty bubble.
+
+    `image_url` displays a preview image at the top of the card. The image renders on the
+    recipient's card whether or not they have your app installed. The small icon beside the
+    caption is the app's own icon and is not settable here.
+
+    `* Note - requires a trusted chat w/ inbound activity`
+
+    `image_title` and `image_subtitle` render as text overlaid on the image (title bold, subtitle
+    beneath it). They only appear when `image_url` is set — without an image there is nothing to
+    overlay — so setting either without `image_url` is rejected.
     """
 
     caption: str
     """Primary label, top-left and bold."""
+
+    image_subtitle: str
+    """Text shown below `image_title`, overlaid on the card image.
+
+    Requires `image_url`.
+    """
+
+    image_title: str
+    """Bold text overlaid on the card image.
+
+    Requires `image_url` (rejected without it).
+    """
+
+    image_url: str
+    """
+    URL of an image (JPEG, PNG, HEIF, or WebP) to display as the card's preview
+    image; an unreachable or non-image URL returns a validation error. Renders for
+    all recipients regardless of whether they have the app. Note - requires a
+    trusted chat w/ inbound activity. In responses, this is the re-hosted
+    `cdn.linqapp.com` copy of the image you supplied, not your original URL.
+    """
 
     subcaption: str
     """Secondary label, below `caption` on the left."""
@@ -72,25 +102,47 @@ class PartIMessageAppPart(TypedDict, total=False):
     layout: Required[PartIMessageAppPartLayout]
     """Visible layout of the card.
 
-    At least one of `caption`, `subcaption`, `trailing_caption`, or
-    `trailing_subcaption` must be set, otherwise the card renders as an empty
-    bubble. Any image on the card is drawn by the recipient's installed app
-    extension; it cannot be supplied here.
+    At least one of `caption`, `subcaption`, `trailing_caption`,
+    `trailing_subcaption`, or `image_url` must be set, otherwise the card renders as
+    an empty bubble.
+
+    `image_url` displays a preview image at the top of the card. The image renders
+    on the recipient's card whether or not they have your app installed. The small
+    icon beside the caption is the app's own icon and is not settable here.
+
+    `* Note - requires a trusted chat w/ inbound activity`
+
+    `image_title` and `image_subtitle` render as text overlaid on the image (title
+    bold, subtitle beneath it). They only appear when `image_url` is set — without
+    an image there is nothing to overlay — so setting either without `image_url` is
+    rejected.
     """
 
     type: Required[Literal["imessage_app"]]
     """Indicates this is an iMessage app card part."""
 
-    url: Required[str]
-    """
-    Absolute HTTPS URL delivered to the recipient's installed iMessage app when they
-    tap the card. Opaque to Messages.
-    """
-
     fallback_text: str
     """Text shown on surfaces that cannot render the card (notifications, lock screen).
 
     Defaults to the caption when omitted.
+    """
+
+    interactive: bool
+    """
+    Whether the card renders as your app's interactive balloon for recipients who
+    have your iMessage app installed. `true` (default) lets your installed extension
+    draw its live, interactive view for those recipients; everyone else sees the
+    static card built from `layout`. `false` always shows the static `layout` card,
+    even to recipients who have the app installed. Recipients without your app
+    always see the static card regardless of this flag.
+    """
+
+    url: str
+    """URL the recipient's app opens when they tap the card.
+
+    Either an absolute `https://` URL (capped at 2048 characters) or a `data:` URL
+    carrying inline app state, e.g. a game's encoded state (capped at 16384
+    characters).
     """
 
 

@@ -83,8 +83,7 @@ class ContactCardResource(SyncAPIResource):
 
           phone_number: E.164 phone number to associate the contact card with
 
-          image_url: URL of the profile image to rehost on the CDN. Only re-uploaded when a new value
-              is provided.
+          image_url: Profile image URL for the contact card.
 
           last_name: Last name for the contact card. Optional.
 
@@ -278,8 +277,7 @@ class AsyncContactCardResource(AsyncAPIResource):
 
           phone_number: E.164 phone number to associate the contact card with
 
-          image_url: URL of the profile image to rehost on the CDN. Only re-uploaded when a new value
-              is provided.
+          image_url: Profile image URL for the contact card.
 
           last_name: Last name for the contact card. Optional.
 

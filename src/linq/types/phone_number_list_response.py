@@ -1,6 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List
+from typing import List, Optional
 from typing_extensions import Literal
 
 from .._models import BaseModel
@@ -15,20 +15,22 @@ class PhoneNumberHealthStatus(BaseModel):
 
     Unlike chat health, line reputation does not include `opted_out` — opt-out applies to individual recipients, not the whole line.
 
-    See the [Phone Health guide](/guides/phone-numbers/phone-health) for what each status means and how to react.
+    See the [Phone Reputation guide](/guides/phone-numbers/phone-reputation) for what each status means and how to react.
     """
 
     doc_url: str
-    """Deep-link to the relevant section of the Phone Health guide for this status."""
+    """
+    Deep-link to the relevant section of the Phone Reputation guide for this status.
+    """
 
     status: Literal["HEALTHY", "AT_RISK", "CRITICAL"]
-    """Current reputation of this phone line as assessed by risk-service.
+    """Current reputation of this phone line.
 
-    - `HEALTHY` — No elevated risk detected.
-    - `AT_RISK` — Elevated risk indicators present; consider reducing send volume or
-      reviewing messaging patterns.
-    - `CRITICAL` — High risk; further sending may result in line flagging or
-      restriction.
+    - `HEALTHY` — The line is in good standing. Send normally.
+    - `AT_RISK` — The line's overall engagement is trending down. Slow the line's
+      send pace and review your messaging patterns.
+    - `CRITICAL` — Strong signals that messages from this line aren't landing well.
+      Pause outbound on the line until it recovers.
 
     Defaults to `HEALTHY` for lines that have not yet been scored.
     """
@@ -41,20 +43,22 @@ class PhoneNumberReputation(BaseModel):
 
     Unlike chat health, line reputation does not include `opted_out` — opt-out applies to individual recipients, not the whole line.
 
-    See the [Phone Health guide](/guides/phone-numbers/phone-health) for what each status means and how to react.
+    See the [Phone Reputation guide](/guides/phone-numbers/phone-reputation) for what each status means and how to react.
     """
 
     doc_url: str
-    """Deep-link to the relevant section of the Phone Health guide for this status."""
+    """
+    Deep-link to the relevant section of the Phone Reputation guide for this status.
+    """
 
     status: Literal["HEALTHY", "AT_RISK", "CRITICAL"]
-    """Current reputation of this phone line as assessed by risk-service.
+    """Current reputation of this phone line.
 
-    - `HEALTHY` — No elevated risk detected.
-    - `AT_RISK` — Elevated risk indicators present; consider reducing send volume or
-      reviewing messaging patterns.
-    - `CRITICAL` — High risk; further sending may result in line flagging or
-      restriction.
+    - `HEALTHY` — The line is in good standing. Send normally.
+    - `AT_RISK` — The line's overall engagement is trending down. Slow the line's
+      send pace and review your messaging patterns.
+    - `CRITICAL` — Strong signals that messages from this line aren't landing well.
+      Pause outbound on the line until it recovers.
 
     Defaults to `HEALTHY` for lines that have not yet been scored.
     """
@@ -73,8 +77,8 @@ class PhoneNumber(BaseModel):
     Unlike chat health, line reputation does not include `opted_out` — opt-out
     applies to individual recipients, not the whole line.
 
-    See the [Phone Health guide](/guides/phone-numbers/phone-health) for what each
-    status means and how to react.
+    See the [Phone Reputation guide](/guides/phone-numbers/phone-reputation) for
+    what each status means and how to react.
     """
 
     phone_number: str
@@ -89,8 +93,14 @@ class PhoneNumber(BaseModel):
     Unlike chat health, line reputation does not include `opted_out` — opt-out
     applies to individual recipients, not the whole line.
 
-    See the [Phone Health guide](/guides/phone-numbers/phone-health) for what each
-    status means and how to react.
+    See the [Phone Reputation guide](/guides/phone-numbers/phone-reputation) for
+    what each status means and how to react.
+    """
+
+    forwarding_number: Optional[str] = None
+    """The forwarding number associated with this phone number, in E.164 format.
+
+    Null when no forwarding number is configured.
     """
 
 

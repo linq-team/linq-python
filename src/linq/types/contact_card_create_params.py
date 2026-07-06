@@ -15,10 +15,7 @@ class ContactCardCreateParams(TypedDict, total=False):
     """E.164 phone number to associate the contact card with"""
 
     image_url: str
-    """URL of the profile image to rehost on the CDN.
-
-    Only re-uploaded when a new value is provided.
-    """
+    """Profile image URL for the contact card."""
 
     last_name: str
     """Last name for the contact card. Optional."""

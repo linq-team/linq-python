@@ -132,7 +132,7 @@ class PartSchemasIMessageAppPartResponse(BaseModel):
     """Indicates this is an iMessage app card part."""
 
     url: str
-    """The URL delivered to the iMessage app on tap."""
+    """The URL the recipient's app opens when the user taps the card."""
 
     fallback_text: Optional[str] = None
     """Fallback text for surfaces that cannot render the card."""
