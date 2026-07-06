@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.1](https://github.com/linq-team/linq-python/compare/v0.15.0...v0.15.1) (2026-07-06)
+
+
+### Documentation
+
+* clarify phone line reputation status descriptions ([#34](https://github.com/linq-team/linq-python/issues/34)) ([a5a6a99](https://github.com/linq-team/linq-python/commit/a5a6a99e2a66bacd6f50b36155d8ffb152a4a85a))
+
 ## [0.15.0](https://github.com/linq-team/linq-python/compare/v0.14.0...v0.15.0) (2026-06-21)
 
 
