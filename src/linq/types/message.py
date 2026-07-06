@@ -49,13 +49,43 @@ class PartIMessageAppPartResponseLayout(BaseModel):
     """Visible layout of the card.
 
     At least one of
-    `caption`, `subcaption`, `trailing_caption`, or `trailing_subcaption` must be set, otherwise
-    the card renders as an empty bubble. Any image on the card is drawn by the recipient's
-    installed app extension; it cannot be supplied here.
+    `caption`, `subcaption`, `trailing_caption`, `trailing_subcaption`, or `image_url` must be
+    set, otherwise the card renders as an empty bubble.
+
+    `image_url` displays a preview image at the top of the card. The image renders on the
+    recipient's card whether or not they have your app installed. The small icon beside the
+    caption is the app's own icon and is not settable here.
+
+    `* Note - requires a trusted chat w/ inbound activity`
+
+    `image_title` and `image_subtitle` render as text overlaid on the image (title bold, subtitle
+    beneath it). They only appear when `image_url` is set — without an image there is nothing to
+    overlay — so setting either without `image_url` is rejected.
     """
 
     caption: Optional[str] = None
     """Primary label, top-left and bold."""
+
+    image_subtitle: Optional[str] = None
+    """Text shown below `image_title`, overlaid on the card image.
+
+    Requires `image_url`.
+    """
+
+    image_title: Optional[str] = None
+    """Bold text overlaid on the card image.
+
+    Requires `image_url` (rejected without it).
+    """
+
+    image_url: Optional[str] = None
+    """
+    URL of an image (JPEG, PNG, HEIF, or WebP) to display as the card's preview
+    image; an unreachable or non-image URL returns a validation error. Renders for
+    all recipients regardless of whether they have the app. Note - requires a
+    trusted chat w/ inbound activity. In responses, this is the re-hosted
+    `cdn.linqapp.com` copy of the image you supplied, not your original URL.
+    """
 
     subcaption: Optional[str] = None
     """Secondary label, below `caption` on the left."""
@@ -76,10 +106,20 @@ class PartIMessageAppPartResponse(BaseModel):
     layout: PartIMessageAppPartResponseLayout
     """Visible layout of the card.
 
-    At least one of `caption`, `subcaption`, `trailing_caption`, or
-    `trailing_subcaption` must be set, otherwise the card renders as an empty
-    bubble. Any image on the card is drawn by the recipient's installed app
-    extension; it cannot be supplied here.
+    At least one of `caption`, `subcaption`, `trailing_caption`,
+    `trailing_subcaption`, or `image_url` must be set, otherwise the card renders as
+    an empty bubble.
+
+    `image_url` displays a preview image at the top of the card. The image renders
+    on the recipient's card whether or not they have your app installed. The small
+    icon beside the caption is the app's own icon and is not settable here.
+
+    `* Note - requires a trusted chat w/ inbound activity`
+
+    `image_title` and `image_subtitle` render as text overlaid on the image (title
+    bold, subtitle beneath it). They only appear when `image_url` is set — without
+    an image there is nothing to overlay — so setting either without `image_url` is
+    rejected.
     """
 
     reactions: Optional[List[Reaction]] = None

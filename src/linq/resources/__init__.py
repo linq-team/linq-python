@@ -65,6 +65,14 @@ from .webhook_events import (
     WebhookEventsResourceWithStreamingResponse,
     AsyncWebhookEventsResourceWithStreamingResponse,
 )
+from .available_number import (
+    AvailableNumberResource,
+    AsyncAvailableNumberResource,
+    AvailableNumberResourceWithRawResponse,
+    AsyncAvailableNumberResourceWithRawResponse,
+    AvailableNumberResourceWithStreamingResponse,
+    AsyncAvailableNumberResourceWithStreamingResponse,
+)
 from .webhook_subscriptions import (
     WebhookSubscriptionsResource,
     AsyncWebhookSubscriptionsResource,
@@ -105,6 +113,12 @@ __all__ = [
     "AsyncPhoneNumbersResourceWithRawResponse",
     "PhoneNumbersResourceWithStreamingResponse",
     "AsyncPhoneNumbersResourceWithStreamingResponse",
+    "AvailableNumberResource",
+    "AsyncAvailableNumberResource",
+    "AvailableNumberResourceWithRawResponse",
+    "AsyncAvailableNumberResourceWithRawResponse",
+    "AvailableNumberResourceWithStreamingResponse",
+    "AsyncAvailableNumberResourceWithStreamingResponse",
     "WebhookEventsResource",
     "AsyncWebhookEventsResource",
     "WebhookEventsResourceWithRawResponse",

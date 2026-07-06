@@ -188,7 +188,7 @@ class AttachmentsResource(SyncAPIResource):
     |---|---|---|
     | Attachment bytes | Retained until you `DELETE` | **Auto-removed after 1 day**, also removable via `DELETE` |
     | Attachment metadata (id, filename, mime type, size) | Retained until you `DELETE` | Removed alongside the bytes |
-    | Message body & parts | Retained per message-retention policy | Retained per message-retention policy |
+    | Message body & parts | Retained per message-retention policy | Retained per message-retention policy — unless the line also has **ephemeral messages** enabled (see the Messages page), in which case the message and its parts are deleted 24 hours after creation |
     | Audit log of deletions | Retained per platform retention policy | Retained per platform retention policy |
 
     **In transit:** TLS 1.2+ everywhere. **At rest:** AES-256 (server-side encryption).
@@ -615,7 +615,7 @@ class AsyncAttachmentsResource(AsyncAPIResource):
     |---|---|---|
     | Attachment bytes | Retained until you `DELETE` | **Auto-removed after 1 day**, also removable via `DELETE` |
     | Attachment metadata (id, filename, mime type, size) | Retained until you `DELETE` | Removed alongside the bytes |
-    | Message body & parts | Retained per message-retention policy | Retained per message-retention policy |
+    | Message body & parts | Retained per message-retention policy | Retained per message-retention policy — unless the line also has **ephemeral messages** enabled (see the Messages page), in which case the message and its parts are deleted 24 hours after creation |
     | Audit log of deletions | Retained per platform retention policy | Retained per platform retention policy |
 
     **In transit:** TLS 1.2+ everywhere. **At rest:** AES-256 (server-side encryption).
