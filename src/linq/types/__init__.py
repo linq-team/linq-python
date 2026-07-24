@@ -18,6 +18,7 @@ from .reply_to import ReplyTo as ReplyTo
 from .message_effect import MessageEffect as MessageEffect
 from .reply_to_param import ReplyToParam as ReplyToParam
 from .link_part_param import LinkPartParam as LinkPartParam
+from .payment_request import PaymentRequest as PaymentRequest
 from .text_part_param import TextPartParam as TextPartParam
 from .media_part_param import MediaPartParam as MediaPartParam
 from .message_event_v2 import MessageEventV2 as MessageEventV2
@@ -54,6 +55,7 @@ from .phone_number_update_params import PhoneNumberUpdateParams as PhoneNumberUp
 from .schemas_text_part_response import SchemasTextPartResponse as SchemasTextPartResponse
 from .capability_check_RCS_params import CapabilityCheckRCSParams as CapabilityCheckRCSParams
 from .message_add_reaction_params import MessageAddReactionParams as MessageAddReactionParams
+from .payment_request_list_params import PaymentRequestListParams as PaymentRequestListParams
 from .schemas_media_part_response import SchemasMediaPartResponse as SchemasMediaPartResponse
 from .webhook_event_list_response import WebhookEventListResponse as WebhookEventListResponse
 from .attachment_retrieve_response import AttachmentRetrieveResponse as AttachmentRetrieveResponse
@@ -64,6 +66,8 @@ from .message_failed_webhook_event import MessageFailedWebhookEvent as MessageFa
 from .phone_number_update_response import PhoneNumberUpdateResponse as PhoneNumberUpdateResponse
 from .reaction_added_webhook_event import ReactionAddedWebhookEvent as ReactionAddedWebhookEvent
 from .message_add_reaction_response import MessageAddReactionResponse as MessageAddReactionResponse
+from .payment_request_create_params import PaymentRequestCreateParams as PaymentRequestCreateParams
+from .payment_request_list_response import PaymentRequestListResponse as PaymentRequestListResponse
 from .contact_card_retrieve_response import ContactCardRetrieveResponse as ContactCardRetrieveResponse
 from .message_received_webhook_event import MessageReceivedWebhookEvent as MessageReceivedWebhookEvent
 from .message_update_app_card_params import MessageUpdateAppCardParams as MessageUpdateAppCardParams

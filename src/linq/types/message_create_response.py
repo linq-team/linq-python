@@ -20,8 +20,8 @@ class FromSelection(BaseModel):
     """
     - `reused_active_chat` — reused an existing chat on its healthy line
     - `new_best_number` — created a new chat on the best available line
-    - `failover_flagged` — prior chat's line was flagged; created a new chat on a
-      fresh line
+    - `failover_flagged` — no existing chat for these recipients was on a line that
+      could send; created a new chat on a fresh line
     """
 
     reused_existing_chat: bool

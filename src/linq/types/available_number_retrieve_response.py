@@ -15,6 +15,6 @@ class AvailableNumberRetrieveResponse(BaseModel):
     """Time-limited link to a vCard (`.vcf`) for the selected line.
 
     The card carries the line's contact details with the selected number as the
-    primary `TEL` and the partner's other healthy lines as backups. The link
+    primary `TEL` and the partner's other available lines as backups. The link
     expires; re-call this endpoint to mint a fresh one.
     """

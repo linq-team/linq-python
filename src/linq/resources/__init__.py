@@ -73,6 +73,14 @@ from .available_number import (
     AvailableNumberResourceWithStreamingResponse,
     AsyncAvailableNumberResourceWithStreamingResponse,
 )
+from .payment_requests import (
+    PaymentRequestsResource,
+    AsyncPaymentRequestsResource,
+    PaymentRequestsResourceWithRawResponse,
+    AsyncPaymentRequestsResourceWithRawResponse,
+    PaymentRequestsResourceWithStreamingResponse,
+    AsyncPaymentRequestsResourceWithStreamingResponse,
+)
 from .webhook_subscriptions import (
     WebhookSubscriptionsResource,
     AsyncWebhookSubscriptionsResource,
@@ -119,6 +127,12 @@ __all__ = [
     "AsyncAvailableNumberResourceWithRawResponse",
     "AvailableNumberResourceWithStreamingResponse",
     "AsyncAvailableNumberResourceWithStreamingResponse",
+    "PaymentRequestsResource",
+    "AsyncPaymentRequestsResource",
+    "PaymentRequestsResourceWithRawResponse",
+    "AsyncPaymentRequestsResourceWithRawResponse",
+    "PaymentRequestsResourceWithStreamingResponse",
+    "AsyncPaymentRequestsResourceWithStreamingResponse",
     "WebhookEventsResource",
     "AsyncWebhookEventsResource",
     "WebhookEventsResourceWithRawResponse",
