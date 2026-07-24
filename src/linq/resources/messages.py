@@ -141,12 +141,14 @@ class MessagesResource(SyncAPIResource):
 
         ## How the from-number and chat are chosen
 
-        - **Reuse** — if a chat with exactly these recipients already exists and the
-          line it lives on is healthy, the message is sent into that chat on its
-          existing line (`from_selection.reason = reused_active_chat`).
+        - **Reuse** — if a chat with exactly these recipients already exists on a line
+          that can still send, the message is sent into that chat on its existing line
+          (`from_selection.reason = reused_active_chat`). The most-recently-active such
+          chat wins; chats stranded on flagged lines (e.g. by an earlier failover) are
+          skipped.
         - **New** — if no such chat exists, a new chat is created on the best available
           line (`from_selection.reason = new_best_number`).
-        - **Failover** — if a matching chat exists but its line has been flagged, a
+        - **Failover** — if matching chats exist but none is on a line that can send, a
           **new** chat is created on a fresh best line and the flagged chat is abandoned
           (`from_selection.reason = failover_flagged`, `previous_chat_id` set). If you
           supply `continuation_message`, that text is sent as the single message INSTEAD
@@ -667,12 +669,14 @@ class AsyncMessagesResource(AsyncAPIResource):
 
         ## How the from-number and chat are chosen
 
-        - **Reuse** — if a chat with exactly these recipients already exists and the
-          line it lives on is healthy, the message is sent into that chat on its
-          existing line (`from_selection.reason = reused_active_chat`).
+        - **Reuse** — if a chat with exactly these recipients already exists on a line
+          that can still send, the message is sent into that chat on its existing line
+          (`from_selection.reason = reused_active_chat`). The most-recently-active such
+          chat wins; chats stranded on flagged lines (e.g. by an earlier failover) are
+          skipped.
         - **New** — if no such chat exists, a new chat is created on the best available
           line (`from_selection.reason = new_best_number`).
-        - **Failover** — if a matching chat exists but its line has been flagged, a
+        - **Failover** — if matching chats exist but none is on a line that can send, a
           **new** chat is created on a fresh best line and the flagged chat is abandoned
           (`from_selection.reason = failover_flagged`, `previous_chat_id` set). If you
           supply `continuation_message`, that text is sent as the single message INSTEAD

@@ -34,6 +34,7 @@ SupportedContentType: TypeAlias = Literal[
     "audio/midi",
     "audio/amr",
     "application/pdf",
+    "application/vnd.apple.pkpass",
     "text/plain",
     "text/markdown",
     "text/vcard",

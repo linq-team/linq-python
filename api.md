@@ -164,6 +164,21 @@ Methods:
 
 - <code title="get /v3/available_number">client.available_number.<a href="./src/linq/resources/available_number.py">retrieve</a>(\*\*<a href="src/linq/types/available_number_retrieve_params.py">params</a>) -> <a href="./src/linq/types/available_number_retrieve_response.py">AvailableNumberRetrieveResponse</a></code>
 
+# PaymentRequests
+
+Types:
+
+```python
+from linq.types import PaymentRequest, PaymentRequestListResponse
+```
+
+Methods:
+
+- <code title="post /v3/payment_requests">client.payment_requests.<a href="./src/linq/resources/payment_requests.py">create</a>(\*\*<a href="src/linq/types/payment_request_create_params.py">params</a>) -> <a href="./src/linq/types/payment_request.py">PaymentRequest</a></code>
+- <code title="get /v3/payment_requests/{paymentRequestId}">client.payment_requests.<a href="./src/linq/resources/payment_requests.py">retrieve</a>(payment_request_id) -> <a href="./src/linq/types/payment_request.py">PaymentRequest</a></code>
+- <code title="get /v3/payment_requests">client.payment_requests.<a href="./src/linq/resources/payment_requests.py">list</a>(\*\*<a href="src/linq/types/payment_request_list_params.py">params</a>) -> <a href="./src/linq/types/payment_request_list_response.py">PaymentRequestListResponse</a></code>
+- <code title="post /v3/payment_requests/{paymentRequestId}/cancel">client.payment_requests.<a href="./src/linq/resources/payment_requests.py">cancel</a>(payment_request_id) -> <a href="./src/linq/types/payment_request.py">PaymentRequest</a></code>
+
 # WebhookEvents
 
 Types:

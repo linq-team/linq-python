@@ -26,6 +26,8 @@ class AttachmentRetrieveResponse(BaseModel):
     **Audio:** audio/mpeg, audio/x-m4a, audio/x-caf, audio/x-wav, audio/x-aiff,
     audio/aac, audio/midi, audio/amr
 
+    **Wallet passes:** application/vnd.apple.pkpass
+
     **Documents:** application/pdf, text/plain, text/markdown, text/vcard, text/rtf,
     text/csv, text/html, text/calendar, text/xml, application/json,
     application/msword,

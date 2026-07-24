@@ -14,18 +14,6 @@ class Data(BaseModel):
     changed_at: datetime
     """When the status change occurred"""
 
-    new_health_status: Literal["HEALTHY", "AT_RISK", "CRITICAL"]
-    """Current reputation of this phone line.
-
-    - `HEALTHY` — The line is in good standing. Send normally.
-    - `AT_RISK` — The line's overall engagement is trending down. Slow the line's
-      send pace and review your messaging patterns.
-    - `CRITICAL` — Strong signals that messages from this line aren't landing well.
-      Pause outbound on the line until it recovers.
-
-    Defaults to `HEALTHY` for lines that have not yet been scored.
-    """
-
     new_reputation: Literal["HEALTHY", "AT_RISK", "CRITICAL"]
     """The new line reputation"""
 
@@ -34,18 +22,6 @@ class Data(BaseModel):
 
     phone_number: str
     """Phone number in E.164 format"""
-
-    previous_health_status: Literal["HEALTHY", "AT_RISK", "CRITICAL"]
-    """Current reputation of this phone line.
-
-    - `HEALTHY` — The line is in good standing. Send normally.
-    - `AT_RISK` — The line's overall engagement is trending down. Slow the line's
-      send pace and review your messaging patterns.
-    - `CRITICAL` — Strong signals that messages from this line aren't landing well.
-      Pause outbound on the line until it recovers.
-
-    Defaults to `HEALTHY` for lines that have not yet been scored.
-    """
 
     previous_reputation: Literal["HEALTHY", "AT_RISK", "CRITICAL"]
     """The previous line reputation"""
@@ -85,6 +61,7 @@ class PhoneNumberStatusUpdatedWebhookEvent(BaseModel):
         "chat.group_icon_updated",
         "chat.group_name_update_failed",
         "chat.group_icon_update_failed",
+        "chat.background_updated",
         "chat.typing_indicator.started",
         "chat.typing_indicator.stopped",
         "phone_number.status_updated",
@@ -97,6 +74,9 @@ class PhoneNumberStatusUpdatedWebhookEvent(BaseModel):
         "call.no_answer",
         "location.sharing.started",
         "location.sharing.stopped",
+        "payment.succeeded",
+        "payment.canceled",
+        "payment.expired",
     ]
     """The type of event"""
 
