@@ -77,6 +77,10 @@ class PhoneNumberStatusUpdatedWebhookEvent(BaseModel):
         "payment.succeeded",
         "payment.canceled",
         "payment.expired",
+        "payment.declined",
+        "payment.authorized",
+        "connection.created",
+        "connection.revoked",
     ]
     """The type of event"""
 

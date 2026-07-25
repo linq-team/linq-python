@@ -36,4 +36,8 @@ WebhookEventType: TypeAlias = Literal[
     "payment.succeeded",
     "payment.canceled",
     "payment.expired",
+    "payment.declined",
+    "payment.authorized",
+    "connection.created",
+    "connection.revoked",
 ]
