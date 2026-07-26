@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.0](https://github.com/linq-team/linq-python/compare/v0.17.0...v0.18.0) (2026-07-26)
+
+
+### Features
+
+* regenerate SDKs from updated API spec ([#40](https://github.com/linq-team/linq-python/issues/40)) ([4072b73](https://github.com/linq-team/linq-python/commit/4072b739b5b806b207c0e24ac1cce389524a87dd))
+
 ## [0.17.0](https://github.com/linq-team/linq-python/compare/v0.16.0...v0.17.0) (2026-07-26)
 
 
