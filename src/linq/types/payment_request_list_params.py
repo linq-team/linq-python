@@ -14,5 +14,5 @@ class PaymentRequestListParams(TypedDict, total=False):
     offset: int
     """Number of results to skip."""
 
-    status: Literal["requested", "succeeded", "canceled", "expired"]
+    status: Literal["requested", "authorized", "succeeded", "canceled", "expired", "declined"]
     """Filter by lifecycle status."""
