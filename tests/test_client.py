@@ -879,16 +879,7 @@ class TestLinqApiv3:
 
         with pytest.raises(APITimeoutError):
             client.chats.with_streaming_response.create(
-                from_="+12052535597",
-                message={
-                    "parts": [
-                        {
-                            "type": "text",
-                            "value": "Hello! How can I help you today?",
-                        }
-                    ]
-                },
-                to=["+12052532136"],
+                from_="+12052535597", message={}, to=["+12052532136"]
             ).__enter__()
 
         assert _get_open_connections(client) == 0
@@ -900,16 +891,7 @@ class TestLinqApiv3:
 
         with pytest.raises(APIStatusError):
             client.chats.with_streaming_response.create(
-                from_="+12052535597",
-                message={
-                    "parts": [
-                        {
-                            "type": "text",
-                            "value": "Hello! How can I help you today?",
-                        }
-                    ]
-                },
-                to=["+12052532136"],
+                from_="+12052535597", message={}, to=["+12052532136"]
             ).__enter__()
         assert _get_open_connections(client) == 0
 
@@ -939,18 +921,7 @@ class TestLinqApiv3:
 
         respx_mock.post("/v3/chats").mock(side_effect=retry_handler)
 
-        response = client.chats.with_raw_response.create(
-            from_="+12052535597",
-            message={
-                "parts": [
-                    {
-                        "type": "text",
-                        "value": "Hello! How can I help you today?",
-                    }
-                ]
-            },
-            to=["+12052532136"],
-        )
+        response = client.chats.with_raw_response.create(from_="+12052535597", message={}, to=["+12052532136"])
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -975,17 +946,7 @@ class TestLinqApiv3:
         respx_mock.post("/v3/chats").mock(side_effect=retry_handler)
 
         response = client.chats.with_raw_response.create(
-            from_="+12052535597",
-            message={
-                "parts": [
-                    {
-                        "type": "text",
-                        "value": "Hello! How can I help you today?",
-                    }
-                ]
-            },
-            to=["+12052532136"],
-            extra_headers={"x-stainless-retry-count": Omit()},
+            from_="+12052535597", message={}, to=["+12052532136"], extra_headers={"x-stainless-retry-count": Omit()}
         )
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
@@ -1010,17 +971,7 @@ class TestLinqApiv3:
         respx_mock.post("/v3/chats").mock(side_effect=retry_handler)
 
         response = client.chats.with_raw_response.create(
-            from_="+12052535597",
-            message={
-                "parts": [
-                    {
-                        "type": "text",
-                        "value": "Hello! How can I help you today?",
-                    }
-                ]
-            },
-            to=["+12052532136"],
-            extra_headers={"x-stainless-retry-count": "42"},
+            from_="+12052535597", message={}, to=["+12052532136"], extra_headers={"x-stainless-retry-count": "42"}
         )
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
@@ -1868,16 +1819,7 @@ class TestAsyncLinqApiv3:
 
         with pytest.raises(APITimeoutError):
             await async_client.chats.with_streaming_response.create(
-                from_="+12052535597",
-                message={
-                    "parts": [
-                        {
-                            "type": "text",
-                            "value": "Hello! How can I help you today?",
-                        }
-                    ]
-                },
-                to=["+12052532136"],
+                from_="+12052535597", message={}, to=["+12052532136"]
             ).__aenter__()
 
         assert _get_open_connections(async_client) == 0
@@ -1891,16 +1833,7 @@ class TestAsyncLinqApiv3:
 
         with pytest.raises(APIStatusError):
             await async_client.chats.with_streaming_response.create(
-                from_="+12052535597",
-                message={
-                    "parts": [
-                        {
-                            "type": "text",
-                            "value": "Hello! How can I help you today?",
-                        }
-                    ]
-                },
-                to=["+12052532136"],
+                from_="+12052535597", message={}, to=["+12052532136"]
             ).__aenter__()
         assert _get_open_connections(async_client) == 0
 
@@ -1930,18 +1863,7 @@ class TestAsyncLinqApiv3:
 
         respx_mock.post("/v3/chats").mock(side_effect=retry_handler)
 
-        response = await client.chats.with_raw_response.create(
-            from_="+12052535597",
-            message={
-                "parts": [
-                    {
-                        "type": "text",
-                        "value": "Hello! How can I help you today?",
-                    }
-                ]
-            },
-            to=["+12052532136"],
-        )
+        response = await client.chats.with_raw_response.create(from_="+12052535597", message={}, to=["+12052532136"])
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -1966,17 +1888,7 @@ class TestAsyncLinqApiv3:
         respx_mock.post("/v3/chats").mock(side_effect=retry_handler)
 
         response = await client.chats.with_raw_response.create(
-            from_="+12052535597",
-            message={
-                "parts": [
-                    {
-                        "type": "text",
-                        "value": "Hello! How can I help you today?",
-                    }
-                ]
-            },
-            to=["+12052532136"],
-            extra_headers={"x-stainless-retry-count": Omit()},
+            from_="+12052535597", message={}, to=["+12052532136"], extra_headers={"x-stainless-retry-count": Omit()}
         )
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
@@ -2001,17 +1913,7 @@ class TestAsyncLinqApiv3:
         respx_mock.post("/v3/chats").mock(side_effect=retry_handler)
 
         response = await client.chats.with_raw_response.create(
-            from_="+12052535597",
-            message={
-                "parts": [
-                    {
-                        "type": "text",
-                        "value": "Hello! How can I help you today?",
-                    }
-                ]
-            },
-            to=["+12052532136"],
-            extra_headers={"x-stainless-retry-count": "42"},
+            from_="+12052535597", message={}, to=["+12052532136"], extra_headers={"x-stainless-retry-count": "42"}
         )
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
