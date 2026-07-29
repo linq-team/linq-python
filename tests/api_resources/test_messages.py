@@ -73,6 +73,7 @@ class TestMessages:
             },
             to=["+14155559876"],
             continuation_message={"text": "Hi, it's Acme Support reaching you from a new number."},
+            exclude_from=["+12052535597"],
             idempotency_key="send-abc123xyz",
         )
         assert_matches_type(MessageCreateResponse, message, path=["response"])
@@ -482,6 +483,7 @@ class TestAsyncMessages:
             },
             to=["+14155559876"],
             continuation_message={"text": "Hi, it's Acme Support reaching you from a new number."},
+            exclude_from=["+12052535597"],
             idempotency_key="send-abc123xyz",
         )
         assert_matches_type(MessageCreateResponse, message, path=["response"])

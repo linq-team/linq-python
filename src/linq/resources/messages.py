@@ -121,6 +121,7 @@ class MessagesResource(SyncAPIResource):
         message: MessageContentParam,
         to: SequenceNotStr[str],
         continuation_message: message_create_params.ContinuationMessage | Omit = omit,
+        exclude_from: SequenceNotStr[str] | Omit = omit,
         idempotency_key: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -157,6 +158,15 @@ class MessagesResource(SyncAPIResource):
 
         Recipients (`to`) are an order-independent set: a single handle is a direct
         chat, multiple handles a group chat.
+
+        ## Excluding lines
+
+        `exclude_from` keeps specific lines out of **this** send's line pick. It only
+        affects picking a line for a new chat — an existing chat is always reused on its
+        own line, preferring a chat on a non-excluded line when the recipients have more
+        than one. An exclusion never abandons a live chat or moves it to a new number,
+        so if the only chat these recipients have is on an excluded line, that chat is
+        still used. `from` tells you the line that was actually used.
 
         ## Differences from POST /v3/chats
 
@@ -195,6 +205,20 @@ class MessagesResource(SyncAPIResource):
               content). Ignored otherwise (a healthy reuse, or genuine first contact). Carries
               no parts, media, or effects — exactly one message is ever sent.
 
+          exclude_from: Lines (E.164) not to pick for this send. Applies for this request only — nothing
+              is remembered between calls.
+
+              **Exclusion only affects picking a line for a new chat.** If `to` already has a
+              chat, that chat is reused on its own line, and a chat on a non-excluded line is
+              preferred when there is more than one. If the only chat these recipients have is
+              on an excluded line, it is still reused — an exclusion never abandons a live
+              chat or moves it to a new number. Check `from` in the response to see the line
+              that was actually used.
+
+              Numbers that are not your lines are ignored. Every entry must be E.164 — a value
+              like `4155551234` is rejected rather than silently skipped. Excluding every one
+              of your available lines returns 400 when a line has to be picked.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -211,6 +235,7 @@ class MessagesResource(SyncAPIResource):
                     "message": message,
                     "to": to,
                     "continuation_message": continuation_message,
+                    "exclude_from": exclude_from,
                 },
                 message_create_params.MessageCreateParams,
             ),
@@ -656,6 +681,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         message: MessageContentParam,
         to: SequenceNotStr[str],
         continuation_message: message_create_params.ContinuationMessage | Omit = omit,
+        exclude_from: SequenceNotStr[str] | Omit = omit,
         idempotency_key: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -692,6 +718,15 @@ class AsyncMessagesResource(AsyncAPIResource):
 
         Recipients (`to`) are an order-independent set: a single handle is a direct
         chat, multiple handles a group chat.
+
+        ## Excluding lines
+
+        `exclude_from` keeps specific lines out of **this** send's line pick. It only
+        affects picking a line for a new chat — an existing chat is always reused on its
+        own line, preferring a chat on a non-excluded line when the recipients have more
+        than one. An exclusion never abandons a live chat or moves it to a new number,
+        so if the only chat these recipients have is on an excluded line, that chat is
+        still used. `from` tells you the line that was actually used.
 
         ## Differences from POST /v3/chats
 
@@ -730,6 +765,20 @@ class AsyncMessagesResource(AsyncAPIResource):
               content). Ignored otherwise (a healthy reuse, or genuine first contact). Carries
               no parts, media, or effects — exactly one message is ever sent.
 
+          exclude_from: Lines (E.164) not to pick for this send. Applies for this request only — nothing
+              is remembered between calls.
+
+              **Exclusion only affects picking a line for a new chat.** If `to` already has a
+              chat, that chat is reused on its own line, and a chat on a non-excluded line is
+              preferred when there is more than one. If the only chat these recipients have is
+              on an excluded line, it is still reused — an exclusion never abandons a live
+              chat or moves it to a new number. Check `from` in the response to see the line
+              that was actually used.
+
+              Numbers that are not your lines are ignored. Every entry must be E.164 — a value
+              like `4155551234` is rejected rather than silently skipped. Excluding every one
+              of your available lines returns 400 when a line has to be picked.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -746,6 +795,7 @@ class AsyncMessagesResource(AsyncAPIResource):
                     "message": message,
                     "to": to,
                     "continuation_message": continuation_message,
+                    "exclude_from": exclude_from,
                 },
                 message_create_params.MessageCreateParams,
             ),

@@ -10,6 +10,18 @@ __all__ = ["AvailableNumberRetrieveParams"]
 
 
 class AvailableNumberRetrieveParams(TypedDict, total=False):
+    exclude_from: SequenceNotStr[str]
+    """Lines (E.164) to leave out of this selection.
+
+    Applies to the returned `phone_number`, to the sticky choice when `to` is given,
+    and to the vCard's backup numbers. Repeat the parameter for multiple lines; use
+    `%2B` for the leading `+`.
+
+    Numbers that are not your lines are ignored. Every entry must be E.164 — a value
+    like `4155551234` is rejected rather than silently skipped. Excluding every one
+    of your available lines returns 400.
+    """
+
     to: SequenceNotStr[str]
     """Recipient handles (E.164 or email) the message is destined for.
 

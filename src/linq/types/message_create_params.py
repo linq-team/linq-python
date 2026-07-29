@@ -42,6 +42,23 @@ class MessageCreateParams(TypedDict, total=False):
     no parts, media, or effects — exactly one message is ever sent.
     """
 
+    exclude_from: SequenceNotStr[str]
+    """Lines (E.164) not to pick for this send.
+
+    Applies for this request only — nothing is remembered between calls.
+
+    **Exclusion only affects picking a line for a new chat.** If `to` already has a
+    chat, that chat is reused on its own line, and a chat on a non-excluded line is
+    preferred when there is more than one. If the only chat these recipients have is
+    on an excluded line, it is still reused — an exclusion never abandons a live
+    chat or moves it to a new number. Check `from` in the response to see the line
+    that was actually used.
+
+    Numbers that are not your lines are ignored. Every entry must be E.164 — a value
+    like `4155551234` is rejected rather than silently skipped. Excluding every one
+    of your available lines returns 400 when a line has to be picked.
+    """
+
     idempotency_key: Annotated[str, PropertyInfo(alias="Idempotency-Key")]
 
 

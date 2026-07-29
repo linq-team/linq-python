@@ -27,6 +27,7 @@ class TestAvailableNumber:
     @parametrize
     def test_method_retrieve_with_all_params(self, client: LinqAPIV3) -> None:
         available_number = client.available_number.retrieve(
+            exclude_from=["string"],
             to=["string"],
         )
         assert_matches_type(AvailableNumberRetrieveResponse, available_number, path=["response"])
@@ -69,6 +70,7 @@ class TestAsyncAvailableNumber:
     @parametrize
     async def test_method_retrieve_with_all_params(self, async_client: AsyncLinqAPIV3) -> None:
         available_number = await async_client.available_number.retrieve(
+            exclude_from=["string"],
             to=["string"],
         )
         assert_matches_type(AvailableNumberRetrieveResponse, available_number, path=["response"])
