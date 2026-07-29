@@ -16,6 +16,14 @@ from .messages import (
     MessagesResourceWithStreamingResponse,
     AsyncMessagesResourceWithStreamingResponse,
 )
+from .payments import (
+    PaymentsResource,
+    AsyncPaymentsResource,
+    PaymentsResourceWithRawResponse,
+    AsyncPaymentsResourceWithRawResponse,
+    PaymentsResourceWithStreamingResponse,
+    AsyncPaymentsResourceWithStreamingResponse,
+)
 from .webhooks import WebhooksResource, AsyncWebhooksResource
 from .capability import (
     CapabilityResource,
@@ -32,6 +40,14 @@ from .attachments import (
     AsyncAttachmentsResourceWithRawResponse,
     AttachmentsResourceWithStreamingResponse,
     AsyncAttachmentsResourceWithStreamingResponse,
+)
+from .experiences import (
+    ExperiencesResource,
+    AsyncExperiencesResource,
+    ExperiencesResourceWithRawResponse,
+    AsyncExperiencesResourceWithRawResponse,
+    ExperiencesResourceWithStreamingResponse,
+    AsyncExperiencesResourceWithStreamingResponse,
 )
 from .contact_card import (
     ContactCardResource,
@@ -65,6 +81,14 @@ from .webhook_events import (
     WebhookEventsResourceWithStreamingResponse,
     AsyncWebhookEventsResourceWithStreamingResponse,
 )
+from .payment_handles import (
+    PaymentHandlesResource,
+    AsyncPaymentHandlesResource,
+    PaymentHandlesResourceWithRawResponse,
+    AsyncPaymentHandlesResourceWithRawResponse,
+    PaymentHandlesResourceWithStreamingResponse,
+    AsyncPaymentHandlesResourceWithStreamingResponse,
+)
 from .available_number import (
     AvailableNumberResource,
     AsyncAvailableNumberResource,
@@ -80,6 +104,14 @@ from .payment_requests import (
     AsyncPaymentRequestsResourceWithRawResponse,
     PaymentRequestsResourceWithStreamingResponse,
     AsyncPaymentRequestsResourceWithStreamingResponse,
+)
+from .payment_providers import (
+    PaymentProvidersResource,
+    AsyncPaymentProvidersResource,
+    PaymentProvidersResourceWithRawResponse,
+    AsyncPaymentProvidersResourceWithRawResponse,
+    PaymentProvidersResourceWithStreamingResponse,
+    AsyncPaymentProvidersResourceWithStreamingResponse,
 )
 from .webhook_subscriptions import (
     WebhookSubscriptionsResource,
@@ -133,6 +165,30 @@ __all__ = [
     "AsyncPaymentRequestsResourceWithRawResponse",
     "PaymentRequestsResourceWithStreamingResponse",
     "AsyncPaymentRequestsResourceWithStreamingResponse",
+    "PaymentProvidersResource",
+    "AsyncPaymentProvidersResource",
+    "PaymentProvidersResourceWithRawResponse",
+    "AsyncPaymentProvidersResourceWithRawResponse",
+    "PaymentProvidersResourceWithStreamingResponse",
+    "AsyncPaymentProvidersResourceWithStreamingResponse",
+    "PaymentHandlesResource",
+    "AsyncPaymentHandlesResource",
+    "PaymentHandlesResourceWithRawResponse",
+    "AsyncPaymentHandlesResourceWithRawResponse",
+    "PaymentHandlesResourceWithStreamingResponse",
+    "AsyncPaymentHandlesResourceWithStreamingResponse",
+    "PaymentsResource",
+    "AsyncPaymentsResource",
+    "PaymentsResourceWithRawResponse",
+    "AsyncPaymentsResourceWithRawResponse",
+    "PaymentsResourceWithStreamingResponse",
+    "AsyncPaymentsResourceWithStreamingResponse",
+    "ExperiencesResource",
+    "AsyncExperiencesResource",
+    "ExperiencesResourceWithRawResponse",
+    "AsyncExperiencesResourceWithRawResponse",
+    "ExperiencesResourceWithStreamingResponse",
+    "AsyncExperiencesResourceWithStreamingResponse",
     "WebhookEventsResource",
     "AsyncWebhookEventsResource",
     "WebhookEventsResourceWithRawResponse",

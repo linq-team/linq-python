@@ -14,6 +14,7 @@ from .shared import (
     MediaPartResponse as MediaPartResponse,
 )
 from .message import Message as Message
+from .payment import Payment as Payment
 from .reply_to import ReplyTo as ReplyTo
 from .message_effect import MessageEffect as MessageEffect
 from .reply_to_param import ReplyToParam as ReplyToParam
@@ -22,6 +23,7 @@ from .payment_request import PaymentRequest as PaymentRequest
 from .text_part_param import TextPartParam as TextPartParam
 from .media_part_param import MediaPartParam as MediaPartParam
 from .message_event_v2 import MessageEventV2 as MessageEventV2
+from .payment_provider import PaymentProvider as PaymentProvider
 from .set_contact_card import SetContactCard as SetContactCard
 from .chat_create_params import ChatCreateParams as ChatCreateParams
 from .chat_update_params import ChatUpdateParams as ChatUpdateParams
@@ -36,12 +38,15 @@ from .handle_check_response import HandleCheckResponse as HandleCheckResponse
 from .message_content_param import MessageContentParam as MessageContentParam
 from .message_create_params import MessageCreateParams as MessageCreateParams
 from .message_update_params import MessageUpdateParams as MessageUpdateParams
+from .payment_create_params import PaymentCreateParams as PaymentCreateParams
 from .chat_list_chats_params import ChatListChatsParams as ChatListChatsParams
 from .schemas_message_effect import SchemasMessageEffect as SchemasMessageEffect
 from .supported_content_type import SupportedContentType as SupportedContentType
 from .message_create_response import MessageCreateResponse as MessageCreateResponse
 from .attachment_create_params import AttachmentCreateParams as AttachmentCreateParams
 from .chat_leave_chat_response import ChatLeaveChatResponse as ChatLeaveChatResponse
+from .experience_list_response import ExperienceListResponse as ExperienceListResponse
+from .payment_handle_connection import PaymentHandleConnection as PaymentHandleConnection
 from .phonenumber_list_response import PhonenumberListResponse as PhonenumberListResponse
 from .attachment_create_response import AttachmentCreateResponse as AttachmentCreateResponse
 from .chat_created_webhook_event import ChatCreatedWebhookEvent as ChatCreatedWebhookEvent
@@ -61,8 +66,11 @@ from .webhook_event_list_response import WebhookEventListResponse as WebhookEven
 from .attachment_retrieve_response import AttachmentRetrieveResponse as AttachmentRetrieveResponse
 from .chat_send_voicememo_response import ChatSendVoicememoResponse as ChatSendVoicememoResponse
 from .contact_card_retrieve_params import ContactCardRetrieveParams as ContactCardRetrieveParams
+from .experience_retrieve_response import ExperienceRetrieveResponse as ExperienceRetrieveResponse
 from .message_edited_webhook_event import MessageEditedWebhookEvent as MessageEditedWebhookEvent
 from .message_failed_webhook_event import MessageFailedWebhookEvent as MessageFailedWebhookEvent
+from .payment_credentials_response import PaymentCredentialsResponse as PaymentCredentialsResponse
+from .payment_handle_verify_params import PaymentHandleVerifyParams as PaymentHandleVerifyParams
 from .phone_number_update_response import PhoneNumberUpdateResponse as PhoneNumberUpdateResponse
 from .reaction_added_webhook_event import ReactionAddedWebhookEvent as ReactionAddedWebhookEvent
 from .message_add_reaction_response import MessageAddReactionResponse as MessageAddReactionResponse
@@ -74,10 +82,12 @@ from .message_update_app_card_params import MessageUpdateAppCardParams as Messag
 from .reaction_removed_webhook_event import ReactionRemovedWebhookEvent as ReactionRemovedWebhookEvent
 from .message_delivered_webhook_event import MessageDeliveredWebhookEvent as MessageDeliveredWebhookEvent
 from .participant_added_webhook_event import ParticipantAddedWebhookEvent as ParticipantAddedWebhookEvent
+from .payment_provider_connect_params import PaymentProviderConnectParams as PaymentProviderConnectParams
 from .available_number_retrieve_params import AvailableNumberRetrieveParams as AvailableNumberRetrieveParams
 from .message_update_app_card_response import MessageUpdateAppCardResponse as MessageUpdateAppCardResponse
 from .capability_check_i_message_params import CapabilityCheckIMessageParams as CapabilityCheckIMessageParams
 from .participant_removed_webhook_event import ParticipantRemovedWebhookEvent as ParticipantRemovedWebhookEvent
+from .payment_provider_connect_response import PaymentProviderConnectResponse as PaymentProviderConnectResponse
 from .available_number_retrieve_response import AvailableNumberRetrieveResponse as AvailableNumberRetrieveResponse
 from .webhook_subscription_create_params import WebhookSubscriptionCreateParams as WebhookSubscriptionCreateParams
 from .webhook_subscription_list_response import WebhookSubscriptionListResponse as WebhookSubscriptionListResponse

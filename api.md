@@ -179,6 +179,62 @@ Methods:
 - <code title="get /v3/payment_requests">client.payment_requests.<a href="./src/linq/resources/payment_requests.py">list</a>(\*\*<a href="src/linq/types/payment_request_list_params.py">params</a>) -> <a href="./src/linq/types/payment_request_list_response.py">PaymentRequestListResponse</a></code>
 - <code title="post /v3/payment_requests/{paymentRequestId}/cancel">client.payment_requests.<a href="./src/linq/resources/payment_requests.py">cancel</a>(payment_request_id) -> <a href="./src/linq/types/payment_request.py">PaymentRequest</a></code>
 
+# PaymentProviders
+
+Types:
+
+```python
+from linq.types import PaymentProvider, PaymentProviderConnectResponse
+```
+
+Methods:
+
+- <code title="get /v3/payments/providers/{provider}">client.payment_providers.<a href="./src/linq/resources/payment_providers.py">retrieve</a>(provider) -> <a href="./src/linq/types/payment_provider.py">PaymentProvider</a></code>
+- <code title="post /v3/payments/providers/{provider}/connect">client.payment_providers.<a href="./src/linq/resources/payment_providers.py">connect</a>(provider, \*\*<a href="src/linq/types/payment_provider_connect_params.py">params</a>) -> <a href="./src/linq/types/payment_provider_connect_response.py">PaymentProviderConnectResponse</a></code>
+
+# PaymentHandles
+
+Types:
+
+```python
+from linq.types import PaymentHandleConnection
+```
+
+Methods:
+
+- <code title="post /v3/payments/handles/{handle}/connect">client.payment_handles.<a href="./src/linq/resources/payment_handles.py">connect</a>(handle) -> <a href="./src/linq/types/payment_handle_connection.py">PaymentHandleConnection</a></code>
+- <code title="get /v3/payments/handles/{handle}/connection">client.payment_handles.<a href="./src/linq/resources/payment_handles.py">connection</a>(handle) -> <a href="./src/linq/types/payment_handle_connection.py">PaymentHandleConnection</a></code>
+- <code title="delete /v3/payments/handles/{handle}/connection">client.payment_handles.<a href="./src/linq/resources/payment_handles.py">revoke</a>(handle) -> <a href="./src/linq/types/payment_handle_connection.py">PaymentHandleConnection</a></code>
+- <code title="post /v3/payments/handles/{handle}/verify">client.payment_handles.<a href="./src/linq/resources/payment_handles.py">verify</a>(handle, \*\*<a href="src/linq/types/payment_handle_verify_params.py">params</a>) -> <a href="./src/linq/types/payment_handle_connection.py">PaymentHandleConnection</a></code>
+
+# Payments
+
+Types:
+
+```python
+from linq.types import Payment, PaymentCredentialsResponse
+```
+
+Methods:
+
+- <code title="post /v3/payments">client.payments.<a href="./src/linq/resources/payments.py">create</a>(\*\*<a href="src/linq/types/payment_create_params.py">params</a>) -> <a href="./src/linq/types/payment.py">Payment</a></code>
+- <code title="get /v3/payments/{paymentId}">client.payments.<a href="./src/linq/resources/payments.py">retrieve</a>(payment_id) -> <a href="./src/linq/types/payment.py">Payment</a></code>
+- <code title="post /v3/payments/{paymentId}/cancel">client.payments.<a href="./src/linq/resources/payments.py">cancel</a>(payment_id) -> <a href="./src/linq/types/payment.py">Payment</a></code>
+- <code title="get /v3/payments/{paymentId}/credentials">client.payments.<a href="./src/linq/resources/payments.py">credentials</a>(payment_id) -> <a href="./src/linq/types/payment_credentials_response.py">PaymentCredentialsResponse</a></code>
+
+# Experiences
+
+Types:
+
+```python
+from linq.types import ExperienceRetrieveResponse, ExperienceListResponse
+```
+
+Methods:
+
+- <code title="get /v3/experiences/{experience}">client.experiences.<a href="./src/linq/resources/experiences.py">retrieve</a>(experience) -> <a href="./src/linq/types/experience_retrieve_response.py">ExperienceRetrieveResponse</a></code>
+- <code title="get /v3/experiences">client.experiences.<a href="./src/linq/resources/experiences.py">list</a>() -> <a href="./src/linq/types/experience_list_response.py">ExperienceListResponse</a></code>
+
 # WebhookEvents
 
 Types:

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Union, Iterable
+from typing import Dict, Union, Iterable
 from typing_extensions import Literal, Required, TypeAlias, TypedDict
 
 from .reply_to_param import ReplyToParam
@@ -12,7 +12,42 @@ from .media_part_param import MediaPartParam
 from .shared.service_type import ServiceType
 from .message_effect_param import MessageEffectParam
 
-__all__ = ["MessageContentParam", "Part", "PartIMessageAppPart", "PartIMessageAppPartApp", "PartIMessageAppPartLayout"]
+__all__ = [
+    "MessageContentParam",
+    "Action",
+    "Part",
+    "PartIMessageAppPart",
+    "PartIMessageAppPartApp",
+    "PartIMessageAppPartLayout",
+]
+
+
+class Action(TypedDict, total=False):
+    """
+    Invokes an action on an experience — a third party that renders inside
+    Linq's iMessage app. Linq resolves the recipient's connection, mints any
+    session the action needs, composes the card and sends it; none of that
+    is visible to you.
+
+    Call `GET /v3/experiences/{experience}` for the actions you may invoke
+    and the fields each accepts.
+    """
+
+    action: Required[str]
+    """Which of its actions, e.g. `attach_card`."""
+
+    experience: Required[str]
+    """The experience to invoke, e.g. `agentcard`."""
+
+    params: Dict[str, object]
+    """Values for the fields this action exposes.
+
+    Keys are exactly the field names listed for the action — no mapping, no nesting.
+
+    Display copy only. Params can never change where a button goes or what a secure
+    field loads; those are fixed by the experience and validated before it is
+    registered.
+    """
 
 
 class PartIMessageAppPartApp(TypedDict, total=False):
@@ -160,6 +195,16 @@ class MessageContentParam(TypedDict, total=False):
     inside Linq's iMessage app. Never both: an app card is the whole message
     (Apple's `MSMessage` cannot coexist with text), so copy and a card are
     two sends, not one.
+    """
+
+    action: Action
+    """
+    Invokes an action on an experience — a third party that renders inside Linq's
+    iMessage app. Linq resolves the recipient's connection, mints any session the
+    action needs, composes the card and sends it; none of that is visible to you.
+
+    Call `GET /v3/experiences/{experience}` for the actions you may invoke and the
+    fields each accepts.
     """
 
     effect: MessageEffectParam

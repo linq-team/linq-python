@@ -40,6 +40,11 @@ class TestChats:
         chat = client.chats.create(
             from_="+12052535597",
             message={
+                "action": {
+                    "action": "attach_card",
+                    "experience": "agentcard",
+                    "params": {"foo": "bar"},
+                },
                 "effect": {
                     "name": "confetti",
                     "type": "screen",
@@ -436,6 +441,11 @@ class TestAsyncChats:
         chat = await async_client.chats.create(
             from_="+12052535597",
             message={
+                "action": {
+                    "action": "attach_card",
+                    "experience": "agentcard",
+                    "params": {"foo": "bar"},
+                },
                 "effect": {
                     "name": "confetti",
                     "type": "screen",
