@@ -222,6 +222,17 @@ class MessageEventV2(BaseModel):
     read_at: Optional[datetime] = None
     """When the message was read. Null if not yet read."""
 
+    reconciled_at: Optional[datetime] = None
+    """
+    Present only when this message was recovered by reconciliation rather than
+    delivered live, and set to the time of that recovery. The field is omitted
+    entirely for normally-delivered messages, which is the overwhelming majority.
+    When present, expect `sent_at` to be substantially earlier than delivery of this
+    event: the message is genuine but is arriving late and out of real-time order,
+    so treat it as history rather than as a live inbound (for example, suppress
+    auto-replies).
+    """
+
     reply_to: Optional[ReplyTo] = None
     """Reference to the message this is replying to (for threaded replies)"""
 
