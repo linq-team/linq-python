@@ -14,7 +14,7 @@ class ExperienceActionFields(BaseModel):
 
     required: Optional[bool] = None
 
-    type: Optional[Literal["string", "cents", "int"]] = None
+    type: Optional[Literal["string", "cents", "int", "url"]] = None
 
 
 class ExperienceAction(BaseModel):
