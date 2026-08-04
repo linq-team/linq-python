@@ -88,6 +88,18 @@ Methods:
 - <code title="get /v3/chats/{chatId}/location">client.chats.location.<a href="./src/linq/resources/chats/location.py">retrieve</a>(chat_id) -> <a href="./src/linq/types/chats/get_chat_location_response.py">GetChatLocationResponse</a></code>
 - <code title="post /v3/chats/{chatId}/location/request">client.chats.location.<a href="./src/linq/resources/chats/location.py">request</a>(chat_id) -> <a href="./src/linq/types/chats/location_request_response.py">LocationRequestResponse</a></code>
 
+## Polls
+
+Types:
+
+```python
+from linq.types.chats import Poll, PollEnvelope
+```
+
+Methods:
+
+- <code title="post /v3/chats/{chatId}/polls">client.chats.polls.<a href="./src/linq/resources/chats/polls.py">create</a>(chat_id, \*\*<a href="src/linq/types/chats/poll_create_params.py">params</a>) -> <a href="./src/linq/types/chats/poll_envelope.py">PollEnvelope</a></code>
+
 # Messages
 
 Types:
@@ -105,13 +117,21 @@ from linq.types import (
 
 Methods:
 
-- <code title="post /v3/messages">client.messages.<a href="./src/linq/resources/messages.py">create</a>(\*\*<a href="src/linq/types/message_create_params.py">params</a>) -> <a href="./src/linq/types/message_create_response.py">MessageCreateResponse</a></code>
-- <code title="get /v3/messages/{messageId}">client.messages.<a href="./src/linq/resources/messages.py">retrieve</a>(message_id) -> <a href="./src/linq/types/message.py">Message</a></code>
-- <code title="patch /v3/messages/{messageId}">client.messages.<a href="./src/linq/resources/messages.py">update</a>(message_id, \*\*<a href="src/linq/types/message_update_params.py">params</a>) -> <a href="./src/linq/types/message.py">Message</a></code>
-- <code title="delete /v3/messages/{messageId}">client.messages.<a href="./src/linq/resources/messages.py">delete</a>(message_id) -> None</code>
-- <code title="post /v3/messages/{messageId}/reactions">client.messages.<a href="./src/linq/resources/messages.py">add_reaction</a>(message_id, \*\*<a href="src/linq/types/message_add_reaction_params.py">params</a>) -> <a href="./src/linq/types/message_add_reaction_response.py">MessageAddReactionResponse</a></code>
-- <code title="get /v3/messages/{messageId}/thread">client.messages.<a href="./src/linq/resources/messages.py">list_messages_thread</a>(message_id, \*\*<a href="src/linq/types/message_list_messages_thread_params.py">params</a>) -> <a href="./src/linq/types/message.py">SyncListMessagesPagination[Message]</a></code>
-- <code title="post /v3/messages/{messageId}/update">client.messages.<a href="./src/linq/resources/messages.py">update_app_card</a>(message_id, \*\*<a href="src/linq/types/message_update_app_card_params.py">params</a>) -> <a href="./src/linq/types/message_update_app_card_response.py">MessageUpdateAppCardResponse</a></code>
+- <code title="post /v3/messages">client.messages.<a href="./src/linq/resources/messages/messages.py">create</a>(\*\*<a href="src/linq/types/message_create_params.py">params</a>) -> <a href="./src/linq/types/message_create_response.py">MessageCreateResponse</a></code>
+- <code title="get /v3/messages/{messageId}">client.messages.<a href="./src/linq/resources/messages/messages.py">retrieve</a>(message_id) -> <a href="./src/linq/types/message.py">Message</a></code>
+- <code title="patch /v3/messages/{messageId}">client.messages.<a href="./src/linq/resources/messages/messages.py">update</a>(message_id, \*\*<a href="src/linq/types/message_update_params.py">params</a>) -> <a href="./src/linq/types/message.py">Message</a></code>
+- <code title="delete /v3/messages/{messageId}">client.messages.<a href="./src/linq/resources/messages/messages.py">delete</a>(message_id) -> None</code>
+- <code title="post /v3/messages/{messageId}/reactions">client.messages.<a href="./src/linq/resources/messages/messages.py">add_reaction</a>(message_id, \*\*<a href="src/linq/types/message_add_reaction_params.py">params</a>) -> <a href="./src/linq/types/message_add_reaction_response.py">MessageAddReactionResponse</a></code>
+- <code title="get /v3/messages/{messageId}/thread">client.messages.<a href="./src/linq/resources/messages/messages.py">list_messages_thread</a>(message_id, \*\*<a href="src/linq/types/message_list_messages_thread_params.py">params</a>) -> <a href="./src/linq/types/message.py">SyncListMessagesPagination[Message]</a></code>
+- <code title="post /v3/messages/{messageId}/update">client.messages.<a href="./src/linq/resources/messages/messages.py">update_app_card</a>(message_id, \*\*<a href="src/linq/types/message_update_app_card_params.py">params</a>) -> <a href="./src/linq/types/message_update_app_card_response.py">MessageUpdateAppCardResponse</a></code>
+
+## Poll
+
+Methods:
+
+- <code title="get /v3/messages/{messageId}/poll">client.messages.poll.<a href="./src/linq/resources/messages/poll.py">retrieve</a>(message_id) -> <a href="./src/linq/types/chats/poll_envelope.py">PollEnvelope</a></code>
+- <code title="post /v3/messages/{messageId}/poll/options">client.messages.poll.<a href="./src/linq/resources/messages/poll.py">add_options</a>(message_id, \*\*<a href="src/linq/types/messages/poll_add_options_params.py">params</a>) -> <a href="./src/linq/types/chats/poll_envelope.py">PollEnvelope</a></code>
+- <code title="post /v3/messages/{messageId}/poll/votes">client.messages.poll.<a href="./src/linq/resources/messages/poll.py">vote</a>(message_id, \*\*<a href="src/linq/types/messages/poll_vote_params.py">params</a>) -> <a href="./src/linq/types/chats/poll_envelope.py">PollEnvelope</a></code>
 
 # Attachments
 

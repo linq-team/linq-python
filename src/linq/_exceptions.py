@@ -2,9 +2,13 @@
 
 from __future__ import annotations
 
+from typing import Any, Optional, cast
 from typing_extensions import Literal
 
 import httpx
+
+from ._utils import is_dict
+from ._models import construct_type
 
 __all__ = [
     "BadRequestError",
@@ -37,11 +41,30 @@ class APIError(LinqApiv3Error):
     If there was no response associated with this error then it will be `None`.
     """
 
-    def __init__(self, message: str, request: httpx.Request, *, body: object | None) -> None:  # noqa: ARG002
+    code: Optional[int]
+    """Linq API error code."""
+    doc_url: Optional[str]
+    """Link to documentation for this error code"""
+    retry_after: Optional[int] = None
+    """Number of seconds to wait before retrying.
+
+    Only present on 429 rate limit errors.
+    """
+
+    def __init__(self, message: str, request: httpx.Request, *, body: object | None) -> None:
         super().__init__(message)
         self.request = request
         self.message = message
         self.body = body
+
+        if is_dict(body):
+            self.code = cast(Any, construct_type(type_=int, value=body.get("code")))
+            self.doc_url = cast(Any, construct_type(type_=str, value=body.get("doc_url")))
+            self.retry_after = cast(Any, construct_type(type_=Optional[int], value=body.get("retry_after")))
+        else:
+            self.code = None
+            self.doc_url = None
+            self.retry_after = None
 
 
 class APIResponseValidationError(APIError):

@@ -21,6 +21,7 @@ from ._types import (
 )
 from ._utils import (
     is_given,
+    is_mapping,
     is_mapping_t,
     get_async_library,
 )
@@ -53,7 +54,6 @@ if TYPE_CHECKING:
         payment_providers,
         webhook_subscriptions,
     )
-    from .resources.messages import MessagesResource, AsyncMessagesResource
     from .resources.payments import PaymentsResource, AsyncPaymentsResource
     from .resources.webhooks import WebhooksResource, AsyncWebhooksResource
     from .resources.capability import CapabilityResource, AsyncCapabilityResource
@@ -67,6 +67,7 @@ if TYPE_CHECKING:
     from .resources.payment_handles import PaymentHandlesResource, AsyncPaymentHandlesResource
     from .resources.available_number import AvailableNumberResource, AsyncAvailableNumberResource
     from .resources.payment_requests import PaymentRequestsResource, AsyncPaymentRequestsResource
+    from .resources.messages.messages import MessagesResource, AsyncMessagesResource
     from .resources.payment_providers import PaymentProvidersResource, AsyncPaymentProvidersResource
     from .resources.webhook_subscriptions import WebhookSubscriptionsResource, AsyncWebhookSubscriptionsResource
 
@@ -1009,30 +1010,31 @@ class LinqAPIV3(SyncAPIClient):
         body: object,
         response: httpx.Response,
     ) -> APIStatusError:
+        data = body.get("error", body) if is_mapping(body) else body
         if response.status_code == 400:
-            return _exceptions.BadRequestError(err_msg, response=response, body=body)
+            return _exceptions.BadRequestError(err_msg, response=response, body=data)
 
         if response.status_code == 401:
-            return _exceptions.AuthenticationError(err_msg, response=response, body=body)
+            return _exceptions.AuthenticationError(err_msg, response=response, body=data)
 
         if response.status_code == 403:
-            return _exceptions.PermissionDeniedError(err_msg, response=response, body=body)
+            return _exceptions.PermissionDeniedError(err_msg, response=response, body=data)
 
         if response.status_code == 404:
-            return _exceptions.NotFoundError(err_msg, response=response, body=body)
+            return _exceptions.NotFoundError(err_msg, response=response, body=data)
 
         if response.status_code == 409:
-            return _exceptions.ConflictError(err_msg, response=response, body=body)
+            return _exceptions.ConflictError(err_msg, response=response, body=data)
 
         if response.status_code == 422:
-            return _exceptions.UnprocessableEntityError(err_msg, response=response, body=body)
+            return _exceptions.UnprocessableEntityError(err_msg, response=response, body=data)
 
         if response.status_code == 429:
-            return _exceptions.RateLimitError(err_msg, response=response, body=body)
+            return _exceptions.RateLimitError(err_msg, response=response, body=data)
 
         if response.status_code >= 500:
-            return _exceptions.InternalServerError(err_msg, response=response, body=body)
-        return APIStatusError(err_msg, response=response, body=body)
+            return _exceptions.InternalServerError(err_msg, response=response, body=data)
+        return APIStatusError(err_msg, response=response, body=data)
 
 
 class AsyncLinqAPIV3(AsyncAPIClient):
@@ -1962,30 +1964,31 @@ class AsyncLinqAPIV3(AsyncAPIClient):
         body: object,
         response: httpx.Response,
     ) -> APIStatusError:
+        data = body.get("error", body) if is_mapping(body) else body
         if response.status_code == 400:
-            return _exceptions.BadRequestError(err_msg, response=response, body=body)
+            return _exceptions.BadRequestError(err_msg, response=response, body=data)
 
         if response.status_code == 401:
-            return _exceptions.AuthenticationError(err_msg, response=response, body=body)
+            return _exceptions.AuthenticationError(err_msg, response=response, body=data)
 
         if response.status_code == 403:
-            return _exceptions.PermissionDeniedError(err_msg, response=response, body=body)
+            return _exceptions.PermissionDeniedError(err_msg, response=response, body=data)
 
         if response.status_code == 404:
-            return _exceptions.NotFoundError(err_msg, response=response, body=body)
+            return _exceptions.NotFoundError(err_msg, response=response, body=data)
 
         if response.status_code == 409:
-            return _exceptions.ConflictError(err_msg, response=response, body=body)
+            return _exceptions.ConflictError(err_msg, response=response, body=data)
 
         if response.status_code == 422:
-            return _exceptions.UnprocessableEntityError(err_msg, response=response, body=body)
+            return _exceptions.UnprocessableEntityError(err_msg, response=response, body=data)
 
         if response.status_code == 429:
-            return _exceptions.RateLimitError(err_msg, response=response, body=body)
+            return _exceptions.RateLimitError(err_msg, response=response, body=data)
 
         if response.status_code >= 500:
-            return _exceptions.InternalServerError(err_msg, response=response, body=body)
-        return APIStatusError(err_msg, response=response, body=body)
+            return _exceptions.InternalServerError(err_msg, response=response, body=data)
+        return APIStatusError(err_msg, response=response, body=data)
 
 
 class LinqAPIV3WithRawResponse:

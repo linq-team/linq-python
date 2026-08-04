@@ -51,6 +51,8 @@ class TestMessages:
                     {
                         "type": "text",
                         "value": "Hi! Thanks for reaching out — how can we help?",
+                        "mention": "+14155551234",
+                        "mention_range": [4, 9],
                         "text_decorations": [
                             {
                                 "range": [0, 5],
@@ -74,6 +76,7 @@ class TestMessages:
             to=["+14155559876"],
             continuation_message={"text": "Hi, it's Acme Support reaching you from a new number."},
             exclude_from=["+12052535597"],
+            override_optout=False,
             idempotency_key="send-abc123xyz",
         )
         assert_matches_type(MessageCreateResponse, message, path=["response"])
@@ -461,6 +464,8 @@ class TestAsyncMessages:
                     {
                         "type": "text",
                         "value": "Hi! Thanks for reaching out — how can we help?",
+                        "mention": "+14155551234",
+                        "mention_range": [4, 9],
                         "text_decorations": [
                             {
                                 "range": [0, 5],
@@ -484,6 +489,7 @@ class TestAsyncMessages:
             to=["+14155559876"],
             continuation_message={"text": "Hi, it's Acme Support reaching you from a new number."},
             exclude_from=["+12052535597"],
+            override_optout=False,
             idempotency_key="send-abc123xyz",
         )
         assert_matches_type(MessageCreateResponse, message, path=["response"])

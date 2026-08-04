@@ -6,31 +6,39 @@ from typing_extensions import Literal
 
 import httpx
 
-from ..types import (
+from .poll import (
+    PollResource,
+    AsyncPollResource,
+    PollResourceWithRawResponse,
+    AsyncPollResourceWithRawResponse,
+    PollResourceWithStreamingResponse,
+    AsyncPollResourceWithStreamingResponse,
+)
+from ...types import (
     message_create_params,
     message_update_params,
     message_add_reaction_params,
     message_update_app_card_params,
     message_list_messages_thread_params,
 )
-from .._types import Body, Omit, Query, Headers, NoneType, NotGiven, SequenceNotStr, omit, not_given
-from .._utils import path_template, maybe_transform, strip_not_given, async_maybe_transform
-from .._compat import cached_property
-from .._resource import SyncAPIResource, AsyncAPIResource
-from .._response import (
+from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, SequenceNotStr, omit, not_given
+from ..._utils import path_template, maybe_transform, strip_not_given, async_maybe_transform
+from ..._compat import cached_property
+from ..._resource import SyncAPIResource, AsyncAPIResource
+from ..._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ..pagination import SyncListMessagesPagination, AsyncListMessagesPagination
-from .._base_client import AsyncPaginator, make_request_options
-from ..types.message import Message
-from ..types.shared.reaction_type import ReactionType
-from ..types.message_content_param import MessageContentParam
-from ..types.message_create_response import MessageCreateResponse
-from ..types.message_add_reaction_response import MessageAddReactionResponse
-from ..types.message_update_app_card_response import MessageUpdateAppCardResponse
+from ...pagination import SyncListMessagesPagination, AsyncListMessagesPagination
+from ..._base_client import AsyncPaginator, make_request_options
+from ...types.message import Message
+from ...types.shared.reaction_type import ReactionType
+from ...types.message_content_param import MessageContentParam
+from ...types.message_create_response import MessageCreateResponse
+from ...types.message_add_reaction_response import MessageAddReactionResponse
+from ...types.message_update_app_card_response import MessageUpdateAppCardResponse
 
 __all__ = ["MessagesResource", "AsyncMessagesResource"]
 
@@ -97,6 +105,69 @@ class MessagesResource(SyncAPIResource):
     """
 
     @cached_property
+    def poll(self) -> PollResource:
+        """Messages are individual communications within a chat thread.
+
+        Messages can include text, media attachments, rich link previews, special effects
+        (like confetti or fireworks), and reactions. All messages are associated with a
+        specific chat and sent from a phone number you own.
+
+        Messages support delivery status tracking, read receipts, and editing capabilities.
+
+        ## Rich Link Previews
+
+        Send a URL as a `link` part to deliver it with a rich preview card showing the
+        page's title, description, and image (when available). A `link` part must be the
+        **only** part in the message — it cannot be combined with text or media parts.
+        To send a URL without a preview card, include it in a `text` part instead.
+
+        **Limitations:**
+        - A `link` part cannot be combined with other parts in the same message.
+        - Maximum URL length: 2,048 characters.
+
+        ## Ephemeral Messages (Privacy Tier)
+
+        For regulated or sensitive conversations, opt in to the **ephemeral messages** tier by contacting your Linq support contact. When enabled, every message on the covered phone numbers is automatically given a fixed **24-hour retention window** — after that window the platform permanently deletes the message from Linq storage. There is no per-message flag; ephemerality is applied automatically based on your configuration.
+
+        You can request it at two scopes:
+
+        | Scope | Effect |
+        |---|---|
+        | **Partner-wide** | Every outbound and inbound message on every phone number under your account is retained for 24 hours, then deleted. |
+        | **Per phone number** | Only the specified phone numbers have their messages auto-deleted. The rest follow the standard message-retention policy. |
+
+        **Behavioral differences vs the standard default:**
+
+        | Aspect | Standard | Ephemeral |
+        |---|---|---|
+        | Retention | Retained per the standard message-retention policy | **Hard backstop: 24 hours** from when the message is created |
+        | After expiry | Message stays retrievable | Message is permanently deleted — `GET /v3/messages/{messageId}` returns `404` and it no longer appears in `GET /v3/chats/{chatId}/messages` |
+        | Content on expiry | N/A | Text, formatting, and attachment references are scrubbed; the message is gone, not blanked out |
+        | Cross-partner isolation | Enforced | Enforced |
+
+        **How the 24-hour window works:**
+
+        - The window is fixed at **24 hours from message creation** (`created_at`) and cannot be configured per message.
+        - It mirrors the ephemeral *attachments* 1-day backstop, so a message and any media it carries expire together.
+        - Expiry is delivery-independent — the clock starts when the message is created, not when it is delivered or read.
+
+        **What you observe:**
+
+        - **No expiry timestamp is exposed.** API responses and webhook payloads do not include the deletion time. If you need it, compute `created_at + 24h` yourself.
+        - **No deletion webhook is sent.** There is no `message.deleted` event — a message simply stops being retrievable once its window passes.
+        - **Delivery is unaffected.** Ephemeral messages send, deliver, and fire the usual `message.sent` / `message.received` and status webhooks exactly like standard messages. Only retention changes.
+
+        **When to choose ephemeral:**
+
+        - You have a compliance requirement that the platform must not retain message content beyond a short window.
+        - The conversation is high-sensitivity (PHI, financial, identity verification) and you do not want it sitting in storage long-term.
+        - Your application is the system of record — you capture what you need from the delivery webhook in real time and do not rely on reading message history back from Linq later.
+
+        **Important:** ephemeral applies in *both directions* — messages you send **and** messages received by the phone numbers in that scope. Because Linq can no longer return the message after 24 hours, persist anything you need to keep from the webhook payload at the time it is delivered.
+        """
+        return PollResource(self._client)
+
+    @cached_property
     def with_raw_response(self) -> MessagesResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
@@ -122,6 +193,7 @@ class MessagesResource(SyncAPIResource):
         to: SequenceNotStr[str],
         continuation_message: message_create_params.ContinuationMessage | Omit = omit,
         exclude_from: SequenceNotStr[str] | Omit = omit,
+        override_optout: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -219,6 +291,11 @@ class MessagesResource(SyncAPIResource):
               like `4155551234` is rejected rather than silently skipped. Excluding every one
               of your available lines returns 400 when a line has to be picked.
 
+          override_optout: Send even though the recipient asked you to stop (`403`, error code `2024`).
+              Applies to this request only: the opt-out stays in place, so the next send
+              without this flag is rejected again. Every override is recorded against your API
+              key.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -236,6 +313,7 @@ class MessagesResource(SyncAPIResource):
                     "to": to,
                     "continuation_message": continuation_message,
                     "exclude_from": exclude_from,
+                    "override_optout": override_optout,
                 },
                 message_create_params.MessageCreateParams,
             ),
@@ -657,6 +735,69 @@ class AsyncMessagesResource(AsyncAPIResource):
     """
 
     @cached_property
+    def poll(self) -> AsyncPollResource:
+        """Messages are individual communications within a chat thread.
+
+        Messages can include text, media attachments, rich link previews, special effects
+        (like confetti or fireworks), and reactions. All messages are associated with a
+        specific chat and sent from a phone number you own.
+
+        Messages support delivery status tracking, read receipts, and editing capabilities.
+
+        ## Rich Link Previews
+
+        Send a URL as a `link` part to deliver it with a rich preview card showing the
+        page's title, description, and image (when available). A `link` part must be the
+        **only** part in the message — it cannot be combined with text or media parts.
+        To send a URL without a preview card, include it in a `text` part instead.
+
+        **Limitations:**
+        - A `link` part cannot be combined with other parts in the same message.
+        - Maximum URL length: 2,048 characters.
+
+        ## Ephemeral Messages (Privacy Tier)
+
+        For regulated or sensitive conversations, opt in to the **ephemeral messages** tier by contacting your Linq support contact. When enabled, every message on the covered phone numbers is automatically given a fixed **24-hour retention window** — after that window the platform permanently deletes the message from Linq storage. There is no per-message flag; ephemerality is applied automatically based on your configuration.
+
+        You can request it at two scopes:
+
+        | Scope | Effect |
+        |---|---|
+        | **Partner-wide** | Every outbound and inbound message on every phone number under your account is retained for 24 hours, then deleted. |
+        | **Per phone number** | Only the specified phone numbers have their messages auto-deleted. The rest follow the standard message-retention policy. |
+
+        **Behavioral differences vs the standard default:**
+
+        | Aspect | Standard | Ephemeral |
+        |---|---|---|
+        | Retention | Retained per the standard message-retention policy | **Hard backstop: 24 hours** from when the message is created |
+        | After expiry | Message stays retrievable | Message is permanently deleted — `GET /v3/messages/{messageId}` returns `404` and it no longer appears in `GET /v3/chats/{chatId}/messages` |
+        | Content on expiry | N/A | Text, formatting, and attachment references are scrubbed; the message is gone, not blanked out |
+        | Cross-partner isolation | Enforced | Enforced |
+
+        **How the 24-hour window works:**
+
+        - The window is fixed at **24 hours from message creation** (`created_at`) and cannot be configured per message.
+        - It mirrors the ephemeral *attachments* 1-day backstop, so a message and any media it carries expire together.
+        - Expiry is delivery-independent — the clock starts when the message is created, not when it is delivered or read.
+
+        **What you observe:**
+
+        - **No expiry timestamp is exposed.** API responses and webhook payloads do not include the deletion time. If you need it, compute `created_at + 24h` yourself.
+        - **No deletion webhook is sent.** There is no `message.deleted` event — a message simply stops being retrievable once its window passes.
+        - **Delivery is unaffected.** Ephemeral messages send, deliver, and fire the usual `message.sent` / `message.received` and status webhooks exactly like standard messages. Only retention changes.
+
+        **When to choose ephemeral:**
+
+        - You have a compliance requirement that the platform must not retain message content beyond a short window.
+        - The conversation is high-sensitivity (PHI, financial, identity verification) and you do not want it sitting in storage long-term.
+        - Your application is the system of record — you capture what you need from the delivery webhook in real time and do not rely on reading message history back from Linq later.
+
+        **Important:** ephemeral applies in *both directions* — messages you send **and** messages received by the phone numbers in that scope. Because Linq can no longer return the message after 24 hours, persist anything you need to keep from the webhook payload at the time it is delivered.
+        """
+        return AsyncPollResource(self._client)
+
+    @cached_property
     def with_raw_response(self) -> AsyncMessagesResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
@@ -682,6 +823,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         to: SequenceNotStr[str],
         continuation_message: message_create_params.ContinuationMessage | Omit = omit,
         exclude_from: SequenceNotStr[str] | Omit = omit,
+        override_optout: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -779,6 +921,11 @@ class AsyncMessagesResource(AsyncAPIResource):
               like `4155551234` is rejected rather than silently skipped. Excluding every one
               of your available lines returns 400 when a line has to be picked.
 
+          override_optout: Send even though the recipient asked you to stop (`403`, error code `2024`).
+              Applies to this request only: the opt-out stays in place, so the next send
+              without this flag is rejected again. Every override is recorded against your API
+              key.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -796,6 +943,7 @@ class AsyncMessagesResource(AsyncAPIResource):
                     "to": to,
                     "continuation_message": continuation_message,
                     "exclude_from": exclude_from,
+                    "override_optout": override_optout,
                 },
                 message_create_params.MessageCreateParams,
             ),
@@ -1181,6 +1329,69 @@ class MessagesResourceWithRawResponse:
             messages.update_app_card,
         )
 
+    @cached_property
+    def poll(self) -> PollResourceWithRawResponse:
+        """Messages are individual communications within a chat thread.
+
+        Messages can include text, media attachments, rich link previews, special effects
+        (like confetti or fireworks), and reactions. All messages are associated with a
+        specific chat and sent from a phone number you own.
+
+        Messages support delivery status tracking, read receipts, and editing capabilities.
+
+        ## Rich Link Previews
+
+        Send a URL as a `link` part to deliver it with a rich preview card showing the
+        page's title, description, and image (when available). A `link` part must be the
+        **only** part in the message — it cannot be combined with text or media parts.
+        To send a URL without a preview card, include it in a `text` part instead.
+
+        **Limitations:**
+        - A `link` part cannot be combined with other parts in the same message.
+        - Maximum URL length: 2,048 characters.
+
+        ## Ephemeral Messages (Privacy Tier)
+
+        For regulated or sensitive conversations, opt in to the **ephemeral messages** tier by contacting your Linq support contact. When enabled, every message on the covered phone numbers is automatically given a fixed **24-hour retention window** — after that window the platform permanently deletes the message from Linq storage. There is no per-message flag; ephemerality is applied automatically based on your configuration.
+
+        You can request it at two scopes:
+
+        | Scope | Effect |
+        |---|---|
+        | **Partner-wide** | Every outbound and inbound message on every phone number under your account is retained for 24 hours, then deleted. |
+        | **Per phone number** | Only the specified phone numbers have their messages auto-deleted. The rest follow the standard message-retention policy. |
+
+        **Behavioral differences vs the standard default:**
+
+        | Aspect | Standard | Ephemeral |
+        |---|---|---|
+        | Retention | Retained per the standard message-retention policy | **Hard backstop: 24 hours** from when the message is created |
+        | After expiry | Message stays retrievable | Message is permanently deleted — `GET /v3/messages/{messageId}` returns `404` and it no longer appears in `GET /v3/chats/{chatId}/messages` |
+        | Content on expiry | N/A | Text, formatting, and attachment references are scrubbed; the message is gone, not blanked out |
+        | Cross-partner isolation | Enforced | Enforced |
+
+        **How the 24-hour window works:**
+
+        - The window is fixed at **24 hours from message creation** (`created_at`) and cannot be configured per message.
+        - It mirrors the ephemeral *attachments* 1-day backstop, so a message and any media it carries expire together.
+        - Expiry is delivery-independent — the clock starts when the message is created, not when it is delivered or read.
+
+        **What you observe:**
+
+        - **No expiry timestamp is exposed.** API responses and webhook payloads do not include the deletion time. If you need it, compute `created_at + 24h` yourself.
+        - **No deletion webhook is sent.** There is no `message.deleted` event — a message simply stops being retrievable once its window passes.
+        - **Delivery is unaffected.** Ephemeral messages send, deliver, and fire the usual `message.sent` / `message.received` and status webhooks exactly like standard messages. Only retention changes.
+
+        **When to choose ephemeral:**
+
+        - You have a compliance requirement that the platform must not retain message content beyond a short window.
+        - The conversation is high-sensitivity (PHI, financial, identity verification) and you do not want it sitting in storage long-term.
+        - Your application is the system of record — you capture what you need from the delivery webhook in real time and do not rely on reading message history back from Linq later.
+
+        **Important:** ephemeral applies in *both directions* — messages you send **and** messages received by the phone numbers in that scope. Because Linq can no longer return the message after 24 hours, persist anything you need to keep from the webhook payload at the time it is delivered.
+        """
+        return PollResourceWithRawResponse(self._messages.poll)
+
 
 class AsyncMessagesResourceWithRawResponse:
     def __init__(self, messages: AsyncMessagesResource) -> None:
@@ -1207,6 +1418,69 @@ class AsyncMessagesResourceWithRawResponse:
         self.update_app_card = async_to_raw_response_wrapper(
             messages.update_app_card,
         )
+
+    @cached_property
+    def poll(self) -> AsyncPollResourceWithRawResponse:
+        """Messages are individual communications within a chat thread.
+
+        Messages can include text, media attachments, rich link previews, special effects
+        (like confetti or fireworks), and reactions. All messages are associated with a
+        specific chat and sent from a phone number you own.
+
+        Messages support delivery status tracking, read receipts, and editing capabilities.
+
+        ## Rich Link Previews
+
+        Send a URL as a `link` part to deliver it with a rich preview card showing the
+        page's title, description, and image (when available). A `link` part must be the
+        **only** part in the message — it cannot be combined with text or media parts.
+        To send a URL without a preview card, include it in a `text` part instead.
+
+        **Limitations:**
+        - A `link` part cannot be combined with other parts in the same message.
+        - Maximum URL length: 2,048 characters.
+
+        ## Ephemeral Messages (Privacy Tier)
+
+        For regulated or sensitive conversations, opt in to the **ephemeral messages** tier by contacting your Linq support contact. When enabled, every message on the covered phone numbers is automatically given a fixed **24-hour retention window** — after that window the platform permanently deletes the message from Linq storage. There is no per-message flag; ephemerality is applied automatically based on your configuration.
+
+        You can request it at two scopes:
+
+        | Scope | Effect |
+        |---|---|
+        | **Partner-wide** | Every outbound and inbound message on every phone number under your account is retained for 24 hours, then deleted. |
+        | **Per phone number** | Only the specified phone numbers have their messages auto-deleted. The rest follow the standard message-retention policy. |
+
+        **Behavioral differences vs the standard default:**
+
+        | Aspect | Standard | Ephemeral |
+        |---|---|---|
+        | Retention | Retained per the standard message-retention policy | **Hard backstop: 24 hours** from when the message is created |
+        | After expiry | Message stays retrievable | Message is permanently deleted — `GET /v3/messages/{messageId}` returns `404` and it no longer appears in `GET /v3/chats/{chatId}/messages` |
+        | Content on expiry | N/A | Text, formatting, and attachment references are scrubbed; the message is gone, not blanked out |
+        | Cross-partner isolation | Enforced | Enforced |
+
+        **How the 24-hour window works:**
+
+        - The window is fixed at **24 hours from message creation** (`created_at`) and cannot be configured per message.
+        - It mirrors the ephemeral *attachments* 1-day backstop, so a message and any media it carries expire together.
+        - Expiry is delivery-independent — the clock starts when the message is created, not when it is delivered or read.
+
+        **What you observe:**
+
+        - **No expiry timestamp is exposed.** API responses and webhook payloads do not include the deletion time. If you need it, compute `created_at + 24h` yourself.
+        - **No deletion webhook is sent.** There is no `message.deleted` event — a message simply stops being retrievable once its window passes.
+        - **Delivery is unaffected.** Ephemeral messages send, deliver, and fire the usual `message.sent` / `message.received` and status webhooks exactly like standard messages. Only retention changes.
+
+        **When to choose ephemeral:**
+
+        - You have a compliance requirement that the platform must not retain message content beyond a short window.
+        - The conversation is high-sensitivity (PHI, financial, identity verification) and you do not want it sitting in storage long-term.
+        - Your application is the system of record — you capture what you need from the delivery webhook in real time and do not rely on reading message history back from Linq later.
+
+        **Important:** ephemeral applies in *both directions* — messages you send **and** messages received by the phone numbers in that scope. Because Linq can no longer return the message after 24 hours, persist anything you need to keep from the webhook payload at the time it is delivered.
+        """
+        return AsyncPollResourceWithRawResponse(self._messages.poll)
 
 
 class MessagesResourceWithStreamingResponse:
@@ -1235,6 +1509,69 @@ class MessagesResourceWithStreamingResponse:
             messages.update_app_card,
         )
 
+    @cached_property
+    def poll(self) -> PollResourceWithStreamingResponse:
+        """Messages are individual communications within a chat thread.
+
+        Messages can include text, media attachments, rich link previews, special effects
+        (like confetti or fireworks), and reactions. All messages are associated with a
+        specific chat and sent from a phone number you own.
+
+        Messages support delivery status tracking, read receipts, and editing capabilities.
+
+        ## Rich Link Previews
+
+        Send a URL as a `link` part to deliver it with a rich preview card showing the
+        page's title, description, and image (when available). A `link` part must be the
+        **only** part in the message — it cannot be combined with text or media parts.
+        To send a URL without a preview card, include it in a `text` part instead.
+
+        **Limitations:**
+        - A `link` part cannot be combined with other parts in the same message.
+        - Maximum URL length: 2,048 characters.
+
+        ## Ephemeral Messages (Privacy Tier)
+
+        For regulated or sensitive conversations, opt in to the **ephemeral messages** tier by contacting your Linq support contact. When enabled, every message on the covered phone numbers is automatically given a fixed **24-hour retention window** — after that window the platform permanently deletes the message from Linq storage. There is no per-message flag; ephemerality is applied automatically based on your configuration.
+
+        You can request it at two scopes:
+
+        | Scope | Effect |
+        |---|---|
+        | **Partner-wide** | Every outbound and inbound message on every phone number under your account is retained for 24 hours, then deleted. |
+        | **Per phone number** | Only the specified phone numbers have their messages auto-deleted. The rest follow the standard message-retention policy. |
+
+        **Behavioral differences vs the standard default:**
+
+        | Aspect | Standard | Ephemeral |
+        |---|---|---|
+        | Retention | Retained per the standard message-retention policy | **Hard backstop: 24 hours** from when the message is created |
+        | After expiry | Message stays retrievable | Message is permanently deleted — `GET /v3/messages/{messageId}` returns `404` and it no longer appears in `GET /v3/chats/{chatId}/messages` |
+        | Content on expiry | N/A | Text, formatting, and attachment references are scrubbed; the message is gone, not blanked out |
+        | Cross-partner isolation | Enforced | Enforced |
+
+        **How the 24-hour window works:**
+
+        - The window is fixed at **24 hours from message creation** (`created_at`) and cannot be configured per message.
+        - It mirrors the ephemeral *attachments* 1-day backstop, so a message and any media it carries expire together.
+        - Expiry is delivery-independent — the clock starts when the message is created, not when it is delivered or read.
+
+        **What you observe:**
+
+        - **No expiry timestamp is exposed.** API responses and webhook payloads do not include the deletion time. If you need it, compute `created_at + 24h` yourself.
+        - **No deletion webhook is sent.** There is no `message.deleted` event — a message simply stops being retrievable once its window passes.
+        - **Delivery is unaffected.** Ephemeral messages send, deliver, and fire the usual `message.sent` / `message.received` and status webhooks exactly like standard messages. Only retention changes.
+
+        **When to choose ephemeral:**
+
+        - You have a compliance requirement that the platform must not retain message content beyond a short window.
+        - The conversation is high-sensitivity (PHI, financial, identity verification) and you do not want it sitting in storage long-term.
+        - Your application is the system of record — you capture what you need from the delivery webhook in real time and do not rely on reading message history back from Linq later.
+
+        **Important:** ephemeral applies in *both directions* — messages you send **and** messages received by the phone numbers in that scope. Because Linq can no longer return the message after 24 hours, persist anything you need to keep from the webhook payload at the time it is delivered.
+        """
+        return PollResourceWithStreamingResponse(self._messages.poll)
+
 
 class AsyncMessagesResourceWithStreamingResponse:
     def __init__(self, messages: AsyncMessagesResource) -> None:
@@ -1261,3 +1598,66 @@ class AsyncMessagesResourceWithStreamingResponse:
         self.update_app_card = async_to_streamed_response_wrapper(
             messages.update_app_card,
         )
+
+    @cached_property
+    def poll(self) -> AsyncPollResourceWithStreamingResponse:
+        """Messages are individual communications within a chat thread.
+
+        Messages can include text, media attachments, rich link previews, special effects
+        (like confetti or fireworks), and reactions. All messages are associated with a
+        specific chat and sent from a phone number you own.
+
+        Messages support delivery status tracking, read receipts, and editing capabilities.
+
+        ## Rich Link Previews
+
+        Send a URL as a `link` part to deliver it with a rich preview card showing the
+        page's title, description, and image (when available). A `link` part must be the
+        **only** part in the message — it cannot be combined with text or media parts.
+        To send a URL without a preview card, include it in a `text` part instead.
+
+        **Limitations:**
+        - A `link` part cannot be combined with other parts in the same message.
+        - Maximum URL length: 2,048 characters.
+
+        ## Ephemeral Messages (Privacy Tier)
+
+        For regulated or sensitive conversations, opt in to the **ephemeral messages** tier by contacting your Linq support contact. When enabled, every message on the covered phone numbers is automatically given a fixed **24-hour retention window** — after that window the platform permanently deletes the message from Linq storage. There is no per-message flag; ephemerality is applied automatically based on your configuration.
+
+        You can request it at two scopes:
+
+        | Scope | Effect |
+        |---|---|
+        | **Partner-wide** | Every outbound and inbound message on every phone number under your account is retained for 24 hours, then deleted. |
+        | **Per phone number** | Only the specified phone numbers have their messages auto-deleted. The rest follow the standard message-retention policy. |
+
+        **Behavioral differences vs the standard default:**
+
+        | Aspect | Standard | Ephemeral |
+        |---|---|---|
+        | Retention | Retained per the standard message-retention policy | **Hard backstop: 24 hours** from when the message is created |
+        | After expiry | Message stays retrievable | Message is permanently deleted — `GET /v3/messages/{messageId}` returns `404` and it no longer appears in `GET /v3/chats/{chatId}/messages` |
+        | Content on expiry | N/A | Text, formatting, and attachment references are scrubbed; the message is gone, not blanked out |
+        | Cross-partner isolation | Enforced | Enforced |
+
+        **How the 24-hour window works:**
+
+        - The window is fixed at **24 hours from message creation** (`created_at`) and cannot be configured per message.
+        - It mirrors the ephemeral *attachments* 1-day backstop, so a message and any media it carries expire together.
+        - Expiry is delivery-independent — the clock starts when the message is created, not when it is delivered or read.
+
+        **What you observe:**
+
+        - **No expiry timestamp is exposed.** API responses and webhook payloads do not include the deletion time. If you need it, compute `created_at + 24h` yourself.
+        - **No deletion webhook is sent.** There is no `message.deleted` event — a message simply stops being retrievable once its window passes.
+        - **Delivery is unaffected.** Ephemeral messages send, deliver, and fire the usual `message.sent` / `message.received` and status webhooks exactly like standard messages. Only retention changes.
+
+        **When to choose ephemeral:**
+
+        - You have a compliance requirement that the platform must not retain message content beyond a short window.
+        - The conversation is high-sensitivity (PHI, financial, identity verification) and you do not want it sitting in storage long-term.
+        - Your application is the system of record — you capture what you need from the delivery webhook in real time and do not rely on reading message history back from Linq later.
+
+        **Important:** ephemeral applies in *both directions* — messages you send **and** messages received by the phone numbers in that scope. Because Linq can no longer return the message after 24 hours, persist anything you need to keep from the webhook payload at the time it is delivered.
+        """
+        return AsyncPollResourceWithStreamingResponse(self._messages.poll)

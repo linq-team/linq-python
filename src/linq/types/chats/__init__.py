@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+from .poll import Poll as Poll
 from .sent_message import SentMessage as SentMessage
+from .poll_envelope import PollEnvelope as PollEnvelope
+from .poll_create_params import PollCreateParams as PollCreateParams
 from .message_list_params import MessageListParams as MessageListParams
 from .message_send_params import MessageSendParams as MessageSendParams
 from .message_send_response import MessageSendResponse as MessageSendResponse

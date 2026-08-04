@@ -100,6 +100,8 @@ class TestMessages:
                     {
                         "type": "text",
                         "value": "Hello, world!",
+                        "mention": "+14155551234",
+                        "mention_range": [4, 9],
                         "text_decorations": [
                             {
                                 "range": [0, 5],
@@ -120,6 +122,7 @@ class TestMessages:
                     "part_index": 0,
                 },
             },
+            override_optout=False,
         )
         assert_matches_type(MessageSendResponse, message, path=["response"])
 
@@ -247,6 +250,8 @@ class TestAsyncMessages:
                     {
                         "type": "text",
                         "value": "Hello, world!",
+                        "mention": "+14155551234",
+                        "mention_range": [4, 9],
                         "text_decorations": [
                             {
                                 "range": [0, 5],
@@ -267,6 +272,7 @@ class TestAsyncMessages:
                     "part_index": 0,
                 },
             },
+            override_optout=False,
         )
         assert_matches_type(MessageSendResponse, message, path=["response"])
 
