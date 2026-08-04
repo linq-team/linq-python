@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.19.0](https://github.com/linq-team/linq-python/compare/v0.18.0...v0.19.0) (2026-08-04)
+
+
+### Features
+
+* add action field to message content for app experiences ([e3e1944](https://github.com/linq-team/linq-python/commit/e3e194457f75c8a10e242c3e22ab2bac7fbf9a87))
+* add agentcard payment provider api ([e3e1944](https://github.com/linq-team/linq-python/commit/e3e194457f75c8a10e242c3e22ab2bac7fbf9a87))
+* add exclude_from parameter to control line selection ([e3e1944](https://github.com/linq-team/linq-python/commit/e3e194457f75c8a10e242c3e22ab2bac7fbf9a87))
+* add reconciled_at field to message objects ([e3e1944](https://github.com/linq-team/linq-python/commit/e3e194457f75c8a10e242c3e22ab2bac7fbf9a87))
+* support url-type fields in message action parameters ([e3e1944](https://github.com/linq-team/linq-python/commit/e3e194457f75c8a10e242c3e22ab2bac7fbf9a87))
+
+
+### Bug Fixes
+
+* clarify contact card creation and update behavior ([e3e1944](https://github.com/linq-team/linq-python/commit/e3e194457f75c8a10e242c3e22ab2bac7fbf9a87))
+* clarify idempotency key behavior with deleted messages ([e3e1944](https://github.com/linq-team/linq-python/commit/e3e194457f75c8a10e242c3e22ab2bac7fbf9a87))
+* clarify message.failed webhook delivery behavior ([e3e1944](https://github.com/linq-team/linq-python/commit/e3e194457f75c8a10e242c3e22ab2bac7fbf9a87))
+* clarify opt-out keyword matching requirements for chat health ([e3e1944](https://github.com/linq-team/linq-python/commit/e3e194457f75c8a10e242c3e22ab2bac7fbf9a87))
+
 ## [0.18.0](https://github.com/linq-team/linq-python/compare/v0.17.0...v0.18.0) (2026-07-26)
 
 
