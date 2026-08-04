@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.19.1](https://github.com/linq-team/linq-python/compare/v0.19.0...v0.19.1) (2026-08-04)
+
+
+### Bug Fixes
+
+* flatten poll subresources to avoid go compile errors ([7075b92](https://github.com/linq-team/linq-python/commit/7075b9271c2b9e981a8e4988cf6dfffa781157cb))
+
 ## [0.19.0](https://github.com/linq-team/linq-python/compare/v0.18.0...v0.19.0) (2026-08-04)
 
 
