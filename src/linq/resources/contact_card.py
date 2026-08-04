@@ -71,12 +71,12 @@ class ContactCardResource(SyncAPIResource):
         This endpoint is intended for
         initial, one-time setup only.
 
-        The contact card is stored in an inactive state first. Once it's applied
-        successfully, it is activated and `is_active` is returned as `true`. On failure,
-        `is_active` is `false`.
+        If setup does not complete, the response is `500` (`2022`) — call this endpoint
+        again.
 
-        **Note:** To update an existing contact card after setup, use
-        `PATCH /v3/contact_card` instead.
+        **Note:** once a card is active, this endpoint returns `409` (`2014`) so an
+        existing card is never overwritten by accident. Use `PATCH /v3/contact_card` to
+        change it.
 
         Args:
           first_name: First name for the contact card. Required.
@@ -168,13 +168,14 @@ class ContactCardResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SetContactCard:
         """
-        Partially updates an existing active contact card for a phone number.
+        Partially updates the contact card for a phone number.
 
-        Fetches the current active contact card and merges the provided fields. Only
-        fields present in the request body are updated; omitted fields retain their
-        existing values.
+        Fetches the current contact card and merges the provided fields. Only fields
+        present in the request body are updated; omitted fields retain their existing
+        values.
 
-        Requires an active contact card to exist for the phone number.
+        If the update does not complete, the response is `500` (`2022`) — call this
+        endpoint again.
 
         Args:
           phone_number: E.164 phone number of the contact card to update
@@ -265,12 +266,12 @@ class AsyncContactCardResource(AsyncAPIResource):
         This endpoint is intended for
         initial, one-time setup only.
 
-        The contact card is stored in an inactive state first. Once it's applied
-        successfully, it is activated and `is_active` is returned as `true`. On failure,
-        `is_active` is `false`.
+        If setup does not complete, the response is `500` (`2022`) — call this endpoint
+        again.
 
-        **Note:** To update an existing contact card after setup, use
-        `PATCH /v3/contact_card` instead.
+        **Note:** once a card is active, this endpoint returns `409` (`2014`) so an
+        existing card is never overwritten by accident. Use `PATCH /v3/contact_card` to
+        change it.
 
         Args:
           first_name: First name for the contact card. Required.
@@ -362,13 +363,14 @@ class AsyncContactCardResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SetContactCard:
         """
-        Partially updates an existing active contact card for a phone number.
+        Partially updates the contact card for a phone number.
 
-        Fetches the current active contact card and merges the provided fields. Only
-        fields present in the request body are updated; omitted fields retain their
-        existing values.
+        Fetches the current contact card and merges the provided fields. Only fields
+        present in the request body are updated; omitted fields retain their existing
+        values.
 
-        Requires an active contact card to exist for the phone number.
+        If the update does not complete, the response is `500` (`2022`) — call this
+        endpoint again.
 
         Args:
           phone_number: E.164 phone number of the contact card to update

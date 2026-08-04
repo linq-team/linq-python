@@ -17,6 +17,11 @@ class MessageCreateParams(TypedDict, total=False):
 
     Groups all message-related fields together, separating the "what" (message
     content) from the "where" (routing fields like from/to).
+
+    A message carries EITHER `parts` — text and attachments, which compose into one
+    bubble — or a single `action`, which invokes an experience inside Linq's
+    iMessage app. Never both: an app card is the whole message (Apple's `MSMessage`
+    cannot coexist with text), so copy and a card are two sends, not one.
     """
 
     to: Required[SequenceNotStr[str]]
@@ -35,6 +40,23 @@ class MessageCreateParams(TypedDict, total=False):
     typically want a fresh-number-appropriate opener rather than the original
     content). Ignored otherwise (a healthy reuse, or genuine first contact). Carries
     no parts, media, or effects — exactly one message is ever sent.
+    """
+
+    exclude_from: SequenceNotStr[str]
+    """Lines (E.164) not to pick for this send.
+
+    Applies for this request only — nothing is remembered between calls.
+
+    **Exclusion only affects picking a line for a new chat.** If `to` already has a
+    chat, that chat is reused on its own line, and a chat on a non-excluded line is
+    preferred when there is more than one. If the only chat these recipients have is
+    on an excluded line, it is still reused — an exclusion never abandons a live
+    chat or moves it to a new number. Check `from` in the response to see the line
+    that was actually used.
+
+    Numbers that are not your lines are ignored. Every entry must be E.164 — a value
+    like `4155551234` is rejected rather than silently skipped. Excluding every one
+    of your available lines returns 400 when a line has to be picked.
     """
 
     idempotency_key: Annotated[str, PropertyInfo(alias="Idempotency-Key")]

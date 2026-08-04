@@ -53,6 +53,7 @@ class AvailableNumberResource(SyncAPIResource):
     def retrieve(
         self,
         *,
+        exclude_from: SequenceNotStr[str] | Omit = omit,
         to: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -77,9 +78,19 @@ class AvailableNumberResource(SyncAPIResource):
         Also returns `vcf_url`: a time-limited link to a vCard (`.vcf`) for the chosen
         line, carrying its contact card (name/photo) with the chosen number as the
         primary `TEL` and the partner's other available lines as backups. Share it with
-        recipients so they can save the line as a contact.
+        recipients so they can save the line as a contact. Lines you pass in
+        `exclude_from` are left out of the vCard too.
 
         Args:
+          exclude_from: Lines (E.164) to leave out of this selection. Applies to the returned
+              `phone_number`, to the sticky choice when `to` is given, and to the vCard's
+              backup numbers. Repeat the parameter for multiple lines; use `%2B` for the
+              leading `+`.
+
+              Numbers that are not your lines are ignored. Every entry must be E.164 — a value
+              like `4155551234` is rejected rather than silently skipped. Excluding every one
+              of your available lines returns 400.
+
           to: Recipient handles (E.164 or email) the message is destined for. When provided,
               an existing chat with these recipients makes the choice sticky. Repeat the
               parameter for multiple recipients.
@@ -99,7 +110,13 @@ class AvailableNumberResource(SyncAPIResource):
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=maybe_transform({"to": to}, available_number_retrieve_params.AvailableNumberRetrieveParams),
+                query=maybe_transform(
+                    {
+                        "exclude_from": exclude_from,
+                        "to": to,
+                    },
+                    available_number_retrieve_params.AvailableNumberRetrieveParams,
+                ),
             ),
             cast_to=AvailableNumberRetrieveResponse,
         )
@@ -137,6 +154,7 @@ class AsyncAvailableNumberResource(AsyncAPIResource):
     async def retrieve(
         self,
         *,
+        exclude_from: SequenceNotStr[str] | Omit = omit,
         to: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -161,9 +179,19 @@ class AsyncAvailableNumberResource(AsyncAPIResource):
         Also returns `vcf_url`: a time-limited link to a vCard (`.vcf`) for the chosen
         line, carrying its contact card (name/photo) with the chosen number as the
         primary `TEL` and the partner's other available lines as backups. Share it with
-        recipients so they can save the line as a contact.
+        recipients so they can save the line as a contact. Lines you pass in
+        `exclude_from` are left out of the vCard too.
 
         Args:
+          exclude_from: Lines (E.164) to leave out of this selection. Applies to the returned
+              `phone_number`, to the sticky choice when `to` is given, and to the vCard's
+              backup numbers. Repeat the parameter for multiple lines; use `%2B` for the
+              leading `+`.
+
+              Numbers that are not your lines are ignored. Every entry must be E.164 — a value
+              like `4155551234` is rejected rather than silently skipped. Excluding every one
+              of your available lines returns 400.
+
           to: Recipient handles (E.164 or email) the message is destined for. When provided,
               an existing chat with these recipients makes the choice sticky. Repeat the
               parameter for multiple recipients.
@@ -184,7 +212,11 @@ class AsyncAvailableNumberResource(AsyncAPIResource):
                 extra_body=extra_body,
                 timeout=timeout,
                 query=await async_maybe_transform(
-                    {"to": to}, available_number_retrieve_params.AvailableNumberRetrieveParams
+                    {
+                        "exclude_from": exclude_from,
+                        "to": to,
+                    },
+                    available_number_retrieve_params.AvailableNumberRetrieveParams,
                 ),
             ),
             cast_to=AvailableNumberRetrieveResponse,

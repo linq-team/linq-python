@@ -190,6 +190,16 @@ class Message(BaseModel):
     read_at: Optional[datetime] = None
     """When the message was read"""
 
+    reconciled_at: Optional[datetime] = None
+    """
+    Present only when this message was recovered by reconciliation rather than
+    delivered live, and set to the time of that recovery. The field is omitted
+    entirely for normally-delivered messages, which is the overwhelming majority.
+    When present, expect `sent_at` to be substantially earlier — the message is
+    genuine but was ingested late, so it may not have appeared in earlier reads of
+    this conversation.
+    """
+
     reply_to: Optional[ReplyTo] = None
     """Indicates this message is a threaded reply to another message"""
 

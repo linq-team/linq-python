@@ -121,6 +121,7 @@ class MessagesResource(SyncAPIResource):
         message: MessageContentParam,
         to: SequenceNotStr[str],
         continuation_message: message_create_params.ContinuationMessage | Omit = omit,
+        exclude_from: SequenceNotStr[str] | Omit = omit,
         idempotency_key: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -158,6 +159,15 @@ class MessagesResource(SyncAPIResource):
         Recipients (`to`) are an order-independent set: a single handle is a direct
         chat, multiple handles a group chat.
 
+        ## Excluding lines
+
+        `exclude_from` keeps specific lines out of **this** send's line pick. It only
+        affects picking a line for a new chat — an existing chat is always reused on its
+        own line, preferring a chat on a non-excluded line when the recipients have more
+        than one. An exclusion never abandons a live chat or moves it to a new number,
+        so if the only chat these recipients have is on an excluded line, that chat is
+        still used. `from` tells you the line that was actually used.
+
         ## Differences from POST /v3/chats
 
         - The first message **may contain a link** (including for a newly created chat).
@@ -178,6 +188,11 @@ class MessagesResource(SyncAPIResource):
               separating the "what" (message content) from the "where" (routing fields like
               from/to).
 
+              A message carries EITHER `parts` — text and attachments, which compose into one
+              bubble — or a single `action`, which invokes an experience inside Linq's
+              iMessage app. Never both: an app card is the whole message (Apple's `MSMessage`
+              cannot coexist with text), so copy and a card are two sends, not one.
+
           to: Recipient handles (E.164 phone numbers or email addresses). One handle is a
               direct chat; multiple handles a group chat. Order-independent — the set
               identifies the chat.
@@ -189,6 +204,20 @@ class MessagesResource(SyncAPIResource):
               typically want a fresh-number-appropriate opener rather than the original
               content). Ignored otherwise (a healthy reuse, or genuine first contact). Carries
               no parts, media, or effects — exactly one message is ever sent.
+
+          exclude_from: Lines (E.164) not to pick for this send. Applies for this request only — nothing
+              is remembered between calls.
+
+              **Exclusion only affects picking a line for a new chat.** If `to` already has a
+              chat, that chat is reused on its own line, and a chat on a non-excluded line is
+              preferred when there is more than one. If the only chat these recipients have is
+              on an excluded line, it is still reused — an exclusion never abandons a live
+              chat or moves it to a new number. Check `from` in the response to see the line
+              that was actually used.
+
+              Numbers that are not your lines are ignored. Every entry must be E.164 — a value
+              like `4155551234` is rejected rather than silently skipped. Excluding every one
+              of your available lines returns 400 when a line has to be picked.
 
           extra_headers: Send extra headers
 
@@ -206,6 +235,7 @@ class MessagesResource(SyncAPIResource):
                     "message": message,
                     "to": to,
                     "continuation_message": continuation_message,
+                    "exclude_from": exclude_from,
                 },
                 message_create_params.MessageCreateParams,
             ),
@@ -313,7 +343,9 @@ class MessagesResource(SyncAPIResource):
         """Deletes a message from the Linq API only.
 
         This does NOT unsend or remove the
-        message from the actual chat — recipients will still see the message.
+        message from the actual chat — recipients will still see the message. Re-sending
+        with a deleted message's idempotency key returns 404 — a deleted message is
+        never resent.
 
         Args:
           extra_headers: Send extra headers
@@ -649,6 +681,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         message: MessageContentParam,
         to: SequenceNotStr[str],
         continuation_message: message_create_params.ContinuationMessage | Omit = omit,
+        exclude_from: SequenceNotStr[str] | Omit = omit,
         idempotency_key: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -686,6 +719,15 @@ class AsyncMessagesResource(AsyncAPIResource):
         Recipients (`to`) are an order-independent set: a single handle is a direct
         chat, multiple handles a group chat.
 
+        ## Excluding lines
+
+        `exclude_from` keeps specific lines out of **this** send's line pick. It only
+        affects picking a line for a new chat — an existing chat is always reused on its
+        own line, preferring a chat on a non-excluded line when the recipients have more
+        than one. An exclusion never abandons a live chat or moves it to a new number,
+        so if the only chat these recipients have is on an excluded line, that chat is
+        still used. `from` tells you the line that was actually used.
+
         ## Differences from POST /v3/chats
 
         - The first message **may contain a link** (including for a newly created chat).
@@ -706,6 +748,11 @@ class AsyncMessagesResource(AsyncAPIResource):
               separating the "what" (message content) from the "where" (routing fields like
               from/to).
 
+              A message carries EITHER `parts` — text and attachments, which compose into one
+              bubble — or a single `action`, which invokes an experience inside Linq's
+              iMessage app. Never both: an app card is the whole message (Apple's `MSMessage`
+              cannot coexist with text), so copy and a card are two sends, not one.
+
           to: Recipient handles (E.164 phone numbers or email addresses). One handle is a
               direct chat; multiple handles a group chat. Order-independent — the set
               identifies the chat.
@@ -717,6 +764,20 @@ class AsyncMessagesResource(AsyncAPIResource):
               typically want a fresh-number-appropriate opener rather than the original
               content). Ignored otherwise (a healthy reuse, or genuine first contact). Carries
               no parts, media, or effects — exactly one message is ever sent.
+
+          exclude_from: Lines (E.164) not to pick for this send. Applies for this request only — nothing
+              is remembered between calls.
+
+              **Exclusion only affects picking a line for a new chat.** If `to` already has a
+              chat, that chat is reused on its own line, and a chat on a non-excluded line is
+              preferred when there is more than one. If the only chat these recipients have is
+              on an excluded line, it is still reused — an exclusion never abandons a live
+              chat or moves it to a new number. Check `from` in the response to see the line
+              that was actually used.
+
+              Numbers that are not your lines are ignored. Every entry must be E.164 — a value
+              like `4155551234` is rejected rather than silently skipped. Excluding every one
+              of your available lines returns 400 when a line has to be picked.
 
           extra_headers: Send extra headers
 
@@ -734,6 +795,7 @@ class AsyncMessagesResource(AsyncAPIResource):
                     "message": message,
                     "to": to,
                     "continuation_message": continuation_message,
+                    "exclude_from": exclude_from,
                 },
                 message_create_params.MessageCreateParams,
             ),
@@ -841,7 +903,9 @@ class AsyncMessagesResource(AsyncAPIResource):
         """Deletes a message from the Linq API only.
 
         This does NOT unsend or remove the
-        message from the actual chat — recipients will still see the message.
+        message from the actual chat — recipients will still see the message. Re-sending
+        with a deleted message's idempotency key returns 404 — a deleted message is
+        never resent.
 
         Args:
           extra_headers: Send extra headers

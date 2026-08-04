@@ -43,14 +43,7 @@ client = LinqAPIV3(
 
 chat = client.chats.create(
     from_="+12052535597",
-    message={
-        "parts": [
-            {
-                "type": "text",
-                "value": "Hello! How can I help you today?",
-            }
-        ]
-    },
+    message={},
     to=["+12052532136"],
 )
 print(chat.chat)
@@ -78,14 +71,7 @@ client = AsyncLinqAPIV3(
 async def main() -> None:
     chat = await client.chats.create(
         from_="+12052535597",
-        message={
-            "parts": [
-                {
-                    "type": "text",
-                    "value": "Hello! How can I help you today?",
-                }
-            ]
-        },
+        message={},
         to=["+12052532136"],
     )
     print(chat.chat)
@@ -123,14 +109,7 @@ async def main() -> None:
     ) as client:
         chat = await client.chats.create(
             from_="+12052535597",
-            message={
-                "parts": [
-                    {
-                        "type": "text",
-                        "value": "Hello! How can I help you today?",
-                    }
-                ]
-            },
+            message={},
             to=["+12052532136"],
         )
         print(chat.chat)
@@ -253,14 +232,7 @@ client = LinqAPIV3()
 try:
     client.chats.create(
         from_="+12052535597",
-        message={
-            "parts": [
-                {
-                    "type": "text",
-                    "value": "Hello! How can I help you today?",
-                }
-            ]
-        },
+        message={},
         to=["+12052532136"],
     )
 except linq.APIConnectionError as e:
@@ -307,14 +279,7 @@ client = LinqAPIV3(
 # Or, configure per-request:
 client.with_options(max_retries=5).chats.create(
     from_="+12052535597",
-    message={
-        "parts": [
-            {
-                "type": "text",
-                "value": "Hello! How can I help you today?",
-            }
-        ]
-    },
+    message={},
     to=["+12052532136"],
 )
 ```
@@ -341,14 +306,7 @@ client = LinqAPIV3(
 # Override per-request:
 client.with_options(timeout=5.0).chats.create(
     from_="+12052535597",
-    message={
-        "parts": [
-            {
-                "type": "text",
-                "value": "Hello! How can I help you today?",
-            }
-        ]
-    },
+    message={},
     to=["+12052532136"],
 )
 ```
@@ -393,12 +351,7 @@ from linq import LinqAPIV3
 client = LinqAPIV3()
 response = client.chats.with_raw_response.create(
     from_="+12052535597",
-    message={
-        "parts": [{
-            "type": "text",
-            "value": "Hello! How can I help you today?",
-        }]
-    },
+    message={},
     to=["+12052532136"],
 )
 print(response.headers.get('X-My-Header'))
@@ -420,14 +373,7 @@ To stream the response body, use `.with_streaming_response` instead, which requi
 ```python
 with client.chats.with_streaming_response.create(
     from_="+12052535597",
-    message={
-        "parts": [
-            {
-                "type": "text",
-                "value": "Hello! How can I help you today?",
-            }
-        ]
-    },
+    message={},
     to=["+12052532136"],
 ) as response:
     print(response.headers.get("X-My-Header"))
