@@ -54,6 +54,8 @@ class TestChats:
                     {
                         "type": "text",
                         "value": "Hello! How can I help you today?",
+                        "mention": "+14155551234",
+                        "mention_range": [4, 9],
                         "text_decorations": [
                             {
                                 "range": [0, 5],
@@ -75,6 +77,7 @@ class TestChats:
                 },
             },
             to=["+12052532136"],
+            override_optout=False,
         )
         assert_matches_type(ChatCreateResponse, chat, path=["response"])
 
@@ -339,6 +342,7 @@ class TestChats:
         chat = client.chats.send_voicememo(
             chat_id="f19ee7b8-8533-4c5c-83ec-4ef8d6d1ddbd",
             attachment_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            override_optout=False,
             voice_memo_url="https://example.com/voice-memo.m4a",
         )
         assert_matches_type(ChatSendVoicememoResponse, chat, path=["response"])
@@ -455,6 +459,8 @@ class TestAsyncChats:
                     {
                         "type": "text",
                         "value": "Hello! How can I help you today?",
+                        "mention": "+14155551234",
+                        "mention_range": [4, 9],
                         "text_decorations": [
                             {
                                 "range": [0, 5],
@@ -476,6 +482,7 @@ class TestAsyncChats:
                 },
             },
             to=["+12052532136"],
+            override_optout=False,
         )
         assert_matches_type(ChatCreateResponse, chat, path=["response"])
 
@@ -740,6 +747,7 @@ class TestAsyncChats:
         chat = await async_client.chats.send_voicememo(
             chat_id="f19ee7b8-8533-4c5c-83ec-4ef8d6d1ddbd",
             attachment_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            override_optout=False,
             voice_memo_url="https://example.com/voice-memo.m4a",
         )
         assert_matches_type(ChatSendVoicememoResponse, chat, path=["response"])

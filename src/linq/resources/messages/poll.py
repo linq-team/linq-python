@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+from typing import Iterable
+from typing_extensions import Literal
+
 import httpx
 
-from ..._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
+from ..._types import Body, Query, Headers, NotGiven, not_given
 from ..._utils import path_template, maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
@@ -14,17 +17,14 @@ from ..._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ...pagination import SyncListMessagesPagination, AsyncListMessagesPagination
-from ...types.chats import message_list_params, message_send_params
-from ..._base_client import AsyncPaginator, make_request_options
-from ...types.message import Message
-from ...types.message_content_param import MessageContentParam
-from ...types.chats.message_send_response import MessageSendResponse
+from ..._base_client import make_request_options
+from ...types.messages import poll_vote_params, poll_add_options_params
+from ...types.chats.poll_envelope import PollEnvelope
 
-__all__ = ["MessagesResource", "AsyncMessagesResource"]
+__all__ = ["PollResource", "AsyncPollResource"]
 
 
-class MessagesResource(SyncAPIResource):
+class PollResource(SyncAPIResource):
     """Messages are individual communications within a chat thread.
 
     Messages can include text, media attachments, rich link previews, special effects
@@ -86,45 +86,40 @@ class MessagesResource(SyncAPIResource):
     """
 
     @cached_property
-    def with_raw_response(self) -> MessagesResourceWithRawResponse:
+    def with_raw_response(self) -> PollResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/linq-team/linq-python#accessing-raw-response-data-eg-headers
         """
-        return MessagesResourceWithRawResponse(self)
+        return PollResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> MessagesResourceWithStreamingResponse:
+    def with_streaming_response(self) -> PollResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/linq-team/linq-python#with_streaming_response
         """
-        return MessagesResourceWithStreamingResponse(self)
+        return PollResourceWithStreamingResponse(self)
 
-    def list(
+    def retrieve(
         self,
-        chat_id: str,
+        message_id: str,
         *,
-        cursor: str | Omit = omit,
-        limit: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> SyncListMessagesPagination[Message]:
+    ) -> PollEnvelope:
         """
-        Retrieve messages from a specific chat with pagination support.
+        Return a poll's current results — its options, each option's voters, and the
+        distinct total number of voters — by the poll-definition message's ID.
 
         Args:
-          cursor: Pagination cursor from previous next_cursor response
-
-          limit: Maximum number of messages to return
-
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -133,99 +128,76 @@ class MessagesResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not chat_id:
-            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
-        return self._get_api_list(
-            path_template("/v3/chats/{chat_id}/messages", chat_id=chat_id),
-            page=SyncListMessagesPagination[Message],
+        if not message_id:
+            raise ValueError(f"Expected a non-empty value for `message_id` but received {message_id!r}")
+        return self._get(
+            path_template("/v3/messages/{message_id}/poll", message_id=message_id),
             options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "cursor": cursor,
-                        "limit": limit,
-                    },
-                    message_list_params.MessageListParams,
-                ),
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            model=Message,
+            cast_to=PollEnvelope,
         )
 
-    def send(
+    def add_options(
         self,
-        chat_id: str,
+        message_id: str,
         *,
-        message: MessageContentParam,
-        override_optout: bool | Omit = omit,
+        options: Iterable[poll_add_options_params.Option],
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MessageSendResponse:
-        """Send a message to an existing chat.
+    ) -> PollEnvelope:
+        """Add one or more options to an existing poll.
 
-        Use this endpoint when you already have a
-        chat ID and want to send additional messages to it.
-
-        ## Message Effects
-
-        You can add iMessage effects to make your messages more expressive. Effects are
-        optional and can be either screen effects (full-screen animations) or bubble
-        effects (message bubble animations).
-
-        **Screen Effects:** `confetti`, `fireworks`, `lasers`, `sparkles`,
-        `celebration`, `hearts`, `love`, `balloons`, `happy_birthday`, `echo`,
-        `spotlight`
-
-        **Bubble Effects:** `slam`, `loud`, `gentle`, `invisible`
-
-        Only one effect type can be applied per message.
-
-        ## Inline Text Decorations (iMessage only)
-
-        Use the `text_decorations` array on a text part to apply styling and animations
-        to character ranges.
-
-        Each decoration specifies a `range: [start, end)` and exactly one of `style` or
-        `animation`.
-
-        **Styles:** `bold`, `italic`, `strikethrough`, `underline` **Animations:**
-        `big`, `small`, `shake`, `nod`, `explode`, `ripple`, `bloom`, `jitter`
-
-        ```json
-        {
-          "type": "text",
-          "value": "Hello world",
-          "text_decorations": [
-            { "range": [0, 5], "style": "bold" },
-            { "range": [6, 11], "animation": "shake" }
-          ]
-        }
-        ```
-
-        **Note:** Style ranges (bold, italic, etc.) may overlap, but animation ranges
-        must not overlap with other animations or styles. Text decorations only render
-        for iMessage recipients. For SMS/RCS, text decorations are not applied.
+        Options are **add-only and
+        immutable** — you can append options but never edit or remove them (Apple
+        constraint). Returns the full poll.
 
         Args:
-          message: Message content container. Groups all message-related fields together,
-              separating the "what" (message content) from the "where" (routing fields like
-              from/to).
+          extra_headers: Send extra headers
 
-              A message carries EITHER `parts` — text and attachments, which compose into one
-              bubble — or a single `action`, which invokes an experience inside Linq's
-              iMessage app. Never both: an app card is the whole message (Apple's `MSMessage`
-              cannot coexist with text), so copy and a card are two sends, not one.
+          extra_query: Add additional query parameters to the request
 
-          override_optout: Send even though the recipient asked you to stop (`403`, error code `2024`).
-              Applies to this request only: the opt-out stays in place, so the next send
-              without this flag is rejected again. Every override is recorded against your API
-              key.
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not message_id:
+            raise ValueError(f"Expected a non-empty value for `message_id` but received {message_id!r}")
+        return self._post(
+            path_template("/v3/messages/{message_id}/poll/options", message_id=message_id),
+            body=maybe_transform({"options": options}, poll_add_options_params.PollAddOptionsParams),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=PollEnvelope,
+        )
+
+    def vote(
+        self,
+        message_id: str,
+        *,
+        operation: Literal["add", "remove"],
+        option_id: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> PollEnvelope:
+        """
+        Add or remove your line's vote on **one** poll option (per-option toggle —
+        iMessage polls are toggled one option at a time). Returns the poll reflecting
+        the toggle.
+
+        Args:
+          operation: Add or remove your line's vote on the option.
+
+          option_id: The option to toggle a vote on.
 
           extra_headers: Send extra headers
 
@@ -235,25 +207,25 @@ class MessagesResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not chat_id:
-            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        if not message_id:
+            raise ValueError(f"Expected a non-empty value for `message_id` but received {message_id!r}")
         return self._post(
-            path_template("/v3/chats/{chat_id}/messages", chat_id=chat_id),
+            path_template("/v3/messages/{message_id}/poll/votes", message_id=message_id),
             body=maybe_transform(
                 {
-                    "message": message,
-                    "override_optout": override_optout,
+                    "operation": operation,
+                    "option_id": option_id,
                 },
-                message_send_params.MessageSendParams,
+                poll_vote_params.PollVoteParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=MessageSendResponse,
+            cast_to=PollEnvelope,
         )
 
 
-class AsyncMessagesResource(AsyncAPIResource):
+class AsyncPollResource(AsyncAPIResource):
     """Messages are individual communications within a chat thread.
 
     Messages can include text, media attachments, rich link previews, special effects
@@ -315,45 +287,40 @@ class AsyncMessagesResource(AsyncAPIResource):
     """
 
     @cached_property
-    def with_raw_response(self) -> AsyncMessagesResourceWithRawResponse:
+    def with_raw_response(self) -> AsyncPollResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/linq-team/linq-python#accessing-raw-response-data-eg-headers
         """
-        return AsyncMessagesResourceWithRawResponse(self)
+        return AsyncPollResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> AsyncMessagesResourceWithStreamingResponse:
+    def with_streaming_response(self) -> AsyncPollResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/linq-team/linq-python#with_streaming_response
         """
-        return AsyncMessagesResourceWithStreamingResponse(self)
+        return AsyncPollResourceWithStreamingResponse(self)
 
-    def list(
+    async def retrieve(
         self,
-        chat_id: str,
+        message_id: str,
         *,
-        cursor: str | Omit = omit,
-        limit: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AsyncPaginator[Message, AsyncListMessagesPagination[Message]]:
+    ) -> PollEnvelope:
         """
-        Retrieve messages from a specific chat with pagination support.
+        Return a poll's current results — its options, each option's voters, and the
+        distinct total number of voters — by the poll-definition message's ID.
 
         Args:
-          cursor: Pagination cursor from previous next_cursor response
-
-          limit: Maximum number of messages to return
-
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -362,99 +329,76 @@ class AsyncMessagesResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not chat_id:
-            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
-        return self._get_api_list(
-            path_template("/v3/chats/{chat_id}/messages", chat_id=chat_id),
-            page=AsyncListMessagesPagination[Message],
+        if not message_id:
+            raise ValueError(f"Expected a non-empty value for `message_id` but received {message_id!r}")
+        return await self._get(
+            path_template("/v3/messages/{message_id}/poll", message_id=message_id),
             options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "cursor": cursor,
-                        "limit": limit,
-                    },
-                    message_list_params.MessageListParams,
-                ),
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            model=Message,
+            cast_to=PollEnvelope,
         )
 
-    async def send(
+    async def add_options(
         self,
-        chat_id: str,
+        message_id: str,
         *,
-        message: MessageContentParam,
-        override_optout: bool | Omit = omit,
+        options: Iterable[poll_add_options_params.Option],
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MessageSendResponse:
-        """Send a message to an existing chat.
+    ) -> PollEnvelope:
+        """Add one or more options to an existing poll.
 
-        Use this endpoint when you already have a
-        chat ID and want to send additional messages to it.
-
-        ## Message Effects
-
-        You can add iMessage effects to make your messages more expressive. Effects are
-        optional and can be either screen effects (full-screen animations) or bubble
-        effects (message bubble animations).
-
-        **Screen Effects:** `confetti`, `fireworks`, `lasers`, `sparkles`,
-        `celebration`, `hearts`, `love`, `balloons`, `happy_birthday`, `echo`,
-        `spotlight`
-
-        **Bubble Effects:** `slam`, `loud`, `gentle`, `invisible`
-
-        Only one effect type can be applied per message.
-
-        ## Inline Text Decorations (iMessage only)
-
-        Use the `text_decorations` array on a text part to apply styling and animations
-        to character ranges.
-
-        Each decoration specifies a `range: [start, end)` and exactly one of `style` or
-        `animation`.
-
-        **Styles:** `bold`, `italic`, `strikethrough`, `underline` **Animations:**
-        `big`, `small`, `shake`, `nod`, `explode`, `ripple`, `bloom`, `jitter`
-
-        ```json
-        {
-          "type": "text",
-          "value": "Hello world",
-          "text_decorations": [
-            { "range": [0, 5], "style": "bold" },
-            { "range": [6, 11], "animation": "shake" }
-          ]
-        }
-        ```
-
-        **Note:** Style ranges (bold, italic, etc.) may overlap, but animation ranges
-        must not overlap with other animations or styles. Text decorations only render
-        for iMessage recipients. For SMS/RCS, text decorations are not applied.
+        Options are **add-only and
+        immutable** — you can append options but never edit or remove them (Apple
+        constraint). Returns the full poll.
 
         Args:
-          message: Message content container. Groups all message-related fields together,
-              separating the "what" (message content) from the "where" (routing fields like
-              from/to).
+          extra_headers: Send extra headers
 
-              A message carries EITHER `parts` — text and attachments, which compose into one
-              bubble — or a single `action`, which invokes an experience inside Linq's
-              iMessage app. Never both: an app card is the whole message (Apple's `MSMessage`
-              cannot coexist with text), so copy and a card are two sends, not one.
+          extra_query: Add additional query parameters to the request
 
-          override_optout: Send even though the recipient asked you to stop (`403`, error code `2024`).
-              Applies to this request only: the opt-out stays in place, so the next send
-              without this flag is rejected again. Every override is recorded against your API
-              key.
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not message_id:
+            raise ValueError(f"Expected a non-empty value for `message_id` but received {message_id!r}")
+        return await self._post(
+            path_template("/v3/messages/{message_id}/poll/options", message_id=message_id),
+            body=await async_maybe_transform({"options": options}, poll_add_options_params.PollAddOptionsParams),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=PollEnvelope,
+        )
+
+    async def vote(
+        self,
+        message_id: str,
+        *,
+        operation: Literal["add", "remove"],
+        option_id: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> PollEnvelope:
+        """
+        Add or remove your line's vote on **one** poll option (per-option toggle —
+        iMessage polls are toggled one option at a time). Returns the poll reflecting
+        the toggle.
+
+        Args:
+          operation: Add or remove your line's vote on the option.
+
+          option_id: The option to toggle a vote on.
 
           extra_headers: Send extra headers
 
@@ -464,67 +408,79 @@ class AsyncMessagesResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not chat_id:
-            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        if not message_id:
+            raise ValueError(f"Expected a non-empty value for `message_id` but received {message_id!r}")
         return await self._post(
-            path_template("/v3/chats/{chat_id}/messages", chat_id=chat_id),
+            path_template("/v3/messages/{message_id}/poll/votes", message_id=message_id),
             body=await async_maybe_transform(
                 {
-                    "message": message,
-                    "override_optout": override_optout,
+                    "operation": operation,
+                    "option_id": option_id,
                 },
-                message_send_params.MessageSendParams,
+                poll_vote_params.PollVoteParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=MessageSendResponse,
+            cast_to=PollEnvelope,
         )
 
 
-class MessagesResourceWithRawResponse:
-    def __init__(self, messages: MessagesResource) -> None:
-        self._messages = messages
+class PollResourceWithRawResponse:
+    def __init__(self, poll: PollResource) -> None:
+        self._poll = poll
 
-        self.list = to_raw_response_wrapper(
-            messages.list,
+        self.retrieve = to_raw_response_wrapper(
+            poll.retrieve,
         )
-        self.send = to_raw_response_wrapper(
-            messages.send,
+        self.add_options = to_raw_response_wrapper(
+            poll.add_options,
         )
-
-
-class AsyncMessagesResourceWithRawResponse:
-    def __init__(self, messages: AsyncMessagesResource) -> None:
-        self._messages = messages
-
-        self.list = async_to_raw_response_wrapper(
-            messages.list,
-        )
-        self.send = async_to_raw_response_wrapper(
-            messages.send,
+        self.vote = to_raw_response_wrapper(
+            poll.vote,
         )
 
 
-class MessagesResourceWithStreamingResponse:
-    def __init__(self, messages: MessagesResource) -> None:
-        self._messages = messages
+class AsyncPollResourceWithRawResponse:
+    def __init__(self, poll: AsyncPollResource) -> None:
+        self._poll = poll
 
-        self.list = to_streamed_response_wrapper(
-            messages.list,
+        self.retrieve = async_to_raw_response_wrapper(
+            poll.retrieve,
         )
-        self.send = to_streamed_response_wrapper(
-            messages.send,
+        self.add_options = async_to_raw_response_wrapper(
+            poll.add_options,
+        )
+        self.vote = async_to_raw_response_wrapper(
+            poll.vote,
         )
 
 
-class AsyncMessagesResourceWithStreamingResponse:
-    def __init__(self, messages: AsyncMessagesResource) -> None:
-        self._messages = messages
+class PollResourceWithStreamingResponse:
+    def __init__(self, poll: PollResource) -> None:
+        self._poll = poll
 
-        self.list = async_to_streamed_response_wrapper(
-            messages.list,
+        self.retrieve = to_streamed_response_wrapper(
+            poll.retrieve,
         )
-        self.send = async_to_streamed_response_wrapper(
-            messages.send,
+        self.add_options = to_streamed_response_wrapper(
+            poll.add_options,
+        )
+        self.vote = to_streamed_response_wrapper(
+            poll.vote,
+        )
+
+
+class AsyncPollResourceWithStreamingResponse:
+    def __init__(self, poll: AsyncPollResource) -> None:
+        self._poll = poll
+
+        self.retrieve = async_to_streamed_response_wrapper(
+            poll.retrieve,
+        )
+        self.add_options = async_to_streamed_response_wrapper(
+            poll.add_options,
+        )
+        self.vote = async_to_streamed_response_wrapper(
+            poll.vote,
         )

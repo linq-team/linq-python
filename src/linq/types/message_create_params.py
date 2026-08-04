@@ -59,6 +59,14 @@ class MessageCreateParams(TypedDict, total=False):
     of your available lines returns 400 when a line has to be picked.
     """
 
+    override_optout: bool
+    """Send even though the recipient asked you to stop (`403`, error code `2024`).
+
+    Applies to this request only: the opt-out stays in place, so the next send
+    without this flag is rejected again. Every override is recorded against your API
+    key.
+    """
+
     idempotency_key: Annotated[str, PropertyInfo(alias="Idempotency-Key")]
 
 

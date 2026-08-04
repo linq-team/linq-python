@@ -22,6 +22,27 @@ class TextPartParam(TypedDict, total=False):
     formatting and animations (iMessage only).
     """
 
+    mention: str
+    """@mention a chat participant (iMessage group chats only).
+
+    Set to their handle — E.164 phone number or Apple ID email. `value` is the
+    display text; use the bare name (`"Juan"`, not `"@Juan"`). The mentioned
+    participant is notified even if the chat is muted. Falls back to plain text over
+    SMS/RCS.
+
+    By default the entire `value` renders as the mention; use `mention_range` to
+    highlight only part of it.
+    """
+
+    mention_range: Iterable[int]
+    """
+    Optional character range `[start, end)` in `value` that renders as the `mention`
+    highlight (e.g. just the name in `"Hey Kevin, can you look at this?"`). Requires
+    `mention`. Without it, the entire `value` is highlighted. `start` is inclusive,
+    `end` is exclusive. _Characters are measured as UTF-16 code units. Most
+    characters count as 1; some emoji count as 2._
+    """
+
     text_decorations: Iterable[TextDecoration]
     """
     Optional array of text decorations applied to character ranges in the `value`

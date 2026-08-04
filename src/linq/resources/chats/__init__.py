@@ -8,6 +8,14 @@ from .chats import (
     ChatsResourceWithStreamingResponse,
     AsyncChatsResourceWithStreamingResponse,
 )
+from .polls import (
+    PollsResource,
+    AsyncPollsResource,
+    PollsResourceWithRawResponse,
+    AsyncPollsResourceWithRawResponse,
+    PollsResourceWithStreamingResponse,
+    AsyncPollsResourceWithStreamingResponse,
+)
 from .typing import (
     TypingResource,
     AsyncTypingResource,
@@ -66,6 +74,12 @@ __all__ = [
     "AsyncLocationResourceWithRawResponse",
     "LocationResourceWithStreamingResponse",
     "AsyncLocationResourceWithStreamingResponse",
+    "PollsResource",
+    "AsyncPollsResource",
+    "PollsResourceWithRawResponse",
+    "AsyncPollsResourceWithRawResponse",
+    "PollsResourceWithStreamingResponse",
+    "AsyncPollsResourceWithStreamingResponse",
     "ChatsResource",
     "AsyncChatsResource",
     "ChatsResourceWithRawResponse",
