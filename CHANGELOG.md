@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.0](https://github.com/linq-team/linq-python/compare/v0.19.1...v0.20.0) (2026-08-05)
+
+
+### Features
+
+* add blocked handles api for message filtering ([c46f165](https://github.com/linq-team/linq-python/commit/c46f16571295c9eb3b56b0d1f55d109f430d1de2))
+
 ## [0.19.1](https://github.com/linq-team/linq-python/compare/v0.19.0...v0.19.1) (2026-08-04)
 
 
