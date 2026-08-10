@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.21.0](https://github.com/linq-team/linq-python/compare/v0.20.0...v0.21.0) (2026-08-10)
+
+
+### Features
+
+* add blocked handles api for managing inbound message filtering ([b8f2f87](https://github.com/linq-team/linq-python/commit/b8f2f87a8cd442f876fd05a49b79f37f9d8b3cb2))
+* add diagnostic fields to message failure webhook events ([b8f2f87](https://github.com/linq-team/linq-python/commit/b8f2f87a8cd442f876fd05a49b79f37f9d8b3cb2))
+* regenerate SDKs from updated API spec ([b8f2f87](https://github.com/linq-team/linq-python/commit/b8f2f87a8cd442f876fd05a49b79f37f9d8b3cb2))
+
+
+### Bug Fixes
+
+* clarify opted-out status clearing behavior in chat health ([b8f2f87](https://github.com/linq-team/linq-python/commit/b8f2f87a8cd442f876fd05a49b79f37f9d8b3cb2))
+* clarify stop keyword behavior and matching rules ([b8f2f87](https://github.com/linq-team/linq-python/commit/b8f2f87a8cd442f876fd05a49b79f37f9d8b3cb2))
+* clarify stop keyword behavior for multi-chat replies ([b8f2f87](https://github.com/linq-team/linq-python/commit/b8f2f87a8cd442f876fd05a49b79f37f9d8b3cb2))
+* expand webhook error code documentation for failure events ([b8f2f87](https://github.com/linq-team/linq-python/commit/b8f2f87a8cd442f876fd05a49b79f37f9d8b3cb2))
+
+
+### Documentation
+
+* clarify presigned url behavior and configuration ([b8f2f87](https://github.com/linq-team/linq-python/commit/b8f2f87a8cd442f876fd05a49b79f37f9d8b3cb2))
+
 ## [0.20.0](https://github.com/linq-team/linq-python/compare/v0.19.1...v0.20.0) (2026-08-05)
 
 
