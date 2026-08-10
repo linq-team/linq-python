@@ -81,6 +81,14 @@ from .webhook_events import (
     WebhookEventsResourceWithStreamingResponse,
     AsyncWebhookEventsResourceWithStreamingResponse,
 )
+from .blocked_handles import (
+    BlockedHandlesResource,
+    AsyncBlockedHandlesResource,
+    BlockedHandlesResourceWithRawResponse,
+    AsyncBlockedHandlesResourceWithRawResponse,
+    BlockedHandlesResourceWithStreamingResponse,
+    AsyncBlockedHandlesResourceWithStreamingResponse,
+)
 from .payment_handles import (
     PaymentHandlesResource,
     AsyncPaymentHandlesResource,
@@ -183,6 +191,12 @@ __all__ = [
     "AsyncPaymentsResourceWithRawResponse",
     "PaymentsResourceWithStreamingResponse",
     "AsyncPaymentsResourceWithStreamingResponse",
+    "BlockedHandlesResource",
+    "AsyncBlockedHandlesResource",
+    "BlockedHandlesResourceWithRawResponse",
+    "AsyncBlockedHandlesResourceWithRawResponse",
+    "BlockedHandlesResourceWithStreamingResponse",
+    "AsyncBlockedHandlesResourceWithStreamingResponse",
     "ExperiencesResource",
     "AsyncExperiencesResource",
     "ExperiencesResourceWithRawResponse",

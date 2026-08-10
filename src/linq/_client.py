@@ -48,6 +48,7 @@ if TYPE_CHECKING:
         phonenumbers,
         phone_numbers,
         webhook_events,
+        blocked_handles,
         payment_handles,
         available_number,
         payment_requests,
@@ -64,6 +65,7 @@ if TYPE_CHECKING:
     from .resources.phonenumbers import PhonenumbersResource, AsyncPhonenumbersResource
     from .resources.phone_numbers import PhoneNumbersResource, AsyncPhoneNumbersResource
     from .resources.webhook_events import WebhookEventsResource, AsyncWebhookEventsResource
+    from .resources.blocked_handles import BlockedHandlesResource, AsyncBlockedHandlesResource
     from .resources.payment_handles import PaymentHandlesResource, AsyncPaymentHandlesResource
     from .resources.available_number import AvailableNumberResource, AsyncAvailableNumberResource
     from .resources.payment_requests import PaymentRequestsResource, AsyncPaymentRequestsResource
@@ -606,6 +608,20 @@ class LinqAPIV3(SyncAPIClient):
         from .resources.payments import PaymentsResource
 
         return PaymentsResource(self)
+
+    @cached_property
+    def blocked_handles(self) -> BlockedHandlesResource:
+        """Block handles — phone numbers, email addresses, SMS short codes, or
+        sender IDs.
+
+        Inbound messages from a blocked handle are dropped before
+        they reach your webhooks, and direct sends to a blocked handle are
+        rejected with `403` (error code `2026`). Group sends that include
+        unblocked members are not restricted.
+        """
+        from .resources.blocked_handles import BlockedHandlesResource
+
+        return BlockedHandlesResource(self)
 
     @cached_property
     def experiences(self) -> ExperiencesResource:
@@ -1562,6 +1578,20 @@ class AsyncLinqAPIV3(AsyncAPIClient):
         return AsyncPaymentsResource(self)
 
     @cached_property
+    def blocked_handles(self) -> AsyncBlockedHandlesResource:
+        """Block handles — phone numbers, email addresses, SMS short codes, or
+        sender IDs.
+
+        Inbound messages from a blocked handle are dropped before
+        they reach your webhooks, and direct sends to a blocked handle are
+        rejected with `403` (error code `2026`). Group sends that include
+        unblocked members are not restricted.
+        """
+        from .resources.blocked_handles import AsyncBlockedHandlesResource
+
+        return AsyncBlockedHandlesResource(self)
+
+    @cached_property
     def experiences(self) -> AsyncExperiencesResource:
         """
         Let an agent pay on a customer's behalf with a single-use virtual card.
@@ -2450,6 +2480,20 @@ class LinqAPIV3WithRawResponse:
         return PaymentsResourceWithRawResponse(self._client.payments)
 
     @cached_property
+    def blocked_handles(self) -> blocked_handles.BlockedHandlesResourceWithRawResponse:
+        """Block handles — phone numbers, email addresses, SMS short codes, or
+        sender IDs.
+
+        Inbound messages from a blocked handle are dropped before
+        they reach your webhooks, and direct sends to a blocked handle are
+        rejected with `403` (error code `2026`). Group sends that include
+        unblocked members are not restricted.
+        """
+        from .resources.blocked_handles import BlockedHandlesResourceWithRawResponse
+
+        return BlockedHandlesResourceWithRawResponse(self._client.blocked_handles)
+
+    @cached_property
     def experiences(self) -> experiences.ExperiencesResourceWithRawResponse:
         """
         Let an agent pay on a customer's behalf with a single-use virtual card.
@@ -3208,6 +3252,20 @@ class AsyncLinqAPIV3WithRawResponse:
         from .resources.payments import AsyncPaymentsResourceWithRawResponse
 
         return AsyncPaymentsResourceWithRawResponse(self._client.payments)
+
+    @cached_property
+    def blocked_handles(self) -> blocked_handles.AsyncBlockedHandlesResourceWithRawResponse:
+        """Block handles — phone numbers, email addresses, SMS short codes, or
+        sender IDs.
+
+        Inbound messages from a blocked handle are dropped before
+        they reach your webhooks, and direct sends to a blocked handle are
+        rejected with `403` (error code `2026`). Group sends that include
+        unblocked members are not restricted.
+        """
+        from .resources.blocked_handles import AsyncBlockedHandlesResourceWithRawResponse
+
+        return AsyncBlockedHandlesResourceWithRawResponse(self._client.blocked_handles)
 
     @cached_property
     def experiences(self) -> experiences.AsyncExperiencesResourceWithRawResponse:
@@ -3970,6 +4028,20 @@ class LinqAPIV3WithStreamedResponse:
         return PaymentsResourceWithStreamingResponse(self._client.payments)
 
     @cached_property
+    def blocked_handles(self) -> blocked_handles.BlockedHandlesResourceWithStreamingResponse:
+        """Block handles — phone numbers, email addresses, SMS short codes, or
+        sender IDs.
+
+        Inbound messages from a blocked handle are dropped before
+        they reach your webhooks, and direct sends to a blocked handle are
+        rejected with `403` (error code `2026`). Group sends that include
+        unblocked members are not restricted.
+        """
+        from .resources.blocked_handles import BlockedHandlesResourceWithStreamingResponse
+
+        return BlockedHandlesResourceWithStreamingResponse(self._client.blocked_handles)
+
+    @cached_property
     def experiences(self) -> experiences.ExperiencesResourceWithStreamingResponse:
         """
         Let an agent pay on a customer's behalf with a single-use virtual card.
@@ -4728,6 +4800,20 @@ class AsyncLinqAPIV3WithStreamedResponse:
         from .resources.payments import AsyncPaymentsResourceWithStreamingResponse
 
         return AsyncPaymentsResourceWithStreamingResponse(self._client.payments)
+
+    @cached_property
+    def blocked_handles(self) -> blocked_handles.AsyncBlockedHandlesResourceWithStreamingResponse:
+        """Block handles — phone numbers, email addresses, SMS short codes, or
+        sender IDs.
+
+        Inbound messages from a blocked handle are dropped before
+        they reach your webhooks, and direct sends to a blocked handle are
+        rejected with `403` (error code `2026`). Group sends that include
+        unblocked members are not restricted.
+        """
+        from .resources.blocked_handles import AsyncBlockedHandlesResourceWithStreamingResponse
+
+        return AsyncBlockedHandlesResourceWithStreamingResponse(self._client.blocked_handles)
 
     @cached_property
     def experiences(self) -> experiences.AsyncExperiencesResourceWithStreamingResponse:

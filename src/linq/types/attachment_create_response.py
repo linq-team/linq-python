@@ -37,5 +37,7 @@ class AttachmentCreateResponse(BaseModel):
     """Presigned URL for uploading the file.
 
     PUT the raw binary file content to this URL with the `required_headers`. Do not
-    JSON-encode or multipart-wrap the body. Expires after 15 minutes.
+    JSON-encode or multipart-wrap the body. Expires after 15 minutes. Treat the URL
+    as opaque — the hostname depends on partner configuration and is the same across
+    sandbox and production.
     """

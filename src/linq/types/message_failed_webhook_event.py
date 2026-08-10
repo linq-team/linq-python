@@ -2,9 +2,11 @@
 
 from typing import Optional
 from datetime import datetime
+from typing_extensions import Literal
 
 from .._models import BaseModel
 from .webhook_event_type import WebhookEventType
+from .shared.service_type import ServiceType
 
 __all__ = ["MessageFailedWebhookEvent", "Data"]
 
@@ -18,7 +20,13 @@ class Data(BaseModel):
     """
 
     code: int
-    """Error codes in webhook failure events (3007, 4001, 4005)."""
+    """Error codes in webhook failure events.
+
+    The possible set varies by event: message.failed can carry 3007, 4001, 4002,
+    4005, 4006, 4007, or 4008; the group update failure events
+    (chat.group_name_update_failed, chat.group_icon_update_failed) carry 3007
+    or 4001.
+    """
 
     failed_at: datetime
     """When the failure was detected"""
@@ -26,11 +34,27 @@ class Data(BaseModel):
     chat_id: Optional[str] = None
     """Chat identifier (UUID)"""
 
+    detail_code: Optional[int] = None
+    """
+    Opaque diagnostic code identifying the specific failure class within `code`.
+    Values are not enumerated and may change without notice — log it and include it
+    in support requests, but do not branch on it.
+    """
+
     message_id: Optional[str] = None
     """Message identifier (UUID)"""
 
+    preferred_service: Optional[Literal["iMessage", "SMS", "RCS", "auto"]] = None
+    """Preferred messaging service type.
+
+    Includes "auto" for default fallback behavior.
+    """
+
     reason: Optional[str] = None
     """Human-readable description of the failure"""
+
+    service: Optional[ServiceType] = None
+    """Messaging service type"""
 
 
 class MessageFailedWebhookEvent(BaseModel):

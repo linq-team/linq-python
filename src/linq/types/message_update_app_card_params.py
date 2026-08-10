@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+from typing import Dict
 from typing_extensions import Required, TypedDict
 
-__all__ = ["MessageUpdateAppCardParams", "Layout"]
+__all__ = ["MessageUpdateAppCardParams", "Layout", "Action"]
 
 
 class MessageUpdateAppCardParams(TypedDict, total=False):
@@ -27,6 +28,16 @@ class MessageUpdateAppCardParams(TypedDict, total=False):
     rejected.
     """
 
+    action: Action
+    """
+    Invokes an action on an experience — a third party that renders inside Linq's
+    iMessage app. Linq resolves the recipient's connection, mints any session the
+    action needs, composes the card and sends it; none of that is visible to you.
+
+    Call `GET /v3/experiences/{experience}` for the actions you may invoke and the
+    fields each accepts.
+    """
+
     fallback_text: str
     """Text shown on surfaces that cannot render the card (notifications, lock screen).
 
@@ -47,7 +58,10 @@ class MessageUpdateAppCardParams(TypedDict, total=False):
     """
 
     url: str
-    """URL the recipient's app opens when they tap the updated card."""
+    """URL the recipient's app opens when they tap the updated card.
+
+    Mutually exclusive with `action` and `raw_payload_data`.
+    """
 
 
 class Layout(TypedDict, total=False):
@@ -100,3 +114,30 @@ class Layout(TypedDict, total=False):
 
     trailing_subcaption: str
     """Label shown below `trailing_caption`, on the right."""
+
+
+class Action(TypedDict, total=False):
+    """
+    Invokes an action on an experience — a third party that renders inside
+    Linq's iMessage app. Linq resolves the recipient's connection, mints any
+    session the action needs, composes the card and sends it; none of that
+    is visible to you.
+
+    Call `GET /v3/experiences/{experience}` for the actions you may invoke
+    and the fields each accepts.
+    """
+
+    action: Required[str]
+    """Which of its actions, e.g. `attach_card`."""
+
+    experience: Required[str]
+    """The experience to invoke, e.g. `agentcard`."""
+
+    params: Dict[str, object]
+    """Values for the fields this action exposes.
+
+    Keys are exactly the field names listed for the action — no mapping, no nesting.
+
+    Display copy only, except a `url`-type field — that value sets the destination,
+    and must be an absolute `https` URL.
+    """
