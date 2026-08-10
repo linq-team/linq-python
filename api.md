@@ -242,6 +242,20 @@ Methods:
 - <code title="post /v3/payments/{paymentId}/cancel">client.payments.<a href="./src/linq/resources/payments.py">cancel</a>(payment_id) -> <a href="./src/linq/types/payment.py">Payment</a></code>
 - <code title="get /v3/payments/{paymentId}/credentials">client.payments.<a href="./src/linq/resources/payments.py">credentials</a>(payment_id) -> <a href="./src/linq/types/payment_credentials_response.py">PaymentCredentialsResponse</a></code>
 
+# BlockedHandles
+
+Types:
+
+```python
+from linq.types import BlockedHandleEntry, BlockedHandleListResponse, BlockedHandleBlockResponse
+```
+
+Methods:
+
+- <code title="get /v3/blocked_handles">client.blocked_handles.<a href="./src/linq/resources/blocked_handles.py">list</a>() -> <a href="./src/linq/types/blocked_handle_list_response.py">BlockedHandleListResponse</a></code>
+- <code title="post /v3/blocked_handles">client.blocked_handles.<a href="./src/linq/resources/blocked_handles.py">block</a>(\*\*<a href="src/linq/types/blocked_handle_block_params.py">params</a>) -> <a href="./src/linq/types/blocked_handle_block_response.py">BlockedHandleBlockResponse</a></code>
+- <code title="delete /v3/blocked_handles">client.blocked_handles.<a href="./src/linq/resources/blocked_handles.py">unblock</a>(\*\*<a href="src/linq/types/blocked_handle_unblock_params.py">params</a>) -> None</code>
+
 # Experiences
 
 Types:
