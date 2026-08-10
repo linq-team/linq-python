@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.21.1](https://github.com/linq-team/linq-python/compare/v0.21.0...v0.21.1) (2026-08-10)
+
+
+### Chores
+
+* regenerate SDKs from updated generator config ([4ca0628](https://github.com/linq-team/linq-python/commit/4ca062885d16ce39ec1bd2ba15587d39826d903a))
+
 ## [0.21.0](https://github.com/linq-team/linq-python/compare/v0.20.0...v0.21.0) (2026-08-10)
 
 
