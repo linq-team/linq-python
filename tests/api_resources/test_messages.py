@@ -387,6 +387,11 @@ class TestMessages:
                 "trailing_caption": "2 min",
                 "trailing_subcaption": "expires",
             },
+            action={
+                "action": "attach_card",
+                "experience": "agentcard",
+                "params": {"foo": "bar"},
+            },
             fallback_text="Score update",
             interactive=True,
             url="https://app.example.com/card?game=7f3a&move=2",
@@ -799,6 +804,11 @@ class TestAsyncMessages:
                 "subcaption": "You said: hello",
                 "trailing_caption": "2 min",
                 "trailing_subcaption": "expires",
+            },
+            action={
+                "action": "attach_card",
+                "experience": "agentcard",
+                "params": {"foo": "bar"},
             },
             fallback_text="Score update",
             interactive=True,
