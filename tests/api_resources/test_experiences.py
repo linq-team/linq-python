@@ -21,7 +21,7 @@ class TestExperiences:
     @parametrize
     def test_method_retrieve(self, client: LinqAPIV3) -> None:
         experience = client.experiences.retrieve(
-            "experience",
+            "agentpay",
         )
         assert_matches_type(ExperienceRetrieveResponse, experience, path=["response"])
 
@@ -29,7 +29,7 @@ class TestExperiences:
     @parametrize
     def test_raw_response_retrieve(self, client: LinqAPIV3) -> None:
         response = client.experiences.with_raw_response.retrieve(
-            "experience",
+            "agentpay",
         )
 
         assert response.is_closed is True
@@ -41,7 +41,7 @@ class TestExperiences:
     @parametrize
     def test_streaming_response_retrieve(self, client: LinqAPIV3) -> None:
         with client.experiences.with_streaming_response.retrieve(
-            "experience",
+            "agentpay",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -97,7 +97,7 @@ class TestAsyncExperiences:
     @parametrize
     async def test_method_retrieve(self, async_client: AsyncLinqAPIV3) -> None:
         experience = await async_client.experiences.retrieve(
-            "experience",
+            "agentpay",
         )
         assert_matches_type(ExperienceRetrieveResponse, experience, path=["response"])
 
@@ -105,7 +105,7 @@ class TestAsyncExperiences:
     @parametrize
     async def test_raw_response_retrieve(self, async_client: AsyncLinqAPIV3) -> None:
         response = await async_client.experiences.with_raw_response.retrieve(
-            "experience",
+            "agentpay",
         )
 
         assert response.is_closed is True
@@ -117,7 +117,7 @@ class TestAsyncExperiences:
     @parametrize
     async def test_streaming_response_retrieve(self, async_client: AsyncLinqAPIV3) -> None:
         async with async_client.experiences.with_streaming_response.retrieve(
-            "experience",
+            "agentpay",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
