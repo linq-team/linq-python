@@ -37,7 +37,7 @@ class TestMessages:
     def test_method_create_with_all_params(self, client: LinqAPIV3) -> None:
         message = client.messages.create(
             message={
-                "action": {
+                "agentkit": {
                     "action": "attach_card",
                     "experience": "agentcard",
                     "params": {"foo": "bar"},
@@ -387,7 +387,7 @@ class TestMessages:
                 "trailing_caption": "2 min",
                 "trailing_subcaption": "expires",
             },
-            action={
+            agentkit={
                 "action": "attach_card",
                 "experience": "agentcard",
                 "params": {"foo": "bar"},
@@ -455,7 +455,7 @@ class TestAsyncMessages:
     async def test_method_create_with_all_params(self, async_client: AsyncLinqAPIV3) -> None:
         message = await async_client.messages.create(
             message={
-                "action": {
+                "agentkit": {
                     "action": "attach_card",
                     "experience": "agentcard",
                     "params": {"foo": "bar"},
@@ -805,7 +805,7 @@ class TestAsyncMessages:
                 "trailing_caption": "2 min",
                 "trailing_subcaption": "expires",
             },
-            action={
+            agentkit={
                 "action": "attach_card",
                 "experience": "agentcard",
                 "params": {"foo": "bar"},

@@ -14,7 +14,7 @@ from .message_effect_param import MessageEffectParam
 
 __all__ = [
     "MessageContentParam",
-    "Action",
+    "Agentkit",
     "Part",
     "PartIMessageAppPart",
     "PartIMessageAppPartApp",
@@ -22,7 +22,7 @@ __all__ = [
 ]
 
 
-class Action(TypedDict, total=False):
+class Agentkit(TypedDict, total=False):
     """
     Invokes an action on an experience — a third party that renders inside
     Linq's iMessage app. Linq resolves the recipient's connection, mints any
@@ -37,7 +37,7 @@ class Action(TypedDict, total=False):
     """Which of its actions, e.g. `attach_card`."""
 
     experience: Required[str]
-    """The experience to invoke, e.g. `agentcard`."""
+    """The experience to invoke, e.g. `agentcard` or `agentpay`."""
 
     params: Dict[str, object]
     """Values for the fields this action exposes.
@@ -46,6 +46,10 @@ class Action(TypedDict, total=False):
 
     Display copy only, except a `url`-type field — that value sets the destination,
     and must be an absolute `https` URL.
+
+    Some fields are read rather than sent: `agentpay`'s `request_payment` takes only
+    a `checkout_url` and resolves the amount and reason from that payment request
+    itself, so the card cannot state a figure the checkout will not charge.
     """
 
 
@@ -190,13 +194,13 @@ class MessageContentParam(TypedDict, total=False):
     separating the "what" (message content) from the "where" (routing fields like from/to).
 
     A message carries EITHER `parts` — text and attachments, which compose
-    into one bubble — or a single `action`, which invokes an experience
-    inside Linq's iMessage app. Never both: an app card is the whole message
+    into one bubble — or a single `agentkit` invocation, which renders an
+    experience inside Linq's iMessage app. Never both: an app card is the whole message
     (Apple's `MSMessage` cannot coexist with text), so copy and a card are
     two sends, not one.
     """
 
-    action: Action
+    agentkit: Agentkit
     """
     Invokes an action on an experience — a third party that renders inside Linq's
     iMessage app. Linq resolves the recipient's connection, mints any session the

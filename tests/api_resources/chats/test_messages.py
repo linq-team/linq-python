@@ -86,7 +86,7 @@ class TestMessages:
         message = client.chats.messages.send(
             chat_id="550e8400-e29b-41d4-a716-446655440000",
             message={
-                "action": {
+                "agentkit": {
                     "action": "attach_card",
                     "experience": "agentcard",
                     "params": {"foo": "bar"},
@@ -236,7 +236,7 @@ class TestAsyncMessages:
         message = await async_client.chats.messages.send(
             chat_id="550e8400-e29b-41d4-a716-446655440000",
             message={
-                "action": {
+                "agentkit": {
                     "action": "attach_card",
                     "experience": "agentcard",
                     "params": {"foo": "bar"},
