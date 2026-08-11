@@ -247,10 +247,9 @@ class AttachmentsResource(SyncAPIResource):
 
         ## Step 1: Request an upload URL
 
-        Call this endpoint with file metadata:
+        Call `POST /v3/attachments` with file metadata:
 
         ```json
-        POST /v3/attachments
         {
           "filename": "photo.jpg",
           "content_type": "image/jpeg",
@@ -281,11 +280,10 @@ class AttachmentsResource(SyncAPIResource):
 
         ## Step 3: Send a message with the attachment
 
-        Reference the `attachment_id` in a media part. The ID never expires — use it in
-        as many messages as you want.
+        Reference the `attachment_id` in a media part with `POST /v3/chats`. The ID
+        never expires — use it in as many messages as you want.
 
         ```json
-        POST /v3/chats
         {
           "from": "+15559876543",
           "to": ["+15551234567"],
@@ -676,10 +674,9 @@ class AsyncAttachmentsResource(AsyncAPIResource):
 
         ## Step 1: Request an upload URL
 
-        Call this endpoint with file metadata:
+        Call `POST /v3/attachments` with file metadata:
 
         ```json
-        POST /v3/attachments
         {
           "filename": "photo.jpg",
           "content_type": "image/jpeg",
@@ -710,11 +707,10 @@ class AsyncAttachmentsResource(AsyncAPIResource):
 
         ## Step 3: Send a message with the attachment
 
-        Reference the `attachment_id` in a media part. The ID never expires — use it in
-        as many messages as you want.
+        Reference the `attachment_id` in a media part with `POST /v3/chats`. The ID
+        never expires — use it in as many messages as you want.
 
         ```json
-        POST /v3/chats
         {
           "from": "+15559876543",
           "to": ["+15551234567"],

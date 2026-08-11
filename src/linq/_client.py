@@ -573,8 +573,9 @@ class LinqAPIV3(SyncAPIClient):
         and it turns itself into "Paid" in place once the payment succeeds,
         without a second message.
 
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
         ```json
-        POST /v3/chats/{chatId}/messages
         {
           "message": {
             "experience": {
@@ -664,8 +665,9 @@ class LinqAPIV3(SyncAPIClient):
         instead of as text or a link. You invoke one by name; Linq resolves the
         recipient, mints any session it needs, composes the card and sends it.
 
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
         ```json
-        POST /v3/chats/{chatId}/messages
         {
           "message": {
             "experience": {
@@ -1620,8 +1622,9 @@ class AsyncLinqAPIV3(AsyncAPIClient):
         and it turns itself into "Paid" in place once the payment succeeds,
         without a second message.
 
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
         ```json
-        POST /v3/chats/{chatId}/messages
         {
           "message": {
             "experience": {
@@ -1711,8 +1714,9 @@ class AsyncLinqAPIV3(AsyncAPIClient):
         instead of as text or a link. You invoke one by name; Linq resolves the
         recipient, mints any session it needs, composes the card and sends it.
 
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
         ```json
-        POST /v3/chats/{chatId}/messages
         {
           "message": {
             "experience": {
@@ -2601,8 +2605,9 @@ class LinqAPIV3WithRawResponse:
         and it turns itself into "Paid" in place once the payment succeeds,
         without a second message.
 
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
         ```json
-        POST /v3/chats/{chatId}/messages
         {
           "message": {
             "experience": {
@@ -2692,8 +2697,9 @@ class LinqAPIV3WithRawResponse:
         instead of as text or a link. You invoke one by name; Linq resolves the
         recipient, mints any session it needs, composes the card and sends it.
 
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
         ```json
-        POST /v3/chats/{chatId}/messages
         {
           "message": {
             "experience": {
@@ -3454,8 +3460,9 @@ class AsyncLinqAPIV3WithRawResponse:
         and it turns itself into "Paid" in place once the payment succeeds,
         without a second message.
 
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
         ```json
-        POST /v3/chats/{chatId}/messages
         {
           "message": {
             "experience": {
@@ -3545,8 +3552,9 @@ class AsyncLinqAPIV3WithRawResponse:
         instead of as text or a link. You invoke one by name; Linq resolves the
         recipient, mints any session it needs, composes the card and sends it.
 
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
         ```json
-        POST /v3/chats/{chatId}/messages
         {
           "message": {
             "experience": {
@@ -4307,8 +4315,9 @@ class LinqAPIV3WithStreamedResponse:
         and it turns itself into "Paid" in place once the payment succeeds,
         without a second message.
 
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
         ```json
-        POST /v3/chats/{chatId}/messages
         {
           "message": {
             "experience": {
@@ -4398,8 +4407,9 @@ class LinqAPIV3WithStreamedResponse:
         instead of as text or a link. You invoke one by name; Linq resolves the
         recipient, mints any session it needs, composes the card and sends it.
 
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
         ```json
-        POST /v3/chats/{chatId}/messages
         {
           "message": {
             "experience": {
@@ -5160,8 +5170,9 @@ class AsyncLinqAPIV3WithStreamedResponse:
         and it turns itself into "Paid" in place once the payment succeeds,
         without a second message.
 
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
         ```json
-        POST /v3/chats/{chatId}/messages
         {
           "message": {
             "experience": {
@@ -5251,8 +5262,9 @@ class AsyncLinqAPIV3WithStreamedResponse:
         instead of as text or a link. You invoke one by name; Linq resolves the
         recipient, mints any session it needs, composes the card and sends it.
 
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
         ```json
-        POST /v3/chats/{chatId}/messages
         {
           "message": {
             "experience": {

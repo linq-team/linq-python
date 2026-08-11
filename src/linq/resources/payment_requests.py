@@ -142,8 +142,9 @@ class PaymentRequestsResource(SyncAPIResource):
     and it turns itself into "Paid" in place once the payment succeeds,
     without a second message.
 
+    Send it to `POST /v3/chats/{chatId}/messages`:
+
     ```json
-    POST /v3/chats/{chatId}/messages
     {
       "message": {
         "experience": {
@@ -562,8 +563,9 @@ class AsyncPaymentRequestsResource(AsyncAPIResource):
     and it turns itself into "Paid" in place once the payment succeeds,
     without a second message.
 
+    Send it to `POST /v3/chats/{chatId}/messages`:
+
     ```json
-    POST /v3/chats/{chatId}/messages
     {
       "message": {
         "experience": {
