@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Dict
 from typing_extensions import Required, TypedDict
 
-__all__ = ["MessageUpdateAppCardParams", "Layout", "Agentkit"]
+__all__ = ["MessageUpdateAppCardParams", "Layout", "Experience"]
 
 
 class MessageUpdateAppCardParams(TypedDict, total=False):
@@ -28,7 +28,7 @@ class MessageUpdateAppCardParams(TypedDict, total=False):
     rejected.
     """
 
-    agentkit: Agentkit
+    experience: Experience
     """
     Invokes an action on an experience — a third party that renders inside Linq's
     iMessage app. Linq resolves the recipient's connection, mints any session the
@@ -60,7 +60,7 @@ class MessageUpdateAppCardParams(TypedDict, total=False):
     url: str
     """URL the recipient's app opens when they tap the updated card.
 
-    Mutually exclusive with `agentkit` and `raw_payload_data`.
+    Mutually exclusive with `experience` and `raw_payload_data`.
     """
 
 
@@ -116,7 +116,7 @@ class Layout(TypedDict, total=False):
     """Label shown below `trailing_caption`, on the right."""
 
 
-class Agentkit(TypedDict, total=False):
+class Experience(TypedDict, total=False):
     """
     Invokes an action on an experience — a third party that renders inside
     Linq's iMessage app. Linq resolves the recipient's connection, mints any
@@ -130,7 +130,7 @@ class Agentkit(TypedDict, total=False):
     action: Required[str]
     """Which of its actions, e.g. `attach_card`."""
 
-    experience: Required[str]
+    name: Required[str]
     """The experience to invoke, e.g. `agentcard` or `agentpay`."""
 
     params: Dict[str, object]

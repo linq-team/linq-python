@@ -14,7 +14,7 @@ from .message_effect_param import MessageEffectParam
 
 __all__ = [
     "MessageContentParam",
-    "Agentkit",
+    "Experience",
     "Part",
     "PartIMessageAppPart",
     "PartIMessageAppPartApp",
@@ -22,7 +22,7 @@ __all__ = [
 ]
 
 
-class Agentkit(TypedDict, total=False):
+class Experience(TypedDict, total=False):
     """
     Invokes an action on an experience — a third party that renders inside
     Linq's iMessage app. Linq resolves the recipient's connection, mints any
@@ -36,7 +36,7 @@ class Agentkit(TypedDict, total=False):
     action: Required[str]
     """Which of its actions, e.g. `attach_card`."""
 
-    experience: Required[str]
+    name: Required[str]
     """The experience to invoke, e.g. `agentcard` or `agentpay`."""
 
     params: Dict[str, object]
@@ -194,13 +194,16 @@ class MessageContentParam(TypedDict, total=False):
     separating the "what" (message content) from the "where" (routing fields like from/to).
 
     A message carries EITHER `parts` — text and attachments, which compose
-    into one bubble — or a single `agentkit` invocation, which renders an
+    into one bubble — or a single `experience` invocation, which renders an
     experience inside Linq's iMessage app. Never both: an app card is the whole message
     (Apple's `MSMessage` cannot coexist with text), so copy and a card are
     two sends, not one.
     """
 
-    agentkit: Agentkit
+    effect: MessageEffectParam
+    """iMessage effect to apply to this message (screen or bubble effect)"""
+
+    experience: Experience
     """
     Invokes an action on an experience — a third party that renders inside Linq's
     iMessage app. Linq resolves the recipient's connection, mints any session the
@@ -209,9 +212,6 @@ class MessageContentParam(TypedDict, total=False):
     Call `GET /v3/experiences/{experience}` for the actions you may invoke and the
     fields each accepts.
     """
-
-    effect: MessageEffectParam
-    """iMessage effect to apply to this message (screen or bubble effect)"""
 
     idempotency_key: str
     """
