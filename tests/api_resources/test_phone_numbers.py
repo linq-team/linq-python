@@ -10,9 +10,9 @@ import pytest
 from linq import LinqAPIV3, AsyncLinqAPIV3
 from linq.types import (
     ReputationAudit,
+    ReputationAuditStarted,
     PhoneNumberListResponse,
     PhoneNumberUpdateResponse,
-    PhoneNumberStartReputationAuditResponse,
 )
 from tests.utils import assert_matches_type
 
@@ -154,7 +154,7 @@ class TestPhoneNumbers:
         phone_number = client.phone_numbers.start_reputation_audit(
             "phoneNumber",
         )
-        assert_matches_type(PhoneNumberStartReputationAuditResponse, phone_number, path=["response"])
+        assert_matches_type(ReputationAuditStarted, phone_number, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -166,7 +166,7 @@ class TestPhoneNumbers:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         phone_number = response.parse()
-        assert_matches_type(PhoneNumberStartReputationAuditResponse, phone_number, path=["response"])
+        assert_matches_type(ReputationAuditStarted, phone_number, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -178,7 +178,7 @@ class TestPhoneNumbers:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             phone_number = response.parse()
-            assert_matches_type(PhoneNumberStartReputationAuditResponse, phone_number, path=["response"])
+            assert_matches_type(ReputationAuditStarted, phone_number, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -328,7 +328,7 @@ class TestAsyncPhoneNumbers:
         phone_number = await async_client.phone_numbers.start_reputation_audit(
             "phoneNumber",
         )
-        assert_matches_type(PhoneNumberStartReputationAuditResponse, phone_number, path=["response"])
+        assert_matches_type(ReputationAuditStarted, phone_number, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -340,7 +340,7 @@ class TestAsyncPhoneNumbers:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         phone_number = await response.parse()
-        assert_matches_type(PhoneNumberStartReputationAuditResponse, phone_number, path=["response"])
+        assert_matches_type(ReputationAuditStarted, phone_number, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -352,7 +352,7 @@ class TestAsyncPhoneNumbers:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             phone_number = await response.parse()
-            assert_matches_type(PhoneNumberStartReputationAuditResponse, phone_number, path=["response"])
+            assert_matches_type(ReputationAuditStarted, phone_number, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

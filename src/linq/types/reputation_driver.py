@@ -1,25 +1,15 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 from typing import Optional
-from typing_extensions import Literal
 
 from .._models import BaseModel
+from .reputation_driver_key import ReputationDriverKey
 
 __all__ = ["ReputationDriver"]
 
 
 class ReputationDriver(BaseModel):
-    key: Optional[
-        Literal[
-            "low_engagement",
-            "overall_conversation_health",
-            "volume_spike",
-            "new_conversation_rate",
-            "opt_out_handling",
-            "flagged",
-            "other",
-        ]
-    ] = None
+    key: Optional[ReputationDriverKey] = None
     """
     Stable driver-category identifier — what is dragging the line, or one of its
     conversations, down.

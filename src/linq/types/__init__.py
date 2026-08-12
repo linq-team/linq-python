@@ -44,15 +44,20 @@ from .message_content_param import MessageContentParam as MessageContentParam
 from .message_create_params import MessageCreateParams as MessageCreateParams
 from .message_update_params import MessageUpdateParams as MessageUpdateParams
 from .payment_create_params import PaymentCreateParams as PaymentCreateParams
+from .reputation_driver_key import ReputationDriverKey as ReputationDriverKey
 from .chat_list_chats_params import ChatListChatsParams as ChatListChatsParams
+from .reputation_action_item import ReputationActionItem as ReputationActionItem
 from .schemas_message_effect import SchemasMessageEffect as SchemasMessageEffect
 from .supported_content_type import SupportedContentType as SupportedContentType
 from .message_create_response import MessageCreateResponse as MessageCreateResponse
+from .reputation_opt_out_chat import ReputationOptOutChat as ReputationOptOutChat
 from .attachment_create_params import AttachmentCreateParams as AttachmentCreateParams
 from .chat_leave_chat_response import ChatLeaveChatResponse as ChatLeaveChatResponse
 from .experience_list_response import ExperienceListResponse as ExperienceListResponse
+from .reputation_audit_started import ReputationAuditStarted as ReputationAuditStarted
 from .payment_handle_connection import PaymentHandleConnection as PaymentHandleConnection
 from .phonenumber_list_response import PhonenumberListResponse as PhonenumberListResponse
+from .reputation_unhealthy_chat import ReputationUnhealthyChat as ReputationUnhealthyChat
 from .attachment_create_response import AttachmentCreateResponse as AttachmentCreateResponse
 from .chat_created_webhook_event import ChatCreatedWebhookEvent as ChatCreatedWebhookEvent
 from .chat_send_voicememo_params import ChatSendVoicememoParams as ChatSendVoicememoParams
@@ -119,7 +124,4 @@ from .chat_typing_indicator_started_webhook_event import (
 )
 from .chat_typing_indicator_stopped_webhook_event import (
     ChatTypingIndicatorStoppedWebhookEvent as ChatTypingIndicatorStoppedWebhookEvent,
-)
-from .phone_number_start_reputation_audit_response import (
-    PhoneNumberStartReputationAuditResponse as PhoneNumberStartReputationAuditResponse,
 )

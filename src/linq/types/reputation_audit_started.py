@@ -4,10 +4,10 @@ from typing_extensions import Literal
 
 from .._models import BaseModel
 
-__all__ = ["PhoneNumberStartReputationAuditResponse"]
+__all__ = ["ReputationAuditStarted"]
 
 
-class PhoneNumberStartReputationAuditResponse(BaseModel):
+class ReputationAuditStarted(BaseModel):
     audit_id: str
     """Identifier for this audit.
 
