@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.22.1](https://github.com/linq-team/linq-python/compare/v0.22.0...v0.22.1) (2026-08-12)
+
+
+### Chores
+
+* add auto-merge workflow for release pull requests ([c709e3e](https://github.com/linq-team/linq-python/commit/c709e3e0c2d1687e5a4bac0d3606f71f8ab50120))
+
+
+### Documentation
+
+* add parameter descriptions for phone number audit endpoints ([c709e3e](https://github.com/linq-team/linq-python/commit/c709e3e0c2d1687e5a4bac0d3606f71f8ab50120))
+
 ## [0.22.0](https://github.com/linq-team/linq-python/compare/v0.21.1...v0.22.0) (2026-08-12)
 
 
