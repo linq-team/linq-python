@@ -218,9 +218,10 @@ class MessagesResource(SyncAPIResource):
               from/to).
 
               A message carries EITHER `parts` — text and attachments, which compose into one
-              bubble — or a single `action`, which invokes an experience inside Linq's
-              iMessage app. Never both: an app card is the whole message (Apple's `MSMessage`
-              cannot coexist with text), so copy and a card are two sends, not one.
+              bubble — or a single `experience` invocation, which renders an experience inside
+              Linq's iMessage app. Never both: an app card is the whole message (Apple's
+              `MSMessage` cannot coexist with text), so copy and a card are two sends, not
+              one.
 
           override_optout: Send even though the recipient asked you to stop (`403`, error code `2024`).
               Applies to this request only: the opt-out stays in place, so the next send
@@ -447,9 +448,10 @@ class AsyncMessagesResource(AsyncAPIResource):
               from/to).
 
               A message carries EITHER `parts` — text and attachments, which compose into one
-              bubble — or a single `action`, which invokes an experience inside Linq's
-              iMessage app. Never both: an app card is the whole message (Apple's `MSMessage`
-              cannot coexist with text), so copy and a card are two sends, not one.
+              bubble — or a single `experience` invocation, which renders an experience inside
+              Linq's iMessage app. Never both: an app card is the whole message (Apple's
+              `MSMessage` cannot coexist with text), so copy and a card are two sends, not
+              one.
 
           override_optout: Send even though the recipient asked you to stop (`403`, error code `2024`).
               Applies to this request only: the opt-out stays in place, so the next send

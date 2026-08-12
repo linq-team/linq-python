@@ -399,9 +399,10 @@ class ChatsResource(SyncAPIResource):
               from/to).
 
               A message carries EITHER `parts` — text and attachments, which compose into one
-              bubble — or a single `action`, which invokes an experience inside Linq's
-              iMessage app. Never both: an app card is the whole message (Apple's `MSMessage`
-              cannot coexist with text), so copy and a card are two sends, not one.
+              bubble — or a single `experience` invocation, which renders an experience inside
+              Linq's iMessage app. Never both: an app card is the whole message (Apple's
+              `MSMessage` cannot coexist with text), so copy and a card are two sends, not
+              one.
 
           to: Array of recipient handles (phone numbers in E.164 format or email addresses).
               For individual chats, provide one recipient. For group chats, provide multiple.
@@ -1120,9 +1121,10 @@ class AsyncChatsResource(AsyncAPIResource):
               from/to).
 
               A message carries EITHER `parts` — text and attachments, which compose into one
-              bubble — or a single `action`, which invokes an experience inside Linq's
-              iMessage app. Never both: an app card is the whole message (Apple's `MSMessage`
-              cannot coexist with text), so copy and a card are two sends, not one.
+              bubble — or a single `experience` invocation, which renders an experience inside
+              Linq's iMessage app. Never both: an app card is the whole message (Apple's
+              `MSMessage` cannot coexist with text), so copy and a card are two sends, not
+              one.
 
           to: Array of recipient handles (phone numbers in E.164 format or email addresses).
               For individual chats, provide one recipient. For group chats, provide multiple.

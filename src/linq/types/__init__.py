@@ -24,11 +24,15 @@ from .text_part_param import TextPartParam as TextPartParam
 from .media_part_param import MediaPartParam as MediaPartParam
 from .message_event_v2 import MessageEventV2 as MessageEventV2
 from .payment_provider import PaymentProvider as PaymentProvider
+from .reputation_audit import ReputationAudit as ReputationAudit
 from .set_contact_card import SetContactCard as SetContactCard
+from .reputation_driver import ReputationDriver as ReputationDriver
+from .reputation_report import ReputationReport as ReputationReport
 from .chat_create_params import ChatCreateParams as ChatCreateParams
 from .chat_update_params import ChatUpdateParams as ChatUpdateParams
 from .webhook_event_type import WebhookEventType as WebhookEventType
 from .reaction_event_base import ReactionEventBase as ReactionEventBase
+from .reputation_evidence import ReputationEvidence as ReputationEvidence
 from .blocked_handle_entry import BlockedHandleEntry as BlockedHandleEntry
 from .chat_create_response import ChatCreateResponse as ChatCreateResponse
 from .chat_update_response import ChatUpdateResponse as ChatUpdateResponse
@@ -115,4 +119,7 @@ from .chat_typing_indicator_started_webhook_event import (
 )
 from .chat_typing_indicator_stopped_webhook_event import (
     ChatTypingIndicatorStoppedWebhookEvent as ChatTypingIndicatorStoppedWebhookEvent,
+)
+from .phone_number_start_reputation_audit_response import (
+    PhoneNumberStartReputationAuditResponse as PhoneNumberStartReputationAuditResponse,
 )

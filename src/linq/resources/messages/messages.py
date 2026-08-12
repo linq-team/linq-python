@@ -261,9 +261,10 @@ class MessagesResource(SyncAPIResource):
               from/to).
 
               A message carries EITHER `parts` — text and attachments, which compose into one
-              bubble — or a single `action`, which invokes an experience inside Linq's
-              iMessage app. Never both: an app card is the whole message (Apple's `MSMessage`
-              cannot coexist with text), so copy and a card are two sends, not one.
+              bubble — or a single `experience` invocation, which renders an experience inside
+              Linq's iMessage app. Never both: an app card is the whole message (Apple's
+              `MSMessage` cannot coexist with text), so copy and a card are two sends, not
+              one.
 
           to: Recipient handles (E.164 phone numbers or email addresses). One handle is a
               direct chat; multiple handles a group chat. Order-independent — the set
@@ -580,7 +581,7 @@ class MessagesResource(SyncAPIResource):
         message_id: str,
         *,
         layout: message_update_app_card_params.Layout,
-        action: message_update_app_card_params.Action | Omit = omit,
+        experience: message_update_app_card_params.Experience | Omit = omit,
         fallback_text: str | Omit = omit,
         interactive: bool | Omit = omit,
         url: str | Omit = omit,
@@ -631,7 +632,7 @@ class MessagesResource(SyncAPIResource):
               an image there is nothing to overlay — so setting either without `image_url` is
               rejected.
 
-          action: Invokes an action on an experience — a third party that renders inside Linq's
+          experience: Invokes an action on an experience — a third party that renders inside Linq's
               iMessage app. Linq resolves the recipient's connection, mints any session the
               action needs, composes the card and sends it; none of that is visible to you.
 
@@ -653,7 +654,7 @@ class MessagesResource(SyncAPIResource):
 
           url: URL the recipient's app opens when they tap the updated card.
 
-              Mutually exclusive with `action` and `raw_payload_data`.
+              Mutually exclusive with `experience` and `raw_payload_data`.
 
           extra_headers: Send extra headers
 
@@ -670,7 +671,7 @@ class MessagesResource(SyncAPIResource):
             body=maybe_transform(
                 {
                     "layout": layout,
-                    "action": action,
+                    "experience": experience,
                     "fallback_text": fallback_text,
                     "interactive": interactive,
                     "url": url,
@@ -902,9 +903,10 @@ class AsyncMessagesResource(AsyncAPIResource):
               from/to).
 
               A message carries EITHER `parts` — text and attachments, which compose into one
-              bubble — or a single `action`, which invokes an experience inside Linq's
-              iMessage app. Never both: an app card is the whole message (Apple's `MSMessage`
-              cannot coexist with text), so copy and a card are two sends, not one.
+              bubble — or a single `experience` invocation, which renders an experience inside
+              Linq's iMessage app. Never both: an app card is the whole message (Apple's
+              `MSMessage` cannot coexist with text), so copy and a card are two sends, not
+              one.
 
           to: Recipient handles (E.164 phone numbers or email addresses). One handle is a
               direct chat; multiple handles a group chat. Order-independent — the set
@@ -1221,7 +1223,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         message_id: str,
         *,
         layout: message_update_app_card_params.Layout,
-        action: message_update_app_card_params.Action | Omit = omit,
+        experience: message_update_app_card_params.Experience | Omit = omit,
         fallback_text: str | Omit = omit,
         interactive: bool | Omit = omit,
         url: str | Omit = omit,
@@ -1272,7 +1274,7 @@ class AsyncMessagesResource(AsyncAPIResource):
               an image there is nothing to overlay — so setting either without `image_url` is
               rejected.
 
-          action: Invokes an action on an experience — a third party that renders inside Linq's
+          experience: Invokes an action on an experience — a third party that renders inside Linq's
               iMessage app. Linq resolves the recipient's connection, mints any session the
               action needs, composes the card and sends it; none of that is visible to you.
 
@@ -1294,7 +1296,7 @@ class AsyncMessagesResource(AsyncAPIResource):
 
           url: URL the recipient's app opens when they tap the updated card.
 
-              Mutually exclusive with `action` and `raw_payload_data`.
+              Mutually exclusive with `experience` and `raw_payload_data`.
 
           extra_headers: Send extra headers
 
@@ -1311,7 +1313,7 @@ class AsyncMessagesResource(AsyncAPIResource):
             body=await async_maybe_transform(
                 {
                     "layout": layout,
-                    "action": action,
+                    "experience": experience,
                     "fallback_text": fallback_text,
                     "interactive": interactive,
                     "url": url,

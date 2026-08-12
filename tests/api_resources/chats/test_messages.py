@@ -86,14 +86,14 @@ class TestMessages:
         message = client.chats.messages.send(
             chat_id="550e8400-e29b-41d4-a716-446655440000",
             message={
-                "action": {
-                    "action": "attach_card",
-                    "experience": "agentcard",
-                    "params": {"foo": "bar"},
-                },
                 "effect": {
                     "name": "confetti",
                     "type": "screen",
+                },
+                "experience": {
+                    "action": "attach_card",
+                    "name": "agentcard",
+                    "params": {"foo": "bar"},
                 },
                 "idempotency_key": "msg-abc123xyz",
                 "parts": [
@@ -236,14 +236,14 @@ class TestAsyncMessages:
         message = await async_client.chats.messages.send(
             chat_id="550e8400-e29b-41d4-a716-446655440000",
             message={
-                "action": {
-                    "action": "attach_card",
-                    "experience": "agentcard",
-                    "params": {"foo": "bar"},
-                },
                 "effect": {
                     "name": "confetti",
                     "type": "screen",
+                },
+                "experience": {
+                    "action": "attach_card",
+                    "name": "agentcard",
+                    "params": {"foo": "bar"},
                 },
                 "idempotency_key": "msg-abc123xyz",
                 "parts": [

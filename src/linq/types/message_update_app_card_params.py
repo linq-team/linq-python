@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Dict
 from typing_extensions import Required, TypedDict
 
-__all__ = ["MessageUpdateAppCardParams", "Layout", "Action"]
+__all__ = ["MessageUpdateAppCardParams", "Layout", "Experience"]
 
 
 class MessageUpdateAppCardParams(TypedDict, total=False):
@@ -28,7 +28,7 @@ class MessageUpdateAppCardParams(TypedDict, total=False):
     rejected.
     """
 
-    action: Action
+    experience: Experience
     """
     Invokes an action on an experience — a third party that renders inside Linq's
     iMessage app. Linq resolves the recipient's connection, mints any session the
@@ -60,7 +60,7 @@ class MessageUpdateAppCardParams(TypedDict, total=False):
     url: str
     """URL the recipient's app opens when they tap the updated card.
 
-    Mutually exclusive with `action` and `raw_payload_data`.
+    Mutually exclusive with `experience` and `raw_payload_data`.
     """
 
 
@@ -116,7 +116,7 @@ class Layout(TypedDict, total=False):
     """Label shown below `trailing_caption`, on the right."""
 
 
-class Action(TypedDict, total=False):
+class Experience(TypedDict, total=False):
     """
     Invokes an action on an experience — a third party that renders inside
     Linq's iMessage app. Linq resolves the recipient's connection, mints any
@@ -130,8 +130,8 @@ class Action(TypedDict, total=False):
     action: Required[str]
     """Which of its actions, e.g. `attach_card`."""
 
-    experience: Required[str]
-    """The experience to invoke, e.g. `agentcard`."""
+    name: Required[str]
+    """The experience to invoke, e.g. `agentcard` or `agentpay`."""
 
     params: Dict[str, object]
     """Values for the fields this action exposes.
@@ -140,4 +140,8 @@ class Action(TypedDict, total=False):
 
     Display copy only, except a `url`-type field — that value sets the destination,
     and must be an absolute `https` URL.
+
+    Some fields are read rather than sent: `agentpay`'s `request_payment` takes only
+    a `checkout_url` and resolves the amount and reason from that payment request
+    itself, so the card cannot state a figure the checkout will not charge.
     """

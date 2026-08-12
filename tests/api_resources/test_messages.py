@@ -37,14 +37,14 @@ class TestMessages:
     def test_method_create_with_all_params(self, client: LinqAPIV3) -> None:
         message = client.messages.create(
             message={
-                "action": {
-                    "action": "attach_card",
-                    "experience": "agentcard",
-                    "params": {"foo": "bar"},
-                },
                 "effect": {
                     "name": "confetti",
                     "type": "screen",
+                },
+                "experience": {
+                    "action": "attach_card",
+                    "name": "agentcard",
+                    "params": {"foo": "bar"},
                 },
                 "idempotency_key": "msg-abc123xyz",
                 "parts": [
@@ -387,9 +387,9 @@ class TestMessages:
                 "trailing_caption": "2 min",
                 "trailing_subcaption": "expires",
             },
-            action={
+            experience={
                 "action": "attach_card",
-                "experience": "agentcard",
+                "name": "agentcard",
                 "params": {"foo": "bar"},
             },
             fallback_text="Score update",
@@ -455,14 +455,14 @@ class TestAsyncMessages:
     async def test_method_create_with_all_params(self, async_client: AsyncLinqAPIV3) -> None:
         message = await async_client.messages.create(
             message={
-                "action": {
-                    "action": "attach_card",
-                    "experience": "agentcard",
-                    "params": {"foo": "bar"},
-                },
                 "effect": {
                     "name": "confetti",
                     "type": "screen",
+                },
+                "experience": {
+                    "action": "attach_card",
+                    "name": "agentcard",
+                    "params": {"foo": "bar"},
                 },
                 "idempotency_key": "msg-abc123xyz",
                 "parts": [
@@ -805,9 +805,9 @@ class TestAsyncMessages:
                 "trailing_caption": "2 min",
                 "trailing_subcaption": "expires",
             },
-            action={
+            experience={
                 "action": "attach_card",
-                "experience": "agentcard",
+                "name": "agentcard",
                 "params": {"foo": "bar"},
             },
             fallback_text="Score update",

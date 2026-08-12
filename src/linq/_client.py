@@ -565,6 +565,41 @@ class LinqAPIV3(SyncAPIClient):
         branding; a newly registered experience can take up to ~24 hours to
         activate on Apple's side, during which links open the web checkout.
 
+        ## Sending it as a card instead
+
+        A `link` part is one way to deliver a request. The other is the
+        **`agentpay` experience**, which sends the same request as a native card
+        in Linq's iMessage app — the amount and reason are drawn in the bubble,
+        and it turns itself into "Paid" in place once the payment succeeds,
+        without a second message.
+
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
+        ```json
+        {
+          "message": {
+            "experience": {
+              "name": "agentpay",
+              "action": "request_payment",
+              "params": { "checkout_url": "https://zero.linqapp.com/pay/acme?session=tok_..." }
+            }
+          }
+        }
+        ```
+
+        `checkout_url` is the only required field — pass back exactly what
+        `POST /v3/payment_requests` returned. **The amount and reason are read
+        from that request, never from you**, so the card can never claim a
+        different figure than the checkout will charge. Optional `title` and
+        `note` override the copy only. The link must be one of your own payment
+        requests; another partner's is rejected.
+
+        The trade-off against a `link` part: a card is an app card, so it is
+        iMessage-only, and recipients without the app see a static version of it.
+        A link works everywhere and is what opens the Apple Pay App Clip. Send
+        whichever suits the conversation — both settle the same payment request
+        and fire the same webhooks.
+
         ## Webhooks
 
         Subscribe to payment lifecycle events to reconcile server-side rather than
@@ -626,9 +661,55 @@ class LinqAPIV3(SyncAPIClient):
     @cached_property
     def experiences(self) -> ExperiencesResource:
         """
-        Let an agent pay on a customer's behalf with a single-use virtual card.
-        Connect a customer once, then create a payment — a virtual card is minted
-        scoped to that purchase and the card details are handed back for checkout.
+        An **experience** renders inside Linq's iMessage app as a native card,
+        instead of as text or a link. You invoke one by name; Linq resolves the
+        recipient, mints any session it needs, composes the card and sends it.
+
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
+        ```json
+        {
+          "message": {
+            "experience": {
+              "name": "agentpay",
+              "action": "request_payment",
+              "params": { "checkout_url": "https://zero.linqapp.com/pay/acme?session=tok_..." }
+            }
+          }
+        }
+        ```
+
+        The key is `experience` — what you're invoking. Nested under it is its
+        `name`, the action you're invoking on it, and that action's params. A card
+        **is** the whole message on Apple's side, so a message carries either
+        `experience` or `parts`, never both, and an action goes to exactly one
+        recipient.
+
+        ## What you can invoke
+
+        | Experience | Action | What the customer sees |
+        |---|---|---|
+        | `agentpay` | `request_payment` | A payment request they can pay in the app. Turns itself into "Paid" in place once it settles. |
+        | `agentcard` | `attach_card` | A prompt to add a card to their wallet. |
+        | `agentcard` | `approve_card` | A passkey approval for a virtual card. |
+        | `link` | `open` | A card that opens a URL you supply. |
+
+        `GET /v3/experiences` is the authoritative list for your account, with
+        every action and the fields each accepts — an action missing there cannot
+        be sent. Fields are display copy unless documented otherwise.
+
+        ## Params are checked before the card is sent
+
+        Unknown fields are **rejected rather than ignored**, so copy that would
+        never have rendered fails for you now instead of arriving wrong on
+        somebody's phone. Some fields are read rather than sent: `agentpay`'s
+        `request_payment` takes only a `checkout_url` and resolves the amount and
+        reason from that payment request, so a card can never claim a figure the
+        checkout will not charge.
+
+        Cards are **iMessage-only**. Recipients without the app see a static
+        version built from the same copy; SMS and RCS recipients cannot receive
+        one at all (error codes 2018 and 4005).
         """
         from .resources.experiences import ExperiencesResource
 
@@ -1533,6 +1614,41 @@ class AsyncLinqAPIV3(AsyncAPIClient):
         branding; a newly registered experience can take up to ~24 hours to
         activate on Apple's side, during which links open the web checkout.
 
+        ## Sending it as a card instead
+
+        A `link` part is one way to deliver a request. The other is the
+        **`agentpay` experience**, which sends the same request as a native card
+        in Linq's iMessage app — the amount and reason are drawn in the bubble,
+        and it turns itself into "Paid" in place once the payment succeeds,
+        without a second message.
+
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
+        ```json
+        {
+          "message": {
+            "experience": {
+              "name": "agentpay",
+              "action": "request_payment",
+              "params": { "checkout_url": "https://zero.linqapp.com/pay/acme?session=tok_..." }
+            }
+          }
+        }
+        ```
+
+        `checkout_url` is the only required field — pass back exactly what
+        `POST /v3/payment_requests` returned. **The amount and reason are read
+        from that request, never from you**, so the card can never claim a
+        different figure than the checkout will charge. Optional `title` and
+        `note` override the copy only. The link must be one of your own payment
+        requests; another partner's is rejected.
+
+        The trade-off against a `link` part: a card is an app card, so it is
+        iMessage-only, and recipients without the app see a static version of it.
+        A link works everywhere and is what opens the Apple Pay App Clip. Send
+        whichever suits the conversation — both settle the same payment request
+        and fire the same webhooks.
+
         ## Webhooks
 
         Subscribe to payment lifecycle events to reconcile server-side rather than
@@ -1594,9 +1710,55 @@ class AsyncLinqAPIV3(AsyncAPIClient):
     @cached_property
     def experiences(self) -> AsyncExperiencesResource:
         """
-        Let an agent pay on a customer's behalf with a single-use virtual card.
-        Connect a customer once, then create a payment — a virtual card is minted
-        scoped to that purchase and the card details are handed back for checkout.
+        An **experience** renders inside Linq's iMessage app as a native card,
+        instead of as text or a link. You invoke one by name; Linq resolves the
+        recipient, mints any session it needs, composes the card and sends it.
+
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
+        ```json
+        {
+          "message": {
+            "experience": {
+              "name": "agentpay",
+              "action": "request_payment",
+              "params": { "checkout_url": "https://zero.linqapp.com/pay/acme?session=tok_..." }
+            }
+          }
+        }
+        ```
+
+        The key is `experience` — what you're invoking. Nested under it is its
+        `name`, the action you're invoking on it, and that action's params. A card
+        **is** the whole message on Apple's side, so a message carries either
+        `experience` or `parts`, never both, and an action goes to exactly one
+        recipient.
+
+        ## What you can invoke
+
+        | Experience | Action | What the customer sees |
+        |---|---|---|
+        | `agentpay` | `request_payment` | A payment request they can pay in the app. Turns itself into "Paid" in place once it settles. |
+        | `agentcard` | `attach_card` | A prompt to add a card to their wallet. |
+        | `agentcard` | `approve_card` | A passkey approval for a virtual card. |
+        | `link` | `open` | A card that opens a URL you supply. |
+
+        `GET /v3/experiences` is the authoritative list for your account, with
+        every action and the fields each accepts — an action missing there cannot
+        be sent. Fields are display copy unless documented otherwise.
+
+        ## Params are checked before the card is sent
+
+        Unknown fields are **rejected rather than ignored**, so copy that would
+        never have rendered fails for you now instead of arriving wrong on
+        somebody's phone. Some fields are read rather than sent: `agentpay`'s
+        `request_payment` takes only a `checkout_url` and resolves the amount and
+        reason from that payment request, so a card can never claim a figure the
+        checkout will not charge.
+
+        Cards are **iMessage-only**. Recipients without the app see a static
+        version built from the same copy; SMS and RCS recipients cannot receive
+        one at all (error codes 2018 and 4005).
         """
         from .resources.experiences import AsyncExperiencesResource
 
@@ -2435,6 +2597,41 @@ class LinqAPIV3WithRawResponse:
         branding; a newly registered experience can take up to ~24 hours to
         activate on Apple's side, during which links open the web checkout.
 
+        ## Sending it as a card instead
+
+        A `link` part is one way to deliver a request. The other is the
+        **`agentpay` experience**, which sends the same request as a native card
+        in Linq's iMessage app — the amount and reason are drawn in the bubble,
+        and it turns itself into "Paid" in place once the payment succeeds,
+        without a second message.
+
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
+        ```json
+        {
+          "message": {
+            "experience": {
+              "name": "agentpay",
+              "action": "request_payment",
+              "params": { "checkout_url": "https://zero.linqapp.com/pay/acme?session=tok_..." }
+            }
+          }
+        }
+        ```
+
+        `checkout_url` is the only required field — pass back exactly what
+        `POST /v3/payment_requests` returned. **The amount and reason are read
+        from that request, never from you**, so the card can never claim a
+        different figure than the checkout will charge. Optional `title` and
+        `note` override the copy only. The link must be one of your own payment
+        requests; another partner's is rejected.
+
+        The trade-off against a `link` part: a card is an app card, so it is
+        iMessage-only, and recipients without the app see a static version of it.
+        A link works everywhere and is what opens the Apple Pay App Clip. Send
+        whichever suits the conversation — both settle the same payment request
+        and fire the same webhooks.
+
         ## Webhooks
 
         Subscribe to payment lifecycle events to reconcile server-side rather than
@@ -2496,9 +2693,55 @@ class LinqAPIV3WithRawResponse:
     @cached_property
     def experiences(self) -> experiences.ExperiencesResourceWithRawResponse:
         """
-        Let an agent pay on a customer's behalf with a single-use virtual card.
-        Connect a customer once, then create a payment — a virtual card is minted
-        scoped to that purchase and the card details are handed back for checkout.
+        An **experience** renders inside Linq's iMessage app as a native card,
+        instead of as text or a link. You invoke one by name; Linq resolves the
+        recipient, mints any session it needs, composes the card and sends it.
+
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
+        ```json
+        {
+          "message": {
+            "experience": {
+              "name": "agentpay",
+              "action": "request_payment",
+              "params": { "checkout_url": "https://zero.linqapp.com/pay/acme?session=tok_..." }
+            }
+          }
+        }
+        ```
+
+        The key is `experience` — what you're invoking. Nested under it is its
+        `name`, the action you're invoking on it, and that action's params. A card
+        **is** the whole message on Apple's side, so a message carries either
+        `experience` or `parts`, never both, and an action goes to exactly one
+        recipient.
+
+        ## What you can invoke
+
+        | Experience | Action | What the customer sees |
+        |---|---|---|
+        | `agentpay` | `request_payment` | A payment request they can pay in the app. Turns itself into "Paid" in place once it settles. |
+        | `agentcard` | `attach_card` | A prompt to add a card to their wallet. |
+        | `agentcard` | `approve_card` | A passkey approval for a virtual card. |
+        | `link` | `open` | A card that opens a URL you supply. |
+
+        `GET /v3/experiences` is the authoritative list for your account, with
+        every action and the fields each accepts — an action missing there cannot
+        be sent. Fields are display copy unless documented otherwise.
+
+        ## Params are checked before the card is sent
+
+        Unknown fields are **rejected rather than ignored**, so copy that would
+        never have rendered fails for you now instead of arriving wrong on
+        somebody's phone. Some fields are read rather than sent: `agentpay`'s
+        `request_payment` takes only a `checkout_url` and resolves the amount and
+        reason from that payment request, so a card can never claim a figure the
+        checkout will not charge.
+
+        Cards are **iMessage-only**. Recipients without the app see a static
+        version built from the same copy; SMS and RCS recipients cannot receive
+        one at all (error codes 2018 and 4005).
         """
         from .resources.experiences import ExperiencesResourceWithRawResponse
 
@@ -3209,6 +3452,41 @@ class AsyncLinqAPIV3WithRawResponse:
         branding; a newly registered experience can take up to ~24 hours to
         activate on Apple's side, during which links open the web checkout.
 
+        ## Sending it as a card instead
+
+        A `link` part is one way to deliver a request. The other is the
+        **`agentpay` experience**, which sends the same request as a native card
+        in Linq's iMessage app — the amount and reason are drawn in the bubble,
+        and it turns itself into "Paid" in place once the payment succeeds,
+        without a second message.
+
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
+        ```json
+        {
+          "message": {
+            "experience": {
+              "name": "agentpay",
+              "action": "request_payment",
+              "params": { "checkout_url": "https://zero.linqapp.com/pay/acme?session=tok_..." }
+            }
+          }
+        }
+        ```
+
+        `checkout_url` is the only required field — pass back exactly what
+        `POST /v3/payment_requests` returned. **The amount and reason are read
+        from that request, never from you**, so the card can never claim a
+        different figure than the checkout will charge. Optional `title` and
+        `note` override the copy only. The link must be one of your own payment
+        requests; another partner's is rejected.
+
+        The trade-off against a `link` part: a card is an app card, so it is
+        iMessage-only, and recipients without the app see a static version of it.
+        A link works everywhere and is what opens the Apple Pay App Clip. Send
+        whichever suits the conversation — both settle the same payment request
+        and fire the same webhooks.
+
         ## Webhooks
 
         Subscribe to payment lifecycle events to reconcile server-side rather than
@@ -3270,9 +3548,55 @@ class AsyncLinqAPIV3WithRawResponse:
     @cached_property
     def experiences(self) -> experiences.AsyncExperiencesResourceWithRawResponse:
         """
-        Let an agent pay on a customer's behalf with a single-use virtual card.
-        Connect a customer once, then create a payment — a virtual card is minted
-        scoped to that purchase and the card details are handed back for checkout.
+        An **experience** renders inside Linq's iMessage app as a native card,
+        instead of as text or a link. You invoke one by name; Linq resolves the
+        recipient, mints any session it needs, composes the card and sends it.
+
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
+        ```json
+        {
+          "message": {
+            "experience": {
+              "name": "agentpay",
+              "action": "request_payment",
+              "params": { "checkout_url": "https://zero.linqapp.com/pay/acme?session=tok_..." }
+            }
+          }
+        }
+        ```
+
+        The key is `experience` — what you're invoking. Nested under it is its
+        `name`, the action you're invoking on it, and that action's params. A card
+        **is** the whole message on Apple's side, so a message carries either
+        `experience` or `parts`, never both, and an action goes to exactly one
+        recipient.
+
+        ## What you can invoke
+
+        | Experience | Action | What the customer sees |
+        |---|---|---|
+        | `agentpay` | `request_payment` | A payment request they can pay in the app. Turns itself into "Paid" in place once it settles. |
+        | `agentcard` | `attach_card` | A prompt to add a card to their wallet. |
+        | `agentcard` | `approve_card` | A passkey approval for a virtual card. |
+        | `link` | `open` | A card that opens a URL you supply. |
+
+        `GET /v3/experiences` is the authoritative list for your account, with
+        every action and the fields each accepts — an action missing there cannot
+        be sent. Fields are display copy unless documented otherwise.
+
+        ## Params are checked before the card is sent
+
+        Unknown fields are **rejected rather than ignored**, so copy that would
+        never have rendered fails for you now instead of arriving wrong on
+        somebody's phone. Some fields are read rather than sent: `agentpay`'s
+        `request_payment` takes only a `checkout_url` and resolves the amount and
+        reason from that payment request, so a card can never claim a figure the
+        checkout will not charge.
+
+        Cards are **iMessage-only**. Recipients without the app see a static
+        version built from the same copy; SMS and RCS recipients cannot receive
+        one at all (error codes 2018 and 4005).
         """
         from .resources.experiences import AsyncExperiencesResourceWithRawResponse
 
@@ -3983,6 +4307,41 @@ class LinqAPIV3WithStreamedResponse:
         branding; a newly registered experience can take up to ~24 hours to
         activate on Apple's side, during which links open the web checkout.
 
+        ## Sending it as a card instead
+
+        A `link` part is one way to deliver a request. The other is the
+        **`agentpay` experience**, which sends the same request as a native card
+        in Linq's iMessage app — the amount and reason are drawn in the bubble,
+        and it turns itself into "Paid" in place once the payment succeeds,
+        without a second message.
+
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
+        ```json
+        {
+          "message": {
+            "experience": {
+              "name": "agentpay",
+              "action": "request_payment",
+              "params": { "checkout_url": "https://zero.linqapp.com/pay/acme?session=tok_..." }
+            }
+          }
+        }
+        ```
+
+        `checkout_url` is the only required field — pass back exactly what
+        `POST /v3/payment_requests` returned. **The amount and reason are read
+        from that request, never from you**, so the card can never claim a
+        different figure than the checkout will charge. Optional `title` and
+        `note` override the copy only. The link must be one of your own payment
+        requests; another partner's is rejected.
+
+        The trade-off against a `link` part: a card is an app card, so it is
+        iMessage-only, and recipients without the app see a static version of it.
+        A link works everywhere and is what opens the Apple Pay App Clip. Send
+        whichever suits the conversation — both settle the same payment request
+        and fire the same webhooks.
+
         ## Webhooks
 
         Subscribe to payment lifecycle events to reconcile server-side rather than
@@ -4044,9 +4403,55 @@ class LinqAPIV3WithStreamedResponse:
     @cached_property
     def experiences(self) -> experiences.ExperiencesResourceWithStreamingResponse:
         """
-        Let an agent pay on a customer's behalf with a single-use virtual card.
-        Connect a customer once, then create a payment — a virtual card is minted
-        scoped to that purchase and the card details are handed back for checkout.
+        An **experience** renders inside Linq's iMessage app as a native card,
+        instead of as text or a link. You invoke one by name; Linq resolves the
+        recipient, mints any session it needs, composes the card and sends it.
+
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
+        ```json
+        {
+          "message": {
+            "experience": {
+              "name": "agentpay",
+              "action": "request_payment",
+              "params": { "checkout_url": "https://zero.linqapp.com/pay/acme?session=tok_..." }
+            }
+          }
+        }
+        ```
+
+        The key is `experience` — what you're invoking. Nested under it is its
+        `name`, the action you're invoking on it, and that action's params. A card
+        **is** the whole message on Apple's side, so a message carries either
+        `experience` or `parts`, never both, and an action goes to exactly one
+        recipient.
+
+        ## What you can invoke
+
+        | Experience | Action | What the customer sees |
+        |---|---|---|
+        | `agentpay` | `request_payment` | A payment request they can pay in the app. Turns itself into "Paid" in place once it settles. |
+        | `agentcard` | `attach_card` | A prompt to add a card to their wallet. |
+        | `agentcard` | `approve_card` | A passkey approval for a virtual card. |
+        | `link` | `open` | A card that opens a URL you supply. |
+
+        `GET /v3/experiences` is the authoritative list for your account, with
+        every action and the fields each accepts — an action missing there cannot
+        be sent. Fields are display copy unless documented otherwise.
+
+        ## Params are checked before the card is sent
+
+        Unknown fields are **rejected rather than ignored**, so copy that would
+        never have rendered fails for you now instead of arriving wrong on
+        somebody's phone. Some fields are read rather than sent: `agentpay`'s
+        `request_payment` takes only a `checkout_url` and resolves the amount and
+        reason from that payment request, so a card can never claim a figure the
+        checkout will not charge.
+
+        Cards are **iMessage-only**. Recipients without the app see a static
+        version built from the same copy; SMS and RCS recipients cannot receive
+        one at all (error codes 2018 and 4005).
         """
         from .resources.experiences import ExperiencesResourceWithStreamingResponse
 
@@ -4757,6 +5162,41 @@ class AsyncLinqAPIV3WithStreamedResponse:
         branding; a newly registered experience can take up to ~24 hours to
         activate on Apple's side, during which links open the web checkout.
 
+        ## Sending it as a card instead
+
+        A `link` part is one way to deliver a request. The other is the
+        **`agentpay` experience**, which sends the same request as a native card
+        in Linq's iMessage app — the amount and reason are drawn in the bubble,
+        and it turns itself into "Paid" in place once the payment succeeds,
+        without a second message.
+
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
+        ```json
+        {
+          "message": {
+            "experience": {
+              "name": "agentpay",
+              "action": "request_payment",
+              "params": { "checkout_url": "https://zero.linqapp.com/pay/acme?session=tok_..." }
+            }
+          }
+        }
+        ```
+
+        `checkout_url` is the only required field — pass back exactly what
+        `POST /v3/payment_requests` returned. **The amount and reason are read
+        from that request, never from you**, so the card can never claim a
+        different figure than the checkout will charge. Optional `title` and
+        `note` override the copy only. The link must be one of your own payment
+        requests; another partner's is rejected.
+
+        The trade-off against a `link` part: a card is an app card, so it is
+        iMessage-only, and recipients without the app see a static version of it.
+        A link works everywhere and is what opens the Apple Pay App Clip. Send
+        whichever suits the conversation — both settle the same payment request
+        and fire the same webhooks.
+
         ## Webhooks
 
         Subscribe to payment lifecycle events to reconcile server-side rather than
@@ -4818,9 +5258,55 @@ class AsyncLinqAPIV3WithStreamedResponse:
     @cached_property
     def experiences(self) -> experiences.AsyncExperiencesResourceWithStreamingResponse:
         """
-        Let an agent pay on a customer's behalf with a single-use virtual card.
-        Connect a customer once, then create a payment — a virtual card is minted
-        scoped to that purchase and the card details are handed back for checkout.
+        An **experience** renders inside Linq's iMessage app as a native card,
+        instead of as text or a link. You invoke one by name; Linq resolves the
+        recipient, mints any session it needs, composes the card and sends it.
+
+        Send it to `POST /v3/chats/{chatId}/messages`:
+
+        ```json
+        {
+          "message": {
+            "experience": {
+              "name": "agentpay",
+              "action": "request_payment",
+              "params": { "checkout_url": "https://zero.linqapp.com/pay/acme?session=tok_..." }
+            }
+          }
+        }
+        ```
+
+        The key is `experience` — what you're invoking. Nested under it is its
+        `name`, the action you're invoking on it, and that action's params. A card
+        **is** the whole message on Apple's side, so a message carries either
+        `experience` or `parts`, never both, and an action goes to exactly one
+        recipient.
+
+        ## What you can invoke
+
+        | Experience | Action | What the customer sees |
+        |---|---|---|
+        | `agentpay` | `request_payment` | A payment request they can pay in the app. Turns itself into "Paid" in place once it settles. |
+        | `agentcard` | `attach_card` | A prompt to add a card to their wallet. |
+        | `agentcard` | `approve_card` | A passkey approval for a virtual card. |
+        | `link` | `open` | A card that opens a URL you supply. |
+
+        `GET /v3/experiences` is the authoritative list for your account, with
+        every action and the fields each accepts — an action missing there cannot
+        be sent. Fields are display copy unless documented otherwise.
+
+        ## Params are checked before the card is sent
+
+        Unknown fields are **rejected rather than ignored**, so copy that would
+        never have rendered fails for you now instead of arriving wrong on
+        somebody's phone. Some fields are read rather than sent: `agentpay`'s
+        `request_payment` takes only a `checkout_url` and resolves the amount and
+        reason from that payment request, so a card can never claim a figure the
+        checkout will not charge.
+
+        Cards are **iMessage-only**. Recipients without the app see a static
+        version built from the same copy; SMS and RCS recipients cannot receive
+        one at all (error codes 2018 and 4005).
         """
         from .resources.experiences import AsyncExperiencesResourceWithStreamingResponse
 

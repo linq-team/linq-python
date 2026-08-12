@@ -18,8 +18,10 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
+from ..types.reputation_audit import ReputationAudit
 from ..types.phone_number_list_response import PhoneNumberListResponse
 from ..types.phone_number_update_response import PhoneNumberUpdateResponse
+from ..types.phone_number_start_reputation_audit_response import PhoneNumberStartReputationAuditResponse
 
 __all__ = ["PhoneNumbersResource", "AsyncPhoneNumbersResource"]
 
@@ -120,6 +122,87 @@ class PhoneNumbersResource(SyncAPIResource):
             cast_to=PhoneNumberListResponse,
         )
 
+    def get_reputation_audit(
+        self,
+        audit_id: str,
+        *,
+        phone_number: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ReputationAudit:
+        """Returns the audit's status and, once complete, the report.
+
+        Audits are scoped to
+        the line in the URL — an `auditId` started on a different line returns `404`.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not phone_number:
+            raise ValueError(f"Expected a non-empty value for `phone_number` but received {phone_number!r}")
+        if not audit_id:
+            raise ValueError(f"Expected a non-empty value for `audit_id` but received {audit_id!r}")
+        return self._get(
+            path_template(
+                "/v3/phone_numbers/{phone_number}/reputation_audit/{audit_id}",
+                phone_number=phone_number,
+                audit_id=audit_id,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ReputationAudit,
+        )
+
+    def start_reputation_audit(
+        self,
+        phone_number: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> PhoneNumberStartReputationAuditResponse:
+        """
+        Starts an asynchronous reputation audit for a line and returns an `audit_id`.
+        Poll the GET endpoint for the result.
+
+        Rate limited per line: only one audit may run at a time (a second request
+        returns `409` while the first is still in progress), and a new audit can't be
+        started for the same line until a cooldown elapses (`429`, with `Retry-After`
+        carrying the wait).
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not phone_number:
+            raise ValueError(f"Expected a non-empty value for `phone_number` but received {phone_number!r}")
+        return self._post(
+            path_template("/v3/phone_numbers/{phone_number}/reputation_audit", phone_number=phone_number),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=PhoneNumberStartReputationAuditResponse,
+        )
+
 
 class AsyncPhoneNumbersResource(AsyncAPIResource):
     """Phone Numbers represent the phone numbers assigned to your partner account.
@@ -217,6 +300,87 @@ class AsyncPhoneNumbersResource(AsyncAPIResource):
             cast_to=PhoneNumberListResponse,
         )
 
+    async def get_reputation_audit(
+        self,
+        audit_id: str,
+        *,
+        phone_number: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ReputationAudit:
+        """Returns the audit's status and, once complete, the report.
+
+        Audits are scoped to
+        the line in the URL — an `auditId` started on a different line returns `404`.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not phone_number:
+            raise ValueError(f"Expected a non-empty value for `phone_number` but received {phone_number!r}")
+        if not audit_id:
+            raise ValueError(f"Expected a non-empty value for `audit_id` but received {audit_id!r}")
+        return await self._get(
+            path_template(
+                "/v3/phone_numbers/{phone_number}/reputation_audit/{audit_id}",
+                phone_number=phone_number,
+                audit_id=audit_id,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ReputationAudit,
+        )
+
+    async def start_reputation_audit(
+        self,
+        phone_number: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> PhoneNumberStartReputationAuditResponse:
+        """
+        Starts an asynchronous reputation audit for a line and returns an `audit_id`.
+        Poll the GET endpoint for the result.
+
+        Rate limited per line: only one audit may run at a time (a second request
+        returns `409` while the first is still in progress), and a new audit can't be
+        started for the same line until a cooldown elapses (`429`, with `Retry-After`
+        carrying the wait).
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not phone_number:
+            raise ValueError(f"Expected a non-empty value for `phone_number` but received {phone_number!r}")
+        return await self._post(
+            path_template("/v3/phone_numbers/{phone_number}/reputation_audit", phone_number=phone_number),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=PhoneNumberStartReputationAuditResponse,
+        )
+
 
 class PhoneNumbersResourceWithRawResponse:
     def __init__(self, phone_numbers: PhoneNumbersResource) -> None:
@@ -227,6 +391,12 @@ class PhoneNumbersResourceWithRawResponse:
         )
         self.list = to_raw_response_wrapper(
             phone_numbers.list,
+        )
+        self.get_reputation_audit = to_raw_response_wrapper(
+            phone_numbers.get_reputation_audit,
+        )
+        self.start_reputation_audit = to_raw_response_wrapper(
+            phone_numbers.start_reputation_audit,
         )
 
 
@@ -240,6 +410,12 @@ class AsyncPhoneNumbersResourceWithRawResponse:
         self.list = async_to_raw_response_wrapper(
             phone_numbers.list,
         )
+        self.get_reputation_audit = async_to_raw_response_wrapper(
+            phone_numbers.get_reputation_audit,
+        )
+        self.start_reputation_audit = async_to_raw_response_wrapper(
+            phone_numbers.start_reputation_audit,
+        )
 
 
 class PhoneNumbersResourceWithStreamingResponse:
@@ -252,6 +428,12 @@ class PhoneNumbersResourceWithStreamingResponse:
         self.list = to_streamed_response_wrapper(
             phone_numbers.list,
         )
+        self.get_reputation_audit = to_streamed_response_wrapper(
+            phone_numbers.get_reputation_audit,
+        )
+        self.start_reputation_audit = to_streamed_response_wrapper(
+            phone_numbers.start_reputation_audit,
+        )
 
 
 class AsyncPhoneNumbersResourceWithStreamingResponse:
@@ -263,4 +445,10 @@ class AsyncPhoneNumbersResourceWithStreamingResponse:
         )
         self.list = async_to_streamed_response_wrapper(
             phone_numbers.list,
+        )
+        self.get_reputation_audit = async_to_streamed_response_wrapper(
+            phone_numbers.get_reputation_audit,
+        )
+        self.start_reputation_audit = async_to_streamed_response_wrapper(
+            phone_numbers.start_reputation_audit,
         )
