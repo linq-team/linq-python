@@ -164,13 +164,23 @@ Methods:
 Types:
 
 ```python
-from linq.types import PhoneNumberUpdateResponse, PhoneNumberListResponse
+from linq.types import (
+    ReputationAudit,
+    ReputationDriver,
+    ReputationEvidence,
+    ReputationReport,
+    PhoneNumberUpdateResponse,
+    PhoneNumberListResponse,
+    PhoneNumberStartReputationAuditResponse,
+)
 ```
 
 Methods:
 
 - <code title="put /v3/phone_numbers/{phoneNumberId}">client.phone_numbers.<a href="./src/linq/resources/phone_numbers.py">update</a>(phone_number_id, \*\*<a href="src/linq/types/phone_number_update_params.py">params</a>) -> <a href="./src/linq/types/phone_number_update_response.py">PhoneNumberUpdateResponse</a></code>
 - <code title="get /v3/phone_numbers">client.phone_numbers.<a href="./src/linq/resources/phone_numbers.py">list</a>() -> <a href="./src/linq/types/phone_number_list_response.py">PhoneNumberListResponse</a></code>
+- <code title="get /v3/phone_numbers/{phoneNumber}/reputation_audit/{auditId}">client.phone_numbers.<a href="./src/linq/resources/phone_numbers.py">get_reputation_audit</a>(audit_id, \*, phone_number) -> <a href="./src/linq/types/reputation_audit.py">ReputationAudit</a></code>
+- <code title="post /v3/phone_numbers/{phoneNumber}/reputation_audit">client.phone_numbers.<a href="./src/linq/resources/phone_numbers.py">start_reputation_audit</a>(phone_number) -> <a href="./src/linq/types/phone_number_start_reputation_audit_response.py">PhoneNumberStartReputationAuditResponse</a></code>
 
 # AvailableNumber
 
