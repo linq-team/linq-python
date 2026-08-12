@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.22.0](https://github.com/linq-team/linq-python/compare/v0.21.1...v0.22.0) (2026-08-12)
+
+
+### Features
+
+* add experiences api for native imessage cards ([275d0fc](https://github.com/linq-team/linq-python/commit/275d0fc7bb6b089569f94c2656c7ad05beac0ebe))
+* add line reputation audit endpoints and report types ([275d0fc](https://github.com/linq-team/linq-python/commit/275d0fc7bb6b089569f94c2656c7ad05beac0ebe))
+* rename agentkit to experience in card api ([275d0fc](https://github.com/linq-team/linq-python/commit/275d0fc7bb6b089569f94c2656c7ad05beac0ebe))
+
+
+### Bug Fixes
+
+* add example responses and parameter descriptions to experiences endpoints ([275d0fc](https://github.com/linq-team/linq-python/commit/275d0fc7bb6b089569f94c2656c7ad05beac0ebe))
+* clarify api endpoints in documentation examples ([275d0fc](https://github.com/linq-team/linq-python/commit/275d0fc7bb6b089569f94c2656c7ad05beac0ebe))
+
 ## [0.21.1](https://github.com/linq-team/linq-python/compare/v0.21.0...v0.21.1) (2026-08-10)
 
 
