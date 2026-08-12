@@ -1,47 +1,12 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 from typing import List, Optional
-from typing_extensions import Literal
 
 from .._models import BaseModel
+from .reputation_opt_out_chat import ReputationOptOutChat
+from .reputation_unhealthy_chat import ReputationUnhealthyChat
 
-__all__ = ["ReputationEvidence", "OptOutChat", "UnhealthyChat"]
-
-
-class OptOutChat(BaseModel):
-    chat_id: Optional[str] = None
-
-    messages_after_stop: Optional[int] = None
-    """Outbound messages sent after the recipient asked to stop."""
-
-
-class UnhealthyChat(BaseModel):
-    chat_id: Optional[str] = None
-
-    driver_keys: Optional[
-        List[
-            Literal[
-                "low_engagement",
-                "overall_conversation_health",
-                "volume_spike",
-                "new_conversation_rate",
-                "opt_out_handling",
-                "flagged",
-                "other",
-            ]
-        ]
-    ] = None
-    """
-    What is dragging this conversation down, in the same vocabulary as the report's
-    drivers. Each key's meaning and the fix for it are documented on
-    `ReputationDriverKey`.
-    """
-
-    status: Optional[Literal["AT_RISK", "CRITICAL", "OPTED_OUT"]] = None
-    """
-    The conversation's current health — the same value `GET /v3/chats/{chatId}`
-    reports for it.
-    """
+__all__ = ["ReputationEvidence"]
 
 
 class ReputationEvidence(BaseModel):
@@ -49,11 +14,11 @@ class ReputationEvidence(BaseModel):
     The specific conversations behind the drivers, so partners can verify every claim against their own send logs. Each `chat_id` can be fetched via `GET /v3/chats/{chatId}` — its current health appears there.
     """
 
-    opt_out_chats: Optional[List[OptOutChat]] = None
+    opt_out_chats: Optional[List[ReputationOptOutChat]] = None
     """
     Worst first — most messages sent after the stop request; honor these
     immediately.
     """
 
-    unhealthy_chats: Optional[List[UnhealthyChat]] = None
+    unhealthy_chats: Optional[List[ReputationUnhealthyChat]] = None
     """Up to 15, worst first."""

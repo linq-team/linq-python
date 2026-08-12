@@ -19,9 +19,9 @@ from .._response import (
 )
 from .._base_client import make_request_options
 from ..types.reputation_audit import ReputationAudit
+from ..types.reputation_audit_started import ReputationAuditStarted
 from ..types.phone_number_list_response import PhoneNumberListResponse
 from ..types.phone_number_update_response import PhoneNumberUpdateResponse
-from ..types.phone_number_start_reputation_audit_response import PhoneNumberStartReputationAuditResponse
 
 __all__ = ["PhoneNumbersResource", "AsyncPhoneNumbersResource"]
 
@@ -174,7 +174,7 @@ class PhoneNumbersResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> PhoneNumberStartReputationAuditResponse:
+    ) -> ReputationAuditStarted:
         """
         Starts an asynchronous reputation audit for a line and returns an `audit_id`.
         Poll the GET endpoint for the result.
@@ -200,7 +200,7 @@ class PhoneNumbersResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=PhoneNumberStartReputationAuditResponse,
+            cast_to=ReputationAuditStarted,
         )
 
 
@@ -352,7 +352,7 @@ class AsyncPhoneNumbersResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> PhoneNumberStartReputationAuditResponse:
+    ) -> ReputationAuditStarted:
         """
         Starts an asynchronous reputation audit for a line and returns an `audit_id`.
         Poll the GET endpoint for the result.
@@ -378,7 +378,7 @@ class AsyncPhoneNumbersResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=PhoneNumberStartReputationAuditResponse,
+            cast_to=ReputationAuditStarted,
         )
 
 

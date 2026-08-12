@@ -6,23 +6,13 @@ from typing_extensions import Literal
 from .._models import BaseModel
 from .reputation_driver import ReputationDriver
 from .reputation_evidence import ReputationEvidence
+from .reputation_action_item import ReputationActionItem
 
-__all__ = ["ReputationReport", "ActionItem"]
-
-
-class ActionItem(BaseModel):
-    detail: Optional[str] = None
-
-    expected_impact: Optional[Literal["high", "medium", "low"]] = None
-
-    priority: Optional[int] = None
-    """1 = do first"""
-
-    title: Optional[str] = None
+__all__ = ["ReputationReport"]
 
 
 class ReputationReport(BaseModel):
-    action_items: Optional[List[ActionItem]] = None
+    action_items: Optional[List[ReputationActionItem]] = None
     """Ordered by `priority`; 1 = do first."""
 
     drivers: Optional[List[ReputationDriver]] = None
