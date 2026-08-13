@@ -105,6 +105,13 @@ class CapabilityResource(SyncAPIResource):
         """
         Check whether a recipient address (phone number) supports RCS messaging.
 
+        A `200` means the check ran and the answer is about the **recipient**. A `503`
+        means the check could not produce an answer because of a fault on the **sender**
+        line — `4004` (RCS not turned on for the line), `4009` (line has no RCS
+        account), or `4010` (the check could not run). Treat all three as "unknown",
+        never as "the recipient does not support RCS", and do not cache them as a
+        negative result.
+
         Args:
           address: The recipient phone number or email address to check
 
@@ -218,6 +225,13 @@ class AsyncCapabilityResource(AsyncAPIResource):
     ) -> HandleCheckResponse:
         """
         Check whether a recipient address (phone number) supports RCS messaging.
+
+        A `200` means the check ran and the answer is about the **recipient**. A `503`
+        means the check could not produce an answer because of a fault on the **sender**
+        line — `4004` (RCS not turned on for the line), `4009` (line has no RCS
+        account), or `4010` (the check could not run). Treat all three as "unknown",
+        never as "the recipient does not support RCS", and do not cache them as a
+        negative result.
 
         Args:
           address: The recipient phone number or email address to check
