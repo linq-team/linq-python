@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.23.1](https://github.com/linq-team/linq-python/compare/v0.23.0...v0.23.1) (2026-08-13)
+
+
+### Bug Fixes
+
+* clarify address format requirements for messaging checks ([1928e59](https://github.com/linq-team/linq-python/commit/1928e5928143f30249bac4429c35f93c331d5668))
+
 ## [0.23.0](https://github.com/linq-team/linq-python/compare/v0.22.1...v0.23.0) (2026-08-13)
 
 
