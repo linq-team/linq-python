@@ -11,7 +11,12 @@ __all__ = ["CapabilityCheckIMessageParams"]
 
 class CapabilityCheckIMessageParams(TypedDict, total=False):
     address: Required[str]
-    """The recipient phone number or email address to check"""
+    """The recipient address to check.
+
+    `check_imessage` accepts an E.164 phone number or an email address; `check_rcs`
+    accepts an E.164 phone number only and rejects an email with a `400`, since RCS
+    has no email addressing.
+    """
 
     from_: Annotated[str, PropertyInfo(alias="from")]
     """Optional sender phone number.
