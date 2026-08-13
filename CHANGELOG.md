@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.23.0](https://github.com/linq-team/linq-python/compare/v0.22.1...v0.23.0) (2026-08-13)
+
+
+### Features
+
+* add detailed 503 errors and response fields for capability checks ([18bd5e8](https://github.com/linq-team/linq-python/commit/18bd5e8fae0348a88f8a9b4f04894bfc3956f718))
+
 ## [0.22.1](https://github.com/linq-team/linq-python/compare/v0.22.0...v0.22.1) (2026-08-12)
 
 
