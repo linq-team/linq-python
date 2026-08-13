@@ -62,7 +62,9 @@ class CapabilityResource(SyncAPIResource):
         iMessage.
 
         Args:
-          address: The recipient phone number or email address to check
+          address: The recipient address to check. `check_imessage` accepts an E.164 phone number
+              or an email address; `check_rcs` accepts an E.164 phone number only and rejects
+              an email with a `400`, since RCS has no email addressing.
 
           from_: Optional sender phone number. If omitted, an available phone from your pool is
               used automatically.
@@ -105,6 +107,9 @@ class CapabilityResource(SyncAPIResource):
         """
         Check whether a recipient address (phone number) supports RCS messaging.
 
+        `address` must be an E.164 phone number. RCS has no email addressing, so an
+        email is rejected with a `400` rather than attempted.
+
         A `200` means the check ran and the answer is about the **recipient**. A `503`
         means the check could not produce an answer because of a fault on the **sender**
         line — `4004` (RCS not turned on for the line), `4009` (line has no RCS
@@ -113,7 +118,9 @@ class CapabilityResource(SyncAPIResource):
         negative result.
 
         Args:
-          address: The recipient phone number or email address to check
+          address: The recipient address to check. `check_imessage` accepts an E.164 phone number
+              or an email address; `check_rcs` accepts an E.164 phone number only and rejects
+              an email with a `400`, since RCS has no email addressing.
 
           from_: Optional sender phone number. If omitted, an available phone from your pool is
               used automatically.
@@ -183,7 +190,9 @@ class AsyncCapabilityResource(AsyncAPIResource):
         iMessage.
 
         Args:
-          address: The recipient phone number or email address to check
+          address: The recipient address to check. `check_imessage` accepts an E.164 phone number
+              or an email address; `check_rcs` accepts an E.164 phone number only and rejects
+              an email with a `400`, since RCS has no email addressing.
 
           from_: Optional sender phone number. If omitted, an available phone from your pool is
               used automatically.
@@ -226,6 +235,9 @@ class AsyncCapabilityResource(AsyncAPIResource):
         """
         Check whether a recipient address (phone number) supports RCS messaging.
 
+        `address` must be an E.164 phone number. RCS has no email addressing, so an
+        email is rejected with a `400` rather than attempted.
+
         A `200` means the check ran and the answer is about the **recipient**. A `503`
         means the check could not produce an answer because of a fault on the **sender**
         line — `4004` (RCS not turned on for the line), `4009` (line has no RCS
@@ -234,7 +246,9 @@ class AsyncCapabilityResource(AsyncAPIResource):
         negative result.
 
         Args:
-          address: The recipient phone number or email address to check
+          address: The recipient address to check. `check_imessage` accepts an E.164 phone number
+              or an email address; `check_rcs` accepts an E.164 phone number only and rejects
+              an email with a `400`, since RCS has no email addressing.
 
           from_: Optional sender phone number. If omitted, an available phone from your pool is
               used automatically.
