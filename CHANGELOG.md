@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.24.1](https://github.com/linq-team/linq-python/compare/v0.24.0...v0.24.1) (2026-08-14)
+
+
+### Bug Fixes
+
+* clarify chat health status guidance and opt-out behavior ([17f6c3e](https://github.com/linq-team/linq-python/commit/17f6c3e46e71a0a325dcb3639444dc7423640127))
+
 ## [0.24.0](https://github.com/linq-team/linq-python/compare/v0.23.1...v0.24.0) (2026-08-14)
 
 
