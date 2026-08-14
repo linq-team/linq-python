@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.24.0](https://github.com/linq-team/linq-python/compare/v0.23.1...v0.24.0) (2026-08-14)
+
+
+### Features
+
+* add 403 error responses for ineligible phone numbers ([64c348a](https://github.com/linq-team/linq-python/commit/64c348aaf1dc485604cfe8e92566ffb8eff2e87e))
+
 ## [0.23.1](https://github.com/linq-team/linq-python/compare/v0.23.0...v0.23.1) (2026-08-13)
 
 
