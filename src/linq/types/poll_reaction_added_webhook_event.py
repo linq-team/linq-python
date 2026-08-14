@@ -4,34 +4,13 @@ from datetime import datetime
 
 from .._models import BaseModel
 from .webhook_event_type import WebhookEventType
+from .reaction_event_base import ReactionEventBase
 
-__all__ = ["ChatGroupNameUpdateFailedWebhookEvent", "Data"]
-
-
-class Data(BaseModel):
-    """
-    Error details for chat.group_name_update_failed webhook events.
-    See [WebhookErrorCode](#/components/schemas/WebhookErrorCode) for the full error code reference.
-    """
-
-    chat_id: str
-    """Chat identifier (UUID) of the group chat"""
-
-    error_code: int
-    """Error codes in webhook failure events.
-
-    The possible set varies by event: message.failed and poll.failed can carry 3007,
-    4001, 4002, 4005, 4006, 4007, or 4008; the group update failure events
-    (chat.group_name_update_failed, chat.group_icon_update_failed) carry 3007
-    or 4001.
-    """
-
-    failed_at: datetime
-    """When the failure was detected"""
+__all__ = ["PollReactionAddedWebhookEvent"]
 
 
-class ChatGroupNameUpdateFailedWebhookEvent(BaseModel):
-    """Complete webhook payload for chat.group_name_update_failed events"""
+class PollReactionAddedWebhookEvent(BaseModel):
+    """Complete webhook payload for poll.reaction.added events"""
 
     api_version: str
     """API version for the webhook payload format"""
@@ -39,11 +18,12 @@ class ChatGroupNameUpdateFailedWebhookEvent(BaseModel):
     created_at: datetime
     """When the event was created"""
 
-    data: Data
-    """
-    Error details for chat.group_name_update_failed webhook events. See
-    [WebhookErrorCode](#/components/schemas/WebhookErrorCode) for the full error
-    code reference.
+    data: ReactionEventBase
+    """Payload for poll.reaction.added — a reaction on a poll message.
+
+    Same shape as reaction.added; `message_id` is the poll-definition message's ID.
+    Poll reactions are stickers, which iMessage cannot remove, so there is no
+    removal counterpart.
     """
 
     event_id: str

@@ -100,6 +100,13 @@ Methods:
 
 - <code title="post /v3/chats/{chatId}/polls">client.chats.polls.<a href="./src/linq/resources/chats/polls.py">create</a>(chat_id, \*\*<a href="src/linq/types/chats/poll_create_params.py">params</a>) -> <a href="./src/linq/types/chats/poll_envelope.py">PollEnvelope</a></code>
 
+## Background
+
+Methods:
+
+- <code title="delete /v3/chats/{chatId}/background">client.chats.background.<a href="./src/linq/resources/chats/background.py">remove</a>(chat_id) -> None</code>
+- <code title="post /v3/chats/{chatId}/background">client.chats.background.<a href="./src/linq/resources/chats/background.py">set</a>(chat_id, \*\*<a href="src/linq/types/chats/background_set_params.py">params</a>) -> None</code>
+
 # Messages
 
 Types:
@@ -348,6 +355,15 @@ from linq.types import (
     MessageEditedWebhookEvent,
     ReactionAddedWebhookEvent,
     ReactionRemovedWebhookEvent,
+    PollReceivedWebhookEvent,
+    PollSentWebhookEvent,
+    PollDeliveredWebhookEvent,
+    PollReadWebhookEvent,
+    PollUpdatedWebhookEvent,
+    PollFailedWebhookEvent,
+    PollVoteAddedWebhookEvent,
+    PollVoteRemovedWebhookEvent,
+    PollReactionAddedWebhookEvent,
     ParticipantAddedWebhookEvent,
     ParticipantRemovedWebhookEvent,
     ChatCreatedWebhookEvent,
@@ -357,6 +373,7 @@ from linq.types import (
     ChatGroupIconUpdateFailedWebhookEvent,
     ChatTypingIndicatorStartedWebhookEvent,
     ChatTypingIndicatorStoppedWebhookEvent,
+    ChatBackgroundUpdatedWebhookEvent,
     PhoneNumberStatusUpdatedWebhookEvent,
     UnwrapWebhookEvent,
 )
