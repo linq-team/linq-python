@@ -1,37 +1,46 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+from typing import Optional
 from datetime import datetime
+from typing_extensions import Literal
 
 from .._models import BaseModel
+from .shared.chat_handle import ChatHandle
 from .webhook_event_type import WebhookEventType
 
-__all__ = ["ChatGroupNameUpdateFailedWebhookEvent", "Data"]
+__all__ = ["PollVoteAddedWebhookEvent", "Data", "DataChat"]
+
+
+class DataChat(BaseModel):
+    """Chat info for poll webhook events."""
+
+    id: str
+
+    is_group: Optional[bool] = None
+
+    owner_handle: Optional[ChatHandle] = None
 
 
 class Data(BaseModel):
-    """
-    Error details for chat.group_name_update_failed webhook events.
-    See [WebhookErrorCode](#/components/schemas/WebhookErrorCode) for the full error code reference.
-    """
+    """Payload for poll.vote.added and poll.vote.removed (one option toggled)."""
 
-    chat_id: str
-    """Chat identifier (UUID) of the group chat"""
+    chat: DataChat
+    """Chat info for poll webhook events."""
 
-    error_code: int
-    """Error codes in webhook failure events.
+    direction: Literal["inbound", "outbound"]
 
-    The possible set varies by event: message.failed and poll.failed can carry 3007,
-    4001, 4002, 4005, 4006, 4007, or 4008; the group update failure events
-    (chat.group_name_update_failed, chat.group_icon_update_failed) carry 3007
-    or 4001.
-    """
+    message_id: str
 
-    failed_at: datetime
-    """When the failure was detected"""
+    option_id: str
+
+    sender_handle: ChatHandle
+    """The voter — always present."""
+
+    service: str
 
 
-class ChatGroupNameUpdateFailedWebhookEvent(BaseModel):
-    """Complete webhook payload for chat.group_name_update_failed events"""
+class PollVoteAddedWebhookEvent(BaseModel):
+    """Complete webhook payload for poll.vote.added events"""
 
     api_version: str
     """API version for the webhook payload format"""
@@ -40,11 +49,7 @@ class ChatGroupNameUpdateFailedWebhookEvent(BaseModel):
     """When the event was created"""
 
     data: Data
-    """
-    Error details for chat.group_name_update_failed webhook events. See
-    [WebhookErrorCode](#/components/schemas/WebhookErrorCode) for the full error
-    code reference.
-    """
+    """Payload for poll.vote.added and poll.vote.removed (one option toggled)."""
 
     event_id: str
     """Unique identifier for this event (for deduplication)"""

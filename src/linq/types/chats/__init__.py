@@ -8,6 +8,7 @@ from .poll_envelope import PollEnvelope as PollEnvelope
 from .poll_create_params import PollCreateParams as PollCreateParams
 from .message_list_params import MessageListParams as MessageListParams
 from .message_send_params import MessageSendParams as MessageSendParams
+from .background_set_params import BackgroundSetParams as BackgroundSetParams
 from .message_send_response import MessageSendResponse as MessageSendResponse
 from .participant_add_params import ParticipantAddParams as ParticipantAddParams
 from .participant_add_response import ParticipantAddResponse as ParticipantAddResponse

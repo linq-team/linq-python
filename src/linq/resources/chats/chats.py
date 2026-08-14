@@ -45,6 +45,14 @@ from .messages import (
     AsyncMessagesResourceWithStreamingResponse,
 )
 from ..._compat import cached_property
+from .background import (
+    BackgroundResource,
+    AsyncBackgroundResource,
+    BackgroundResourceWithRawResponse,
+    AsyncBackgroundResourceWithRawResponse,
+    BackgroundResourceWithStreamingResponse,
+    AsyncBackgroundResourceWithStreamingResponse,
+)
 from ..._resource import SyncAPIResource, AsyncAPIResource
 from ..._response import (
     to_raw_response_wrapper,
@@ -282,6 +290,27 @@ class ChatsResource(SyncAPIResource):
         **Important:** ephemeral applies in *both directions* — messages you send **and** messages received by the phone numbers in that scope. Because Linq can no longer return the message after 24 hours, persist anything you need to keep from the webhook payload at the time it is delivered.
         """
         return PollsResource(self._client)
+
+    @cached_property
+    def background(self) -> BackgroundResource:
+        """A Chat is a conversation thread with one or more participants.
+
+        To begin a chat, you must create a Chat with at least one recipient handle.
+        Including multiple handles creates a group chat.
+
+        When creating a chat, the `from` field specifies which of your
+        authorized phone numbers the message originates from. Your authentication token grants
+        access to one or more phone numbers, but the `from` field determines the actual sender.
+
+        **Handle Format:**
+        - Handles can be phone numbers or email addresses
+        - Phone numbers MUST be in E.164 format (starting with +)
+        - Phone format: `+[country code][subscriber number]`
+        - Example phone: `+12223334444` (US), `+442071234567` (UK), `+81312345678` (Japan)
+        - Example email: `user@example.com`
+        - No spaces, dashes, or parentheses in phone numbers
+        """
+        return BackgroundResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> ChatsResourceWithRawResponse:
@@ -1004,6 +1033,27 @@ class AsyncChatsResource(AsyncAPIResource):
         **Important:** ephemeral applies in *both directions* — messages you send **and** messages received by the phone numbers in that scope. Because Linq can no longer return the message after 24 hours, persist anything you need to keep from the webhook payload at the time it is delivered.
         """
         return AsyncPollsResource(self._client)
+
+    @cached_property
+    def background(self) -> AsyncBackgroundResource:
+        """A Chat is a conversation thread with one or more participants.
+
+        To begin a chat, you must create a Chat with at least one recipient handle.
+        Including multiple handles creates a group chat.
+
+        When creating a chat, the `from` field specifies which of your
+        authorized phone numbers the message originates from. Your authentication token grants
+        access to one or more phone numbers, but the `from` field determines the actual sender.
+
+        **Handle Format:**
+        - Handles can be phone numbers or email addresses
+        - Phone numbers MUST be in E.164 format (starting with +)
+        - Phone format: `+[country code][subscriber number]`
+        - Example phone: `+12223334444` (US), `+442071234567` (UK), `+81312345678` (Japan)
+        - Example email: `user@example.com`
+        - No spaces, dashes, or parentheses in phone numbers
+        """
+        return AsyncBackgroundResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> AsyncChatsResourceWithRawResponse:
@@ -1755,6 +1805,27 @@ class ChatsResourceWithRawResponse:
         """
         return PollsResourceWithRawResponse(self._chats.polls)
 
+    @cached_property
+    def background(self) -> BackgroundResourceWithRawResponse:
+        """A Chat is a conversation thread with one or more participants.
+
+        To begin a chat, you must create a Chat with at least one recipient handle.
+        Including multiple handles creates a group chat.
+
+        When creating a chat, the `from` field specifies which of your
+        authorized phone numbers the message originates from. Your authentication token grants
+        access to one or more phone numbers, but the `from` field determines the actual sender.
+
+        **Handle Format:**
+        - Handles can be phone numbers or email addresses
+        - Phone numbers MUST be in E.164 format (starting with +)
+        - Phone format: `+[country code][subscriber number]`
+        - Example phone: `+12223334444` (US), `+442071234567` (UK), `+81312345678` (Japan)
+        - Example email: `user@example.com`
+        - No spaces, dashes, or parentheses in phone numbers
+        """
+        return BackgroundResourceWithRawResponse(self._chats.background)
+
 
 class AsyncChatsResourceWithRawResponse:
     def __init__(self, chats: AsyncChatsResource) -> None:
@@ -1994,6 +2065,27 @@ class AsyncChatsResourceWithRawResponse:
         **Important:** ephemeral applies in *both directions* — messages you send **and** messages received by the phone numbers in that scope. Because Linq can no longer return the message after 24 hours, persist anything you need to keep from the webhook payload at the time it is delivered.
         """
         return AsyncPollsResourceWithRawResponse(self._chats.polls)
+
+    @cached_property
+    def background(self) -> AsyncBackgroundResourceWithRawResponse:
+        """A Chat is a conversation thread with one or more participants.
+
+        To begin a chat, you must create a Chat with at least one recipient handle.
+        Including multiple handles creates a group chat.
+
+        When creating a chat, the `from` field specifies which of your
+        authorized phone numbers the message originates from. Your authentication token grants
+        access to one or more phone numbers, but the `from` field determines the actual sender.
+
+        **Handle Format:**
+        - Handles can be phone numbers or email addresses
+        - Phone numbers MUST be in E.164 format (starting with +)
+        - Phone format: `+[country code][subscriber number]`
+        - Example phone: `+12223334444` (US), `+442071234567` (UK), `+81312345678` (Japan)
+        - Example email: `user@example.com`
+        - No spaces, dashes, or parentheses in phone numbers
+        """
+        return AsyncBackgroundResourceWithRawResponse(self._chats.background)
 
 
 class ChatsResourceWithStreamingResponse:
@@ -2235,6 +2327,27 @@ class ChatsResourceWithStreamingResponse:
         """
         return PollsResourceWithStreamingResponse(self._chats.polls)
 
+    @cached_property
+    def background(self) -> BackgroundResourceWithStreamingResponse:
+        """A Chat is a conversation thread with one or more participants.
+
+        To begin a chat, you must create a Chat with at least one recipient handle.
+        Including multiple handles creates a group chat.
+
+        When creating a chat, the `from` field specifies which of your
+        authorized phone numbers the message originates from. Your authentication token grants
+        access to one or more phone numbers, but the `from` field determines the actual sender.
+
+        **Handle Format:**
+        - Handles can be phone numbers or email addresses
+        - Phone numbers MUST be in E.164 format (starting with +)
+        - Phone format: `+[country code][subscriber number]`
+        - Example phone: `+12223334444` (US), `+442071234567` (UK), `+81312345678` (Japan)
+        - Example email: `user@example.com`
+        - No spaces, dashes, or parentheses in phone numbers
+        """
+        return BackgroundResourceWithStreamingResponse(self._chats.background)
+
 
 class AsyncChatsResourceWithStreamingResponse:
     def __init__(self, chats: AsyncChatsResource) -> None:
@@ -2474,3 +2587,24 @@ class AsyncChatsResourceWithStreamingResponse:
         **Important:** ephemeral applies in *both directions* — messages you send **and** messages received by the phone numbers in that scope. Because Linq can no longer return the message after 24 hours, persist anything you need to keep from the webhook payload at the time it is delivered.
         """
         return AsyncPollsResourceWithStreamingResponse(self._chats.polls)
+
+    @cached_property
+    def background(self) -> AsyncBackgroundResourceWithStreamingResponse:
+        """A Chat is a conversation thread with one or more participants.
+
+        To begin a chat, you must create a Chat with at least one recipient handle.
+        Including multiple handles creates a group chat.
+
+        When creating a chat, the `from` field specifies which of your
+        authorized phone numbers the message originates from. Your authentication token grants
+        access to one or more phone numbers, but the `from` field determines the actual sender.
+
+        **Handle Format:**
+        - Handles can be phone numbers or email addresses
+        - Phone numbers MUST be in E.164 format (starting with +)
+        - Phone format: `+[country code][subscriber number]`
+        - Example phone: `+12223334444` (US), `+442071234567` (UK), `+81312345678` (Japan)
+        - Example email: `user@example.com`
+        - No spaces, dashes, or parentheses in phone numbers
+        """
+        return AsyncBackgroundResourceWithStreamingResponse(self._chats.background)

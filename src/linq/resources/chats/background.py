@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+from typing_extensions import Literal
+
 import httpx
 
-from ..._types import Body, Query, Headers, NoneType, NotGiven, not_given
-from ..._utils import path_template
+from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, SequenceNotStr, omit, not_given
+from ..._utils import path_template, maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
 from ..._response import (
@@ -14,12 +16,13 @@ from ..._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
+from ...types.chats import background_set_params
 from ..._base_client import make_request_options
 
-__all__ = ["TypingResource", "AsyncTypingResource"]
+__all__ = ["BackgroundResource", "AsyncBackgroundResource"]
 
 
-class TypingResource(SyncAPIResource):
+class BackgroundResource(SyncAPIResource):
     """A Chat is a conversation thread with one or more participants.
 
     To begin a chat, you must create a Chat with at least one recipient handle.
@@ -39,25 +42,25 @@ class TypingResource(SyncAPIResource):
     """
 
     @cached_property
-    def with_raw_response(self) -> TypingResourceWithRawResponse:
+    def with_raw_response(self) -> BackgroundResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/linq-team/linq-python#accessing-raw-response-data-eg-headers
         """
-        return TypingResourceWithRawResponse(self)
+        return BackgroundResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> TypingResourceWithStreamingResponse:
+    def with_streaming_response(self) -> BackgroundResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/linq-team/linq-python#with_streaming_response
         """
-        return TypingResourceWithStreamingResponse(self)
+        return BackgroundResourceWithStreamingResponse(self)
 
-    def start(
+    def remove(
         self,
         chat_id: str,
         *,
@@ -69,99 +72,7 @@ class TypingResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
         """
-        Send a typing indicator to show that someone is typing in the chat.
-
-        ## Behavior
-
-        Typing indicators are best-effort signals that behave as follows:
-
-        - **iMessage chats only:** Typing indicators are only supported for iMessage
-          chats. Requests for RCS or SMS chats are accepted (`204`) but no indicator is
-          delivered.
-
-        - **Send a message first for reliable delivery:** Typing indicators are
-          best-effort. If you have not sent a message in this chat recently (roughly the
-          **last 5 minutes**), a typing indicator may not reach the recipient — the
-          request is still accepted (`204`), but delivery is not deterministic. Once you
-          have sent a message in the chat, typing indicators reliably reach the
-          recipient.
-
-        - **No delivery guarantee:** Even for active chats, a `204` response only
-          indicates the request was accepted for processing.
-
-        - **Direct and group chats:** Typing indicators work in both direct and group
-          chats.
-
-        ## Duration & keeping it visible
-
-        - A single call shows the indicator for about **85–90 seconds**, then it clears
-          automatically.
-
-        - To keep it visible longer, call this endpoint again every **60 seconds**. Each
-          call refreshes the indicator so it stays visible continuously.
-
-        - Sending a message clears the indicator.
-
-        - To resume typing after sending a message, call this endpoint again.
-
-        - Incoming messages do not affect the indicator.
-
-        ## Recipient re-opening the chat
-
-        If the recipient brings their messaging app to the foreground while the chat has
-        an unread message, their device clears any showing typing indicator. Calling
-        this endpoint again on its own may not bring it back. To make it reappear,
-        either send a message, or call `DELETE /v3/chats/{chatId}/typing` (stop) and
-        then call start typing again.
-
-        ## Recommended usage
-
-        Call this endpoint when composing begins, call it again every 60 seconds while
-        composing, and send the message to clear the indicator. To clear the indicator
-        without sending a message, call `DELETE /v3/chats/{chatId}/typing`.
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not chat_id:
-            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
-        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
-        return self._post(
-            path_template("/v3/chats/{chat_id}/typing", chat_id=chat_id),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=NoneType,
-        )
-
-    def stop(
-        self,
-        chat_id: str,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> None:
-        """
-        Immediately clears the typing indicator for the chat, without sending a message.
-
-        The typing indicator also clears automatically when you send a message, or about
-        85–90 seconds after the last `POST /v3/chats/{chatId}/typing` (start typing)
-        request.
-
-        See the start typing endpoint (`POST /v3/chats/{chatId}/typing`) above for
-        behavior details.
-
-        **Note:** Works in both direct and group chats.
+        Remove the transcript background from a chat, resetting it to the default.
 
         Args:
           extra_headers: Send extra headers
@@ -176,7 +87,82 @@ class TypingResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return self._delete(
-            path_template("/v3/chats/{chat_id}/typing", chat_id=chat_id),
+            path_template("/v3/chats/{chat_id}/background", chat_id=chat_id),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NoneType,
+        )
+
+    def set(
+        self,
+        chat_id: str,
+        *,
+        type: Literal["color", "dynamic", "photo"],
+        image_url: str | Omit = omit,
+        shades: SequenceNotStr[str] | Omit = omit,
+        style: Literal["sky", "water", "aurora", "glitter"] | Omit = omit,
+        variant: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> None:
+        """
+        Set the transcript background for a chat.
+
+        Provide one of: a **color** (a named preset or a custom 2-stop gradient), a
+        **dynamic** animated style, or a **photo** (by URL). The request is accepted
+        asynchronously; the terminal result arrives via the `chat.background_updated`
+        webhook.
+
+        **Group chats are supported.** Requests for RCS or SMS chats are accepted
+        (`202`) but no background is applied and no `chat.background_updated` webhook
+        fires.
+
+        Args:
+          type: The background family.
+
+          image_url: Photo: the image URL to embed in the background.
+
+          shades: Color with `variant: custom`: the two gradient stops as hex, top then bottom.
+              Ignored for named color variants (they carry their own two colors).
+
+          style: Dynamic: the animated style.
+
+          variant: Color: a named swatch — `mango`, `ice`, `plum`, `deep_sea`, `green_apple`,
+              `cherry`, `bubblegum`, `tangerine`, `magenta`, `lime`, `silver`, `carbon`,
+              `stone` — or `custom` (supply `shades`). Dynamic: the variant within the `style`
+              (e.g. `sunrise`).
+
+              An unrecognized value still returns `202`, but no background is applied and no
+              `chat.background_updated` webhook fires. Send one of the values above.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not chat_id:
+            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        return self._post(
+            path_template("/v3/chats/{chat_id}/background", chat_id=chat_id),
+            body=maybe_transform(
+                {
+                    "type": type,
+                    "image_url": image_url,
+                    "shades": shades,
+                    "style": style,
+                    "variant": variant,
+                },
+                background_set_params.BackgroundSetParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -184,7 +170,7 @@ class TypingResource(SyncAPIResource):
         )
 
 
-class AsyncTypingResource(AsyncAPIResource):
+class AsyncBackgroundResource(AsyncAPIResource):
     """A Chat is a conversation thread with one or more participants.
 
     To begin a chat, you must create a Chat with at least one recipient handle.
@@ -204,25 +190,25 @@ class AsyncTypingResource(AsyncAPIResource):
     """
 
     @cached_property
-    def with_raw_response(self) -> AsyncTypingResourceWithRawResponse:
+    def with_raw_response(self) -> AsyncBackgroundResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/linq-team/linq-python#accessing-raw-response-data-eg-headers
         """
-        return AsyncTypingResourceWithRawResponse(self)
+        return AsyncBackgroundResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> AsyncTypingResourceWithStreamingResponse:
+    def with_streaming_response(self) -> AsyncBackgroundResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/linq-team/linq-python#with_streaming_response
         """
-        return AsyncTypingResourceWithStreamingResponse(self)
+        return AsyncBackgroundResourceWithStreamingResponse(self)
 
-    async def start(
+    async def remove(
         self,
         chat_id: str,
         *,
@@ -234,99 +220,7 @@ class AsyncTypingResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
         """
-        Send a typing indicator to show that someone is typing in the chat.
-
-        ## Behavior
-
-        Typing indicators are best-effort signals that behave as follows:
-
-        - **iMessage chats only:** Typing indicators are only supported for iMessage
-          chats. Requests for RCS or SMS chats are accepted (`204`) but no indicator is
-          delivered.
-
-        - **Send a message first for reliable delivery:** Typing indicators are
-          best-effort. If you have not sent a message in this chat recently (roughly the
-          **last 5 minutes**), a typing indicator may not reach the recipient — the
-          request is still accepted (`204`), but delivery is not deterministic. Once you
-          have sent a message in the chat, typing indicators reliably reach the
-          recipient.
-
-        - **No delivery guarantee:** Even for active chats, a `204` response only
-          indicates the request was accepted for processing.
-
-        - **Direct and group chats:** Typing indicators work in both direct and group
-          chats.
-
-        ## Duration & keeping it visible
-
-        - A single call shows the indicator for about **85–90 seconds**, then it clears
-          automatically.
-
-        - To keep it visible longer, call this endpoint again every **60 seconds**. Each
-          call refreshes the indicator so it stays visible continuously.
-
-        - Sending a message clears the indicator.
-
-        - To resume typing after sending a message, call this endpoint again.
-
-        - Incoming messages do not affect the indicator.
-
-        ## Recipient re-opening the chat
-
-        If the recipient brings their messaging app to the foreground while the chat has
-        an unread message, their device clears any showing typing indicator. Calling
-        this endpoint again on its own may not bring it back. To make it reappear,
-        either send a message, or call `DELETE /v3/chats/{chatId}/typing` (stop) and
-        then call start typing again.
-
-        ## Recommended usage
-
-        Call this endpoint when composing begins, call it again every 60 seconds while
-        composing, and send the message to clear the indicator. To clear the indicator
-        without sending a message, call `DELETE /v3/chats/{chatId}/typing`.
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not chat_id:
-            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
-        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
-        return await self._post(
-            path_template("/v3/chats/{chat_id}/typing", chat_id=chat_id),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=NoneType,
-        )
-
-    async def stop(
-        self,
-        chat_id: str,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> None:
-        """
-        Immediately clears the typing indicator for the chat, without sending a message.
-
-        The typing indicator also clears automatically when you send a message, or about
-        85–90 seconds after the last `POST /v3/chats/{chatId}/typing` (start typing)
-        request.
-
-        See the start typing endpoint (`POST /v3/chats/{chatId}/typing`) above for
-        behavior details.
-
-        **Note:** Works in both direct and group chats.
+        Remove the transcript background from a chat, resetting it to the default.
 
         Args:
           extra_headers: Send extra headers
@@ -341,7 +235,82 @@ class AsyncTypingResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return await self._delete(
-            path_template("/v3/chats/{chat_id}/typing", chat_id=chat_id),
+            path_template("/v3/chats/{chat_id}/background", chat_id=chat_id),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NoneType,
+        )
+
+    async def set(
+        self,
+        chat_id: str,
+        *,
+        type: Literal["color", "dynamic", "photo"],
+        image_url: str | Omit = omit,
+        shades: SequenceNotStr[str] | Omit = omit,
+        style: Literal["sky", "water", "aurora", "glitter"] | Omit = omit,
+        variant: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> None:
+        """
+        Set the transcript background for a chat.
+
+        Provide one of: a **color** (a named preset or a custom 2-stop gradient), a
+        **dynamic** animated style, or a **photo** (by URL). The request is accepted
+        asynchronously; the terminal result arrives via the `chat.background_updated`
+        webhook.
+
+        **Group chats are supported.** Requests for RCS or SMS chats are accepted
+        (`202`) but no background is applied and no `chat.background_updated` webhook
+        fires.
+
+        Args:
+          type: The background family.
+
+          image_url: Photo: the image URL to embed in the background.
+
+          shades: Color with `variant: custom`: the two gradient stops as hex, top then bottom.
+              Ignored for named color variants (they carry their own two colors).
+
+          style: Dynamic: the animated style.
+
+          variant: Color: a named swatch — `mango`, `ice`, `plum`, `deep_sea`, `green_apple`,
+              `cherry`, `bubblegum`, `tangerine`, `magenta`, `lime`, `silver`, `carbon`,
+              `stone` — or `custom` (supply `shades`). Dynamic: the variant within the `style`
+              (e.g. `sunrise`).
+
+              An unrecognized value still returns `202`, but no background is applied and no
+              `chat.background_updated` webhook fires. Send one of the values above.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not chat_id:
+            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        return await self._post(
+            path_template("/v3/chats/{chat_id}/background", chat_id=chat_id),
+            body=await async_maybe_transform(
+                {
+                    "type": type,
+                    "image_url": image_url,
+                    "shades": shades,
+                    "style": style,
+                    "variant": variant,
+                },
+                background_set_params.BackgroundSetParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -349,49 +318,49 @@ class AsyncTypingResource(AsyncAPIResource):
         )
 
 
-class TypingResourceWithRawResponse:
-    def __init__(self, typing: TypingResource) -> None:
-        self._typing = typing
+class BackgroundResourceWithRawResponse:
+    def __init__(self, background: BackgroundResource) -> None:
+        self._background = background
 
-        self.start = to_raw_response_wrapper(
-            typing.start,
+        self.remove = to_raw_response_wrapper(
+            background.remove,
         )
-        self.stop = to_raw_response_wrapper(
-            typing.stop,
-        )
-
-
-class AsyncTypingResourceWithRawResponse:
-    def __init__(self, typing: AsyncTypingResource) -> None:
-        self._typing = typing
-
-        self.start = async_to_raw_response_wrapper(
-            typing.start,
-        )
-        self.stop = async_to_raw_response_wrapper(
-            typing.stop,
+        self.set = to_raw_response_wrapper(
+            background.set,
         )
 
 
-class TypingResourceWithStreamingResponse:
-    def __init__(self, typing: TypingResource) -> None:
-        self._typing = typing
+class AsyncBackgroundResourceWithRawResponse:
+    def __init__(self, background: AsyncBackgroundResource) -> None:
+        self._background = background
 
-        self.start = to_streamed_response_wrapper(
-            typing.start,
+        self.remove = async_to_raw_response_wrapper(
+            background.remove,
         )
-        self.stop = to_streamed_response_wrapper(
-            typing.stop,
+        self.set = async_to_raw_response_wrapper(
+            background.set,
         )
 
 
-class AsyncTypingResourceWithStreamingResponse:
-    def __init__(self, typing: AsyncTypingResource) -> None:
-        self._typing = typing
+class BackgroundResourceWithStreamingResponse:
+    def __init__(self, background: BackgroundResource) -> None:
+        self._background = background
 
-        self.start = async_to_streamed_response_wrapper(
-            typing.start,
+        self.remove = to_streamed_response_wrapper(
+            background.remove,
         )
-        self.stop = async_to_streamed_response_wrapper(
-            typing.stop,
+        self.set = to_streamed_response_wrapper(
+            background.set,
+        )
+
+
+class AsyncBackgroundResourceWithStreamingResponse:
+    def __init__(self, background: AsyncBackgroundResource) -> None:
+        self._background = background
+
+        self.remove = async_to_streamed_response_wrapper(
+            background.remove,
+        )
+        self.set = async_to_streamed_response_wrapper(
+            background.set,
         )

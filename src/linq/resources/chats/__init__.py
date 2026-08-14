@@ -40,6 +40,14 @@ from .messages import (
     MessagesResourceWithStreamingResponse,
     AsyncMessagesResourceWithStreamingResponse,
 )
+from .background import (
+    BackgroundResource,
+    AsyncBackgroundResource,
+    BackgroundResourceWithRawResponse,
+    AsyncBackgroundResourceWithRawResponse,
+    BackgroundResourceWithStreamingResponse,
+    AsyncBackgroundResourceWithStreamingResponse,
+)
 from .participants import (
     ParticipantsResource,
     AsyncParticipantsResource,
@@ -80,6 +88,12 @@ __all__ = [
     "AsyncPollsResourceWithRawResponse",
     "PollsResourceWithStreamingResponse",
     "AsyncPollsResourceWithStreamingResponse",
+    "BackgroundResource",
+    "AsyncBackgroundResource",
+    "BackgroundResourceWithRawResponse",
+    "AsyncBackgroundResourceWithRawResponse",
+    "BackgroundResourceWithStreamingResponse",
+    "AsyncBackgroundResourceWithStreamingResponse",
     "ChatsResource",
     "AsyncChatsResource",
     "ChatsResourceWithRawResponse",
