@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.25.0](https://github.com/linq-team/linq-python/compare/v0.24.1...v0.25.0) (2026-08-14)
+
+
+### Features
+
+* add chat background and poll features ([44aa466](https://github.com/linq-team/linq-python/commit/44aa466ba2f216267d9fc00d5172790f84bd3c9e))
+
 ## [0.24.1](https://github.com/linq-team/linq-python/compare/v0.24.0...v0.24.1) (2026-08-14)
 
 
