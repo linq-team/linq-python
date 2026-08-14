@@ -423,6 +423,15 @@ class LinqAPIV3(SyncAPIClient):
 
         When creating chats, listing chats, or sending a voice memo, use one of your assigned phone numbers
         in the `from` field.
+
+        **Ineligible numbers.** A number can temporarily lose the ability to deliver messages.
+        While it is in that state, requests that would produce new activity on it — sending a
+        message, creating a chat, reacting, typing, group actions — are rejected with `403`
+        (error code `2027`) before anything is created. Reads keep working, so your existing
+        chats, messages, and history stay available. Omit `from` on `POST /v3/messages` and we
+        pick an eligible number for you, skipping ineligible ones; if none of your assigned
+        numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
+        specific number to blame with a `403`).
         """
         from .resources.phonenumbers import PhonenumbersResource
 
@@ -437,6 +446,15 @@ class LinqAPIV3(SyncAPIClient):
 
         When creating chats, listing chats, or sending a voice memo, use one of your assigned phone numbers
         in the `from` field.
+
+        **Ineligible numbers.** A number can temporarily lose the ability to deliver messages.
+        While it is in that state, requests that would produce new activity on it — sending a
+        message, creating a chat, reacting, typing, group actions — are rejected with `403`
+        (error code `2027`) before anything is created. Reads keep working, so your existing
+        chats, messages, and history stay available. Omit `from` on `POST /v3/messages` and we
+        pick an eligible number for you, skipping ineligible ones; if none of your assigned
+        numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
+        specific number to blame with a `403`).
         """
         from .resources.phone_numbers import PhoneNumbersResource
 
@@ -451,6 +469,15 @@ class LinqAPIV3(SyncAPIClient):
 
         When creating chats, listing chats, or sending a voice memo, use one of your assigned phone numbers
         in the `from` field.
+
+        **Ineligible numbers.** A number can temporarily lose the ability to deliver messages.
+        While it is in that state, requests that would produce new activity on it — sending a
+        message, creating a chat, reacting, typing, group actions — are rejected with `403`
+        (error code `2027`) before anything is created. Reads keep working, so your existing
+        chats, messages, and history stay available. Omit `from` on `POST /v3/messages` and we
+        pick an eligible number for you, skipping ineligible ones; if none of your assigned
+        numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
+        specific number to blame with a `403`).
         """
         from .resources.available_number import AvailableNumberResource
 
@@ -1472,6 +1499,15 @@ class AsyncLinqAPIV3(AsyncAPIClient):
 
         When creating chats, listing chats, or sending a voice memo, use one of your assigned phone numbers
         in the `from` field.
+
+        **Ineligible numbers.** A number can temporarily lose the ability to deliver messages.
+        While it is in that state, requests that would produce new activity on it — sending a
+        message, creating a chat, reacting, typing, group actions — are rejected with `403`
+        (error code `2027`) before anything is created. Reads keep working, so your existing
+        chats, messages, and history stay available. Omit `from` on `POST /v3/messages` and we
+        pick an eligible number for you, skipping ineligible ones; if none of your assigned
+        numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
+        specific number to blame with a `403`).
         """
         from .resources.phonenumbers import AsyncPhonenumbersResource
 
@@ -1486,6 +1522,15 @@ class AsyncLinqAPIV3(AsyncAPIClient):
 
         When creating chats, listing chats, or sending a voice memo, use one of your assigned phone numbers
         in the `from` field.
+
+        **Ineligible numbers.** A number can temporarily lose the ability to deliver messages.
+        While it is in that state, requests that would produce new activity on it — sending a
+        message, creating a chat, reacting, typing, group actions — are rejected with `403`
+        (error code `2027`) before anything is created. Reads keep working, so your existing
+        chats, messages, and history stay available. Omit `from` on `POST /v3/messages` and we
+        pick an eligible number for you, skipping ineligible ones; if none of your assigned
+        numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
+        specific number to blame with a `403`).
         """
         from .resources.phone_numbers import AsyncPhoneNumbersResource
 
@@ -1500,6 +1545,15 @@ class AsyncLinqAPIV3(AsyncAPIClient):
 
         When creating chats, listing chats, or sending a voice memo, use one of your assigned phone numbers
         in the `from` field.
+
+        **Ineligible numbers.** A number can temporarily lose the ability to deliver messages.
+        While it is in that state, requests that would produce new activity on it — sending a
+        message, creating a chat, reacting, typing, group actions — are rejected with `403`
+        (error code `2027`) before anything is created. Reads keep working, so your existing
+        chats, messages, and history stay available. Omit `from` on `POST /v3/messages` and we
+        pick an eligible number for you, skipping ineligible ones; if none of your assigned
+        numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
+        specific number to blame with a `403`).
         """
         from .resources.available_number import AsyncAvailableNumberResource
 
@@ -2455,6 +2509,15 @@ class LinqAPIV3WithRawResponse:
 
         When creating chats, listing chats, or sending a voice memo, use one of your assigned phone numbers
         in the `from` field.
+
+        **Ineligible numbers.** A number can temporarily lose the ability to deliver messages.
+        While it is in that state, requests that would produce new activity on it — sending a
+        message, creating a chat, reacting, typing, group actions — are rejected with `403`
+        (error code `2027`) before anything is created. Reads keep working, so your existing
+        chats, messages, and history stay available. Omit `from` on `POST /v3/messages` and we
+        pick an eligible number for you, skipping ineligible ones; if none of your assigned
+        numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
+        specific number to blame with a `403`).
         """
         from .resources.phonenumbers import PhonenumbersResourceWithRawResponse
 
@@ -2469,6 +2532,15 @@ class LinqAPIV3WithRawResponse:
 
         When creating chats, listing chats, or sending a voice memo, use one of your assigned phone numbers
         in the `from` field.
+
+        **Ineligible numbers.** A number can temporarily lose the ability to deliver messages.
+        While it is in that state, requests that would produce new activity on it — sending a
+        message, creating a chat, reacting, typing, group actions — are rejected with `403`
+        (error code `2027`) before anything is created. Reads keep working, so your existing
+        chats, messages, and history stay available. Omit `from` on `POST /v3/messages` and we
+        pick an eligible number for you, skipping ineligible ones; if none of your assigned
+        numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
+        specific number to blame with a `403`).
         """
         from .resources.phone_numbers import PhoneNumbersResourceWithRawResponse
 
@@ -2483,6 +2555,15 @@ class LinqAPIV3WithRawResponse:
 
         When creating chats, listing chats, or sending a voice memo, use one of your assigned phone numbers
         in the `from` field.
+
+        **Ineligible numbers.** A number can temporarily lose the ability to deliver messages.
+        While it is in that state, requests that would produce new activity on it — sending a
+        message, creating a chat, reacting, typing, group actions — are rejected with `403`
+        (error code `2027`) before anything is created. Reads keep working, so your existing
+        chats, messages, and history stay available. Omit `from` on `POST /v3/messages` and we
+        pick an eligible number for you, skipping ineligible ones; if none of your assigned
+        numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
+        specific number to blame with a `403`).
         """
         from .resources.available_number import AvailableNumberResourceWithRawResponse
 
@@ -3310,6 +3391,15 @@ class AsyncLinqAPIV3WithRawResponse:
 
         When creating chats, listing chats, or sending a voice memo, use one of your assigned phone numbers
         in the `from` field.
+
+        **Ineligible numbers.** A number can temporarily lose the ability to deliver messages.
+        While it is in that state, requests that would produce new activity on it — sending a
+        message, creating a chat, reacting, typing, group actions — are rejected with `403`
+        (error code `2027`) before anything is created. Reads keep working, so your existing
+        chats, messages, and history stay available. Omit `from` on `POST /v3/messages` and we
+        pick an eligible number for you, skipping ineligible ones; if none of your assigned
+        numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
+        specific number to blame with a `403`).
         """
         from .resources.phonenumbers import AsyncPhonenumbersResourceWithRawResponse
 
@@ -3324,6 +3414,15 @@ class AsyncLinqAPIV3WithRawResponse:
 
         When creating chats, listing chats, or sending a voice memo, use one of your assigned phone numbers
         in the `from` field.
+
+        **Ineligible numbers.** A number can temporarily lose the ability to deliver messages.
+        While it is in that state, requests that would produce new activity on it — sending a
+        message, creating a chat, reacting, typing, group actions — are rejected with `403`
+        (error code `2027`) before anything is created. Reads keep working, so your existing
+        chats, messages, and history stay available. Omit `from` on `POST /v3/messages` and we
+        pick an eligible number for you, skipping ineligible ones; if none of your assigned
+        numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
+        specific number to blame with a `403`).
         """
         from .resources.phone_numbers import AsyncPhoneNumbersResourceWithRawResponse
 
@@ -3338,6 +3437,15 @@ class AsyncLinqAPIV3WithRawResponse:
 
         When creating chats, listing chats, or sending a voice memo, use one of your assigned phone numbers
         in the `from` field.
+
+        **Ineligible numbers.** A number can temporarily lose the ability to deliver messages.
+        While it is in that state, requests that would produce new activity on it — sending a
+        message, creating a chat, reacting, typing, group actions — are rejected with `403`
+        (error code `2027`) before anything is created. Reads keep working, so your existing
+        chats, messages, and history stay available. Omit `from` on `POST /v3/messages` and we
+        pick an eligible number for you, skipping ineligible ones; if none of your assigned
+        numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
+        specific number to blame with a `403`).
         """
         from .resources.available_number import AsyncAvailableNumberResourceWithRawResponse
 
@@ -4165,6 +4273,15 @@ class LinqAPIV3WithStreamedResponse:
 
         When creating chats, listing chats, or sending a voice memo, use one of your assigned phone numbers
         in the `from` field.
+
+        **Ineligible numbers.** A number can temporarily lose the ability to deliver messages.
+        While it is in that state, requests that would produce new activity on it — sending a
+        message, creating a chat, reacting, typing, group actions — are rejected with `403`
+        (error code `2027`) before anything is created. Reads keep working, so your existing
+        chats, messages, and history stay available. Omit `from` on `POST /v3/messages` and we
+        pick an eligible number for you, skipping ineligible ones; if none of your assigned
+        numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
+        specific number to blame with a `403`).
         """
         from .resources.phonenumbers import PhonenumbersResourceWithStreamingResponse
 
@@ -4179,6 +4296,15 @@ class LinqAPIV3WithStreamedResponse:
 
         When creating chats, listing chats, or sending a voice memo, use one of your assigned phone numbers
         in the `from` field.
+
+        **Ineligible numbers.** A number can temporarily lose the ability to deliver messages.
+        While it is in that state, requests that would produce new activity on it — sending a
+        message, creating a chat, reacting, typing, group actions — are rejected with `403`
+        (error code `2027`) before anything is created. Reads keep working, so your existing
+        chats, messages, and history stay available. Omit `from` on `POST /v3/messages` and we
+        pick an eligible number for you, skipping ineligible ones; if none of your assigned
+        numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
+        specific number to blame with a `403`).
         """
         from .resources.phone_numbers import PhoneNumbersResourceWithStreamingResponse
 
@@ -4193,6 +4319,15 @@ class LinqAPIV3WithStreamedResponse:
 
         When creating chats, listing chats, or sending a voice memo, use one of your assigned phone numbers
         in the `from` field.
+
+        **Ineligible numbers.** A number can temporarily lose the ability to deliver messages.
+        While it is in that state, requests that would produce new activity on it — sending a
+        message, creating a chat, reacting, typing, group actions — are rejected with `403`
+        (error code `2027`) before anything is created. Reads keep working, so your existing
+        chats, messages, and history stay available. Omit `from` on `POST /v3/messages` and we
+        pick an eligible number for you, skipping ineligible ones; if none of your assigned
+        numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
+        specific number to blame with a `403`).
         """
         from .resources.available_number import AvailableNumberResourceWithStreamingResponse
 
@@ -5020,6 +5155,15 @@ class AsyncLinqAPIV3WithStreamedResponse:
 
         When creating chats, listing chats, or sending a voice memo, use one of your assigned phone numbers
         in the `from` field.
+
+        **Ineligible numbers.** A number can temporarily lose the ability to deliver messages.
+        While it is in that state, requests that would produce new activity on it — sending a
+        message, creating a chat, reacting, typing, group actions — are rejected with `403`
+        (error code `2027`) before anything is created. Reads keep working, so your existing
+        chats, messages, and history stay available. Omit `from` on `POST /v3/messages` and we
+        pick an eligible number for you, skipping ineligible ones; if none of your assigned
+        numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
+        specific number to blame with a `403`).
         """
         from .resources.phonenumbers import AsyncPhonenumbersResourceWithStreamingResponse
 
@@ -5034,6 +5178,15 @@ class AsyncLinqAPIV3WithStreamedResponse:
 
         When creating chats, listing chats, or sending a voice memo, use one of your assigned phone numbers
         in the `from` field.
+
+        **Ineligible numbers.** A number can temporarily lose the ability to deliver messages.
+        While it is in that state, requests that would produce new activity on it — sending a
+        message, creating a chat, reacting, typing, group actions — are rejected with `403`
+        (error code `2027`) before anything is created. Reads keep working, so your existing
+        chats, messages, and history stay available. Omit `from` on `POST /v3/messages` and we
+        pick an eligible number for you, skipping ineligible ones; if none of your assigned
+        numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
+        specific number to blame with a `403`).
         """
         from .resources.phone_numbers import AsyncPhoneNumbersResourceWithStreamingResponse
 
@@ -5048,6 +5201,15 @@ class AsyncLinqAPIV3WithStreamedResponse:
 
         When creating chats, listing chats, or sending a voice memo, use one of your assigned phone numbers
         in the `from` field.
+
+        **Ineligible numbers.** A number can temporarily lose the ability to deliver messages.
+        While it is in that state, requests that would produce new activity on it — sending a
+        message, creating a chat, reacting, typing, group actions — are rejected with `403`
+        (error code `2027`) before anything is created. Reads keep working, so your existing
+        chats, messages, and history stay available. Omit `from` on `POST /v3/messages` and we
+        pick an eligible number for you, skipping ineligible ones; if none of your assigned
+        numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
+        specific number to blame with a `403`).
         """
         from .resources.available_number import AsyncAvailableNumberResourceWithStreamingResponse
 
