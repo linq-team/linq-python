@@ -47,6 +47,10 @@ class Data(BaseModel):
     """Payload for poll.updated (option(s) added — add-only)."""
 
     added_options: List[DataAddedOption]
+    """Only the options this update added — never the ones the poll already had.
+
+    Fetch the poll to read its full option set.
+    """
 
     chat: DataChat
     """Chat info for poll webhook events."""
