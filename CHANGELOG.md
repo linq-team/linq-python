@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.25.1](https://github.com/linq-team/linq-python/compare/v0.25.0...v0.25.1) (2026-08-17)
+
+
+### Bug Fixes
+
+* clarify poll webhook added_options field behavior ([e472cd8](https://github.com/linq-team/linq-python/commit/e472cd8e38d489abd604f42f8e807617d3b498c9))
+
 ## [0.25.0](https://github.com/linq-team/linq-python/compare/v0.24.1...v0.25.0) (2026-08-14)
 
 
