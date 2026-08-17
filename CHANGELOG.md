@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.25.2](https://github.com/linq-team/linq-python/compare/v0.25.1...v0.25.2) (2026-08-17)
+
+
+### Bug Fixes
+
+* clarify health check guidance for conversations and volume ([4e0dae1](https://github.com/linq-team/linq-python/commit/4e0dae13d2fbcaecb0560c7d7355229605e0cd29))
+
 ## [0.25.1](https://github.com/linq-team/linq-python/compare/v0.25.0...v0.25.1) (2026-08-17)
 
 
