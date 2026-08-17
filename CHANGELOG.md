@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.26.0](https://github.com/linq-team/linq-python/compare/v0.25.2...v0.26.0) (2026-08-17)
+
+
+### Features
+
+* add 409 conflict responses for mention and chat availability errors ([84c026d](https://github.com/linq-team/linq-python/commit/84c026d4164408e4124462d5b0a7da5be0f3d855))
+
 ## [0.25.2](https://github.com/linq-team/linq-python/compare/v0.25.1...v0.25.2) (2026-08-17)
 
 
