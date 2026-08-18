@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.27.1](https://github.com/linq-team/linq-python/compare/v0.27.0...v0.27.1) (2026-08-18)
+
+
+### Bug Fixes
+
+* clarify poll option creator and update sender semantics ([195cfad](https://github.com/linq-team/linq-python/commit/195cfad9813e2f09500d093c4e13f183e7a74da2))
+
 ## [0.27.0](https://github.com/linq-team/linq-python/compare/v0.26.0...v0.27.0) (2026-08-18)
 
 
