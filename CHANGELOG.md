@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.27.0](https://github.com/linq-team/linq-python/compare/v0.26.0...v0.27.0) (2026-08-18)
+
+
+### Features
+
+* add chat.background_update_failed webhook event ([c6d4e0e](https://github.com/linq-team/linq-python/commit/c6d4e0e87e85ecffaf135ad9a6944de3bd528ed1))
+
 ## [0.26.0](https://github.com/linq-team/linq-python/compare/v0.25.2...v0.26.0) (2026-08-17)
 
 
