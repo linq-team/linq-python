@@ -30,6 +30,7 @@ WebhookEventType: TypeAlias = Literal[
     "chat.group_name_update_failed",
     "chat.group_icon_update_failed",
     "chat.background_updated",
+    "chat.background_update_failed",
     "chat.typing_indicator.started",
     "chat.typing_indicator.stopped",
     "phone_number.status_updated",
