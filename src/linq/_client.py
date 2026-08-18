@@ -56,7 +56,6 @@ if TYPE_CHECKING:
         webhook_subscriptions,
     )
     from .resources.payments import PaymentsResource, AsyncPaymentsResource
-    from .resources.webhooks import WebhooksResource, AsyncWebhooksResource
     from .resources.capability import CapabilityResource, AsyncCapabilityResource
     from .resources.attachments import AttachmentsResource, AsyncAttachmentsResource
     from .resources.chats.chats import ChatsResource, AsyncChatsResource
@@ -1016,12 +1015,6 @@ class LinqAPIV3(SyncAPIClient):
         from .resources.capability import CapabilityResource
 
         return CapabilityResource(self)
-
-    @cached_property
-    def webhooks(self) -> WebhooksResource:
-        from .resources.webhooks import WebhooksResource
-
-        return WebhooksResource(self)
 
     @cached_property
     def contact_card(self) -> ContactCardResource:
@@ -2092,12 +2085,6 @@ class AsyncLinqAPIV3(AsyncAPIClient):
         from .resources.capability import AsyncCapabilityResource
 
         return AsyncCapabilityResource(self)
-
-    @cached_property
-    def webhooks(self) -> AsyncWebhooksResource:
-        from .resources.webhooks import AsyncWebhooksResource
-
-        return AsyncWebhooksResource(self)
 
     @cached_property
     def contact_card(self) -> AsyncContactCardResource:

@@ -14,7 +14,14 @@ class BackgroundSetParams(TypedDict, total=False):
     """The background family."""
 
     image_url: str
-    """Photo: the image URL to embed in the background."""
+    """Photo: the image URL to embed in the background.
+
+    Must be an absolute `https` URL pointing at an image (`.jpg`, `.png`, `.heic`,
+    `.webp`), and the image is fetched and re-hosted on our CDN before the request
+    is accepted — the same way `group_chat_icon` works. A URL we cannot fetch, or
+    one that isn't an image, is rejected with a `400` (`5007`/`5006`) rather than
+    failing later on the device.
+    """
 
     shades: SequenceNotStr[str]
     """
