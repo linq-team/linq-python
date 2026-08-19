@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.28.1](https://github.com/linq-team/linq-python/compare/v0.28.0...v0.28.1) (2026-08-19)
+
+
+### Bug Fixes
+
+* update card preview image url examples ([9a57be4](https://github.com/linq-team/linq-python/commit/9a57be49bb71dd08e64002a1cd89e25c3361d515))
+
 ## [0.28.0](https://github.com/linq-team/linq-python/compare/v0.27.1...v0.28.0) (2026-08-19)
 
 
