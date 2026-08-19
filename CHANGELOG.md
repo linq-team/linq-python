@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.28.2](https://github.com/linq-team/linq-python/compare/v0.28.1...v0.28.2) (2026-08-19)
+
+
+### Bug Fixes
+
+* clarify 409 errors for mention targets no longer in chat ([a2bb16c](https://github.com/linq-team/linq-python/commit/a2bb16c52433545e20d9ec83d38a4a877efb297b))
+
 ## [0.28.1](https://github.com/linq-team/linq-python/compare/v0.28.0...v0.28.1) (2026-08-19)
 
 
