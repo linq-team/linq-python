@@ -22,6 +22,7 @@ __all__ = [
     "PartIMessageAppPartResponse",
     "PartIMessageAppPartResponseApp",
     "PartIMessageAppPartResponseLayout",
+    "PartAppClipPartResponse",
 ]
 
 
@@ -135,7 +136,31 @@ class PartIMessageAppPartResponse(BaseModel):
     """Fallback text for surfaces that cannot render the card."""
 
 
-Part: TypeAlias = Union[TextPartResponse, MediaPartResponse, LinkPartResponse, PartIMessageAppPartResponse]
+class PartAppClipPartResponse(BaseModel):
+    """An Apple Pay App Clip payment card part"""
+
+    reactions: Optional[List[Reaction]] = None
+    """Reactions on this message part"""
+
+    type: Literal["app_clip"]
+    """Indicates this is an App Clip payment card part"""
+
+    value: str
+    """The checkout link the card opens"""
+
+    description: Optional[str] = None
+    """The card's summary line, composed by Linq from the checkout session"""
+
+    image_url: Optional[str] = None
+    """The card's preview image"""
+
+    title: Optional[str] = None
+    """The card's headline, composed by Linq from the checkout session"""
+
+
+Part: TypeAlias = Union[
+    TextPartResponse, MediaPartResponse, LinkPartResponse, PartIMessageAppPartResponse, PartAppClipPartResponse
+]
 
 
 class Message(BaseModel):

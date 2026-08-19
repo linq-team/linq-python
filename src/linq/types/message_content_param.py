@@ -19,6 +19,7 @@ __all__ = [
     "PartIMessageAppPart",
     "PartIMessageAppPartApp",
     "PartIMessageAppPartLayout",
+    "PartAppClipPart",
 ]
 
 
@@ -184,7 +185,35 @@ class PartIMessageAppPart(TypedDict, total=False):
     """
 
 
-Part: TypeAlias = Union[TextPartParam, MediaPartParam, LinkPartParam, PartIMessageAppPart]
+class PartAppClipPart(TypedDict, total=False):
+    """
+    Sends a Linq checkout link as an Apple Pay App Clip card — the payment
+    preview with the **Open** button, rather than a plain link preview.
+
+    Everything on the card — merchant name, amount, description, image — is
+    composed by Linq from the checkout session itself, the same content the
+    checkout page already shows. You supply only the link.
+
+    An `app_clip` part must be the **only** part in the message.
+
+    **iMessage only**, and it never downgrades. A `service_preference` of
+    `sms` or `rcs` is rejected (`AppClipServiceUnsupported`, 2028). A
+    recipient who can't receive it fails the send rather than being sent a
+    plain link in its place.
+    """
+
+    type: Required[Literal["app_clip"]]
+    """Indicates this is an App Clip payment card"""
+
+    value: Required[str]
+    """A Linq checkout link, e.g.
+
+    one returned as `checkout_url` from `POST /v3/payment_requests`. Any other URL
+    is rejected.
+    """
+
+
+Part: TypeAlias = Union[TextPartParam, MediaPartParam, LinkPartParam, PartIMessageAppPart, PartAppClipPart]
 
 
 class MessageContentParam(TypedDict, total=False):
@@ -234,6 +263,14 @@ class MessageContentParam(TypedDict, total=False):
     - A `link` part must be the **only** part in the message
     - To send a URL as plain text (no preview), use a `text` part instead
 
+    **App Clip Payment Cards:**
+
+    - Use an `app_clip` part to send a Linq checkout link as an Apple Pay App Clip
+      card (the payment preview with the Open button)
+    - An `app_clip` part must be the **only** part in the message
+    - iMessage-only: unlike `link`, it never downgrades to SMS/RCS — the send fails
+      instead of delivering a bare URL
+
     **Supported Media:**
 
     - Images: .jpg, .jpeg, .png, .gif, .heic, .heif, .tif, .tiff, .bmp
@@ -254,6 +291,9 @@ class MessageContentParam(TypedDict, total=False):
 
     - A `link` part must be the **only** part in the message. It cannot be combined
       with text or media parts.
+    - An `app_clip` part must be the **only** part in the message. Its `value` must
+      be a Linq checkout link (e.g. from `POST /v3/payment_requests`); any other URL
+      is rejected.
     - Consecutive text parts are not allowed. Text parts must be separated by media
       parts. For example, [text, text] is invalid, but [text, media, text] is valid.
     - Maximum of **100 parts** total.
