@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.28.0](https://github.com/linq-team/linq-python/compare/v0.27.1...v0.28.0) (2026-08-19)
+
+
+### Features
+
+* add apple pay app clip payment card support ([217d710](https://github.com/linq-team/linq-python/commit/217d710f702b071338ee0649259b17ee367a52ae))
+
 ## [0.27.1](https://github.com/linq-team/linq-python/compare/v0.27.0...v0.27.1) (2026-08-18)
 
 
