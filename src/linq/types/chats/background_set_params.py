@@ -29,16 +29,19 @@ class BackgroundSetParams(TypedDict, total=False):
     Ignored for named color variants (they carry their own two colors).
     """
 
-    style: Literal["sky", "water", "aurora", "glitter"]
+    style: Literal["sky", "water", "aurora"]
     """Dynamic: the animated style."""
 
     variant: str
     """
     Color: a named swatch — `mango`, `ice`, `plum`, `deep_sea`, `green_apple`,
     `cherry`, `bubblegum`, `tangerine`, `magenta`, `lime`, `silver`, `carbon`,
-    `stone` — or `custom` (supply `shades`). Dynamic: the variant within the `style`
-    (e.g. `sunrise`).
+    `stone` — or `custom` (supply `shades`). Omitting `variant` is equivalent to
+    `custom`, so it still requires `shades`.
 
-    An unrecognized value still returns `202`, but no background is applied and no
-    `chat.background_updated` webhook fires. Send one of the values above.
+    Dynamic: required — the variant within the `style`. `sky`: `dusk`, `haze`,
+    `sunset`, `clear`, `sunrise`, `dawn`. `water`: `light`, `dark`. `aurora`:
+    `green`, `purple`, `pink`.
+
+    An unrecognized value is rejected with `400`.
     """
