@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.30.0](https://github.com/linq-team/linq-python/compare/v0.29.0...v0.30.0) (2026-08-20)
+
+
+### Features
+
+* add mention and mention_range fields to message text parts ([fcf564a](https://github.com/linq-team/linq-python/commit/fcf564afb3c3d4ce0dbfff7dc81d12c3d1e22ca3))
+
 ## [0.29.0](https://github.com/linq-team/linq-python/compare/v0.28.2...v0.29.0) (2026-08-20)
 
 
