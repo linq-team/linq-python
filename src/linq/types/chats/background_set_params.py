@@ -21,16 +21,19 @@ class BackgroundSetParams(TypedDict, total=False):
     is accepted — the same way `group_chat_icon` works. A URL we cannot fetch, or
     one that isn't an image, is rejected with a `400` (`5007`/`5006`) rather than
     failing later on the device.
+
+    Example: `https://cdn.linqapp.com/u/bg.jpg`.
     """
 
     shades: SequenceNotStr[str]
     """
-    Color with `variant: custom`: the two gradient stops as hex, top then bottom.
-    Ignored for named color variants (they carry their own two colors).
+    Color with `variant: custom`: the two gradient stops as hex, top then bottom —
+    e.g. `["#F2C4E1", "#F5A623"]`. Ignored for named color variants (they carry
+    their own two colors).
     """
 
     style: Literal["sky", "water", "aurora"]
-    """Dynamic: the animated style."""
+    """Dynamic: the animated style — `sky`, `water`, or `aurora`."""
 
     variant: str
     """

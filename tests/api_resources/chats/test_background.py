@@ -72,8 +72,8 @@ class TestBackground:
         background = client.chats.background.set(
             chat_id="550e8400-e29b-41d4-a716-446655440000",
             type="color",
-            image_url="https://cdn.linqapp.com/u/bg.jpg",
-            shades=["#F2C4E1", "#F5A623"],
+            image_url="https://example.com",
+            shades=["string", "string"],
             style="sky",
             variant="mango",
         )
@@ -179,8 +179,8 @@ class TestAsyncBackground:
         background = await async_client.chats.background.set(
             chat_id="550e8400-e29b-41d4-a716-446655440000",
             type="color",
-            image_url="https://cdn.linqapp.com/u/bg.jpg",
-            shades=["#F2C4E1", "#F5A623"],
+            image_url="https://example.com",
+            shades=["string", "string"],
             style="sky",
             variant="mango",
         )

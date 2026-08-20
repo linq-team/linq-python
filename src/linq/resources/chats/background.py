@@ -131,10 +131,13 @@ class BackgroundResource(SyncAPIResource):
               `group_chat_icon` works. A URL we cannot fetch, or one that isn't an image, is
               rejected with a `400` (`5007`/`5006`) rather than failing later on the device.
 
-          shades: Color with `variant: custom`: the two gradient stops as hex, top then bottom.
-              Ignored for named color variants (they carry their own two colors).
+              Example: `https://cdn.linqapp.com/u/bg.jpg`.
 
-          style: Dynamic: the animated style.
+          shades: Color with `variant: custom`: the two gradient stops as hex, top then bottom —
+              e.g. `["#F2C4E1", "#F5A623"]`. Ignored for named color variants (they carry
+              their own two colors).
+
+          style: Dynamic: the animated style — `sky`, `water`, or `aurora`.
 
           variant: Color: a named swatch — `mango`, `ice`, `plum`, `deep_sea`, `green_apple`,
               `cherry`, `bubblegum`, `tangerine`, `magenta`, `lime`, `silver`, `carbon`,
@@ -286,10 +289,13 @@ class AsyncBackgroundResource(AsyncAPIResource):
               `group_chat_icon` works. A URL we cannot fetch, or one that isn't an image, is
               rejected with a `400` (`5007`/`5006`) rather than failing later on the device.
 
-          shades: Color with `variant: custom`: the two gradient stops as hex, top then bottom.
-              Ignored for named color variants (they carry their own two colors).
+              Example: `https://cdn.linqapp.com/u/bg.jpg`.
 
-          style: Dynamic: the animated style.
+          shades: Color with `variant: custom`: the two gradient stops as hex, top then bottom —
+              e.g. `["#F2C4E1", "#F5A623"]`. Ignored for named color variants (they carry
+              their own two colors).
+
+          style: Dynamic: the animated style — `sky`, `water`, or `aurora`.
 
           variant: Color: a named swatch — `mango`, `ice`, `plum`, `deep_sea`, `green_apple`,
               `cherry`, `bubblegum`, `tangerine`, `magenta`, `lime`, `silver`, `carbon`,
