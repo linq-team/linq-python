@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.30.3](https://github.com/linq-team/linq-python/compare/v0.30.2...v0.30.3) (2026-08-20)
+
+
+### Documentation
+
+* clarify transcript background field requirements and examples ([f22adc1](https://github.com/linq-team/linq-python/commit/f22adc1693d9606673dde87831403a296de4f529))
+
 ## [0.30.2](https://github.com/linq-team/linq-python/compare/v0.30.1...v0.30.2) (2026-08-20)
 
 
