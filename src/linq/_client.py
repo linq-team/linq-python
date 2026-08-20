@@ -720,9 +720,9 @@ class LinqAPIV3(SyncAPIClient):
         | `agentcard` | `approve_card` | A passkey approval for a virtual card. |
         | `link` | `open` | A card that opens a URL you supply. |
 
-        `GET /v3/experiences` is the authoritative list for your account, with
-        every action and the fields each accepts — an action missing there cannot
-        be sent. Fields are display copy unless documented otherwise.
+        `GET /v3/experiences` is the list to build against, with every action and
+        the fields each accepts — anything not described there is unsupported.
+        Fields are display copy unless documented otherwise.
 
         ## Params are checked before the card is sent
 
@@ -1790,9 +1790,9 @@ class AsyncLinqAPIV3(AsyncAPIClient):
         | `agentcard` | `approve_card` | A passkey approval for a virtual card. |
         | `link` | `open` | A card that opens a URL you supply. |
 
-        `GET /v3/experiences` is the authoritative list for your account, with
-        every action and the fields each accepts — an action missing there cannot
-        be sent. Fields are display copy unless documented otherwise.
+        `GET /v3/experiences` is the list to build against, with every action and
+        the fields each accepts — anything not described there is unsupported.
+        Fields are display copy unless documented otherwise.
 
         ## Params are checked before the card is sent
 
@@ -2794,9 +2794,9 @@ class LinqAPIV3WithRawResponse:
         | `agentcard` | `approve_card` | A passkey approval for a virtual card. |
         | `link` | `open` | A card that opens a URL you supply. |
 
-        `GET /v3/experiences` is the authoritative list for your account, with
-        every action and the fields each accepts — an action missing there cannot
-        be sent. Fields are display copy unless documented otherwise.
+        `GET /v3/experiences` is the list to build against, with every action and
+        the fields each accepts — anything not described there is unsupported.
+        Fields are display copy unless documented otherwise.
 
         ## Params are checked before the card is sent
 
@@ -3676,9 +3676,9 @@ class AsyncLinqAPIV3WithRawResponse:
         | `agentcard` | `approve_card` | A passkey approval for a virtual card. |
         | `link` | `open` | A card that opens a URL you supply. |
 
-        `GET /v3/experiences` is the authoritative list for your account, with
-        every action and the fields each accepts — an action missing there cannot
-        be sent. Fields are display copy unless documented otherwise.
+        `GET /v3/experiences` is the list to build against, with every action and
+        the fields each accepts — anything not described there is unsupported.
+        Fields are display copy unless documented otherwise.
 
         ## Params are checked before the card is sent
 
@@ -4558,9 +4558,9 @@ class LinqAPIV3WithStreamedResponse:
         | `agentcard` | `approve_card` | A passkey approval for a virtual card. |
         | `link` | `open` | A card that opens a URL you supply. |
 
-        `GET /v3/experiences` is the authoritative list for your account, with
-        every action and the fields each accepts — an action missing there cannot
-        be sent. Fields are display copy unless documented otherwise.
+        `GET /v3/experiences` is the list to build against, with every action and
+        the fields each accepts — anything not described there is unsupported.
+        Fields are display copy unless documented otherwise.
 
         ## Params are checked before the card is sent
 
@@ -5440,9 +5440,9 @@ class AsyncLinqAPIV3WithStreamedResponse:
         | `agentcard` | `approve_card` | A passkey approval for a virtual card. |
         | `link` | `open` | A card that opens a URL you supply. |
 
-        `GET /v3/experiences` is the authoritative list for your account, with
-        every action and the fields each accepts — an action missing there cannot
-        be sent. Fields are display copy unless documented otherwise.
+        `GET /v3/experiences` is the list to build against, with every action and
+        the fields each accepts — anything not described there is unsupported.
+        Fields are display copy unless documented otherwise.
 
         ## Params are checked before the card is sent
 
