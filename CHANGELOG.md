@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.29.0](https://github.com/linq-team/linq-python/compare/v0.28.2...v0.29.0) (2026-08-20)
+
+
+### Features
+
+* clarify text decoration and mention behavior across recipient types ([7c38504](https://github.com/linq-team/linq-python/commit/7c38504dbd555dab6f154f77a6fcc28c7186ee91))
+
 ## [0.28.2](https://github.com/linq-team/linq-python/compare/v0.28.1...v0.28.2) (2026-08-19)
 
 
