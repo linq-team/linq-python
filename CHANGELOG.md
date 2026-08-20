@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.30.2](https://github.com/linq-team/linq-python/compare/v0.30.1...v0.30.2) (2026-08-20)
+
+
+### Bug Fixes
+
+* clarify background color variant requirements and valid styles ([0a80a18](https://github.com/linq-team/linq-python/commit/0a80a18bf19d0480f112aba07426df94c22c3e52))
+
 ## [0.30.1](https://github.com/linq-team/linq-python/compare/v0.30.0...v0.30.1) (2026-08-20)
 
 
