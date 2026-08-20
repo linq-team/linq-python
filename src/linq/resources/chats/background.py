@@ -101,7 +101,7 @@ class BackgroundResource(SyncAPIResource):
         type: Literal["color", "dynamic", "photo"],
         image_url: str | Omit = omit,
         shades: SequenceNotStr[str] | Omit = omit,
-        style: Literal["sky", "water", "aurora", "glitter"] | Omit = omit,
+        style: Literal["sky", "water", "aurora"] | Omit = omit,
         variant: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -138,11 +138,14 @@ class BackgroundResource(SyncAPIResource):
 
           variant: Color: a named swatch — `mango`, `ice`, `plum`, `deep_sea`, `green_apple`,
               `cherry`, `bubblegum`, `tangerine`, `magenta`, `lime`, `silver`, `carbon`,
-              `stone` — or `custom` (supply `shades`). Dynamic: the variant within the `style`
-              (e.g. `sunrise`).
+              `stone` — or `custom` (supply `shades`). Omitting `variant` is equivalent to
+              `custom`, so it still requires `shades`.
 
-              An unrecognized value still returns `202`, but no background is applied and no
-              `chat.background_updated` webhook fires. Send one of the values above.
+              Dynamic: required — the variant within the `style`. `sky`: `dusk`, `haze`,
+              `sunset`, `clear`, `sunrise`, `dawn`. `water`: `light`, `dark`. `aurora`:
+              `green`, `purple`, `pink`.
+
+              An unrecognized value is rejected with `400`.
 
           extra_headers: Send extra headers
 
@@ -253,7 +256,7 @@ class AsyncBackgroundResource(AsyncAPIResource):
         type: Literal["color", "dynamic", "photo"],
         image_url: str | Omit = omit,
         shades: SequenceNotStr[str] | Omit = omit,
-        style: Literal["sky", "water", "aurora", "glitter"] | Omit = omit,
+        style: Literal["sky", "water", "aurora"] | Omit = omit,
         variant: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -290,11 +293,14 @@ class AsyncBackgroundResource(AsyncAPIResource):
 
           variant: Color: a named swatch — `mango`, `ice`, `plum`, `deep_sea`, `green_apple`,
               `cherry`, `bubblegum`, `tangerine`, `magenta`, `lime`, `silver`, `carbon`,
-              `stone` — or `custom` (supply `shades`). Dynamic: the variant within the `style`
-              (e.g. `sunrise`).
+              `stone` — or `custom` (supply `shades`). Omitting `variant` is equivalent to
+              `custom`, so it still requires `shades`.
 
-              An unrecognized value still returns `202`, but no background is applied and no
-              `chat.background_updated` webhook fires. Send one of the values above.
+              Dynamic: required — the variant within the `style`. `sky`: `dusk`, `haze`,
+              `sunset`, `clear`, `sunrise`, `dawn`. `water`: `light`, `dark`. `aurora`:
+              `green`, `purple`, `pink`.
+
+              An unrecognized value is rejected with `400`.
 
           extra_headers: Send extra headers
 
