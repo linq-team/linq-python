@@ -209,8 +209,10 @@ class MessagesResource(SyncAPIResource):
         ```
 
         **Note:** Style ranges (bold, italic, etc.) may overlap, but animation ranges
-        must not overlap with other animations or styles. Text decorations only render
-        for iMessage recipients. For SMS/RCS, text decorations are not applied.
+        must not overlap with other animations or styles. Decorations render per
+        recipient, not per message: in a group with both iMessage and SMS/RCS
+        participants, iMessage recipients see the decorations and SMS/RCS recipients
+        receive the same message as plain text.
 
         Args:
           message: Message content container. Groups all message-related fields together,
@@ -439,8 +441,10 @@ class AsyncMessagesResource(AsyncAPIResource):
         ```
 
         **Note:** Style ranges (bold, italic, etc.) may overlap, but animation ranges
-        must not overlap with other animations or styles. Text decorations only render
-        for iMessage recipients. For SMS/RCS, text decorations are not applied.
+        must not overlap with other animations or styles. Decorations render per
+        recipient, not per message: in a group with both iMessage and SMS/RCS
+        participants, iMessage recipients see the decorations and SMS/RCS recipients
+        receive the same message as plain text.
 
         Args:
           message: Message content container. Groups all message-related fields together,
