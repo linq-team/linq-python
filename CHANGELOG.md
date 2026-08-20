@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.30.1](https://github.com/linq-team/linq-python/compare/v0.30.0...v0.30.1) (2026-08-20)
+
+
+### Documentation
+
+* clarify experiences endpoint as authoritative api reference ([3b38986](https://github.com/linq-team/linq-python/commit/3b389866ca0de195aeb231677d1d6ed2c89d0242))
+
 ## [0.30.0](https://github.com/linq-team/linq-python/compare/v0.29.0...v0.30.0) (2026-08-20)
 
 
