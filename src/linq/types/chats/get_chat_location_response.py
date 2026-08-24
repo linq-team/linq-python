@@ -11,7 +11,7 @@ __all__ = ["GetChatLocationResponse", "Data", "DataFeature", "DataFeatureGeometr
 
 class DataFeatureGeometry(BaseModel):
     coordinates: List[float]
-    """[longitude, latitude] or [longitude, latitude, altitude]"""
+    """[longitude, latitude]"""
 
     type: Literal["Point"]
 
