@@ -1,6 +1,6 @@
 [project]
 name = "linq-python"
-version = "0.30.3"
+version = "0.31.0"
 description = "The official Python library for the linq-api-v3 API"
 dynamic = ["readme"]
 license = "Apache-2.0"

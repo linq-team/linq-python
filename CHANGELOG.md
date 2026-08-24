@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.31.0](https://github.com/linq-team/linq-python/compare/v0.30.3...v0.31.0) (2026-08-24)
+
+
+### Features
+
+* add location sharing webhook metadata and request validation ([c8a7223](https://github.com/linq-team/linq-python/commit/c8a72238ace153bb05ab53851c73e6ad84ec519c))
+
 ## [0.30.3](https://github.com/linq-team/linq-python/compare/v0.30.2...v0.30.3) (2026-08-20)
 
 
