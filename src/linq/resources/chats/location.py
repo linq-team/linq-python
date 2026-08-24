@@ -27,7 +27,7 @@ class LocationResource(SyncAPIResource):
     and subscribe to webhooks when someone starts or stops sharing.
 
     **Coordinates** are returned in [GeoJSON](https://datatracker.ietf.org/doc/html/rfc7946) format:
-    `[longitude, latitude]` or `[longitude, latitude, altitude]` if altitude is available.
+    `[longitude, latitude]`.
 
     ### Reading location is poll-based
 
@@ -103,6 +103,9 @@ class LocationResource(SyncAPIResource):
         separate feature for each participant who is sharing. Each feature's
         `properties.handle` identifies the user.
 
+        A participant appears as soon as their first position arrives, typically within
+        a second or two of sharing starting.
+
         Returns an empty `data.features` array if no one is sharing or no location data
         is available yet. If sharing started but this stays empty, see the **Location
         Sharing** overview.
@@ -152,6 +155,12 @@ class LocationResource(SyncAPIResource):
         `{ "success": true, "message": "Location request sent" }` and does not return
         coordinates.
 
+        Rejected with `409` if the recipient is already sharing — read their location
+        with `GET /v3/chats/{chatId}/location` instead of re-requesting.
+
+        Rate limited per chat, since each request prompts the recipient's device.
+        Exceeding it returns `429` with a `Retry-After` header.
+
         Location requests only work in **1:1 iMessage chats** (Apple limitation):
 
         - Group chats (any service) return `409` with code `2016`
@@ -185,7 +194,7 @@ class AsyncLocationResource(AsyncAPIResource):
     and subscribe to webhooks when someone starts or stops sharing.
 
     **Coordinates** are returned in [GeoJSON](https://datatracker.ietf.org/doc/html/rfc7946) format:
-    `[longitude, latitude]` or `[longitude, latitude, altitude]` if altitude is available.
+    `[longitude, latitude]`.
 
     ### Reading location is poll-based
 
@@ -261,6 +270,9 @@ class AsyncLocationResource(AsyncAPIResource):
         separate feature for each participant who is sharing. Each feature's
         `properties.handle` identifies the user.
 
+        A participant appears as soon as their first position arrives, typically within
+        a second or two of sharing starting.
+
         Returns an empty `data.features` array if no one is sharing or no location data
         is available yet. If sharing started but this stays empty, see the **Location
         Sharing** overview.
@@ -309,6 +321,12 @@ class AsyncLocationResource(AsyncAPIResource):
         The request is delivered asynchronously. The endpoint returns immediately with
         `{ "success": true, "message": "Location request sent" }` and does not return
         coordinates.
+
+        Rejected with `409` if the recipient is already sharing — read their location
+        with `GET /v3/chats/{chatId}/location` instead of re-requesting.
+
+        Rate limited per chat, since each request prompts the recipient's device.
+        Exceeding it returns `429` with a `Retry-After` header.
 
         Location requests only work in **1:1 iMessage chats** (Apple limitation):
 

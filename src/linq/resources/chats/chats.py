@@ -193,7 +193,7 @@ class ChatsResource(SyncAPIResource):
         and subscribe to webhooks when someone starts or stops sharing.
 
         **Coordinates** are returned in [GeoJSON](https://datatracker.ietf.org/doc/html/rfc7946) format:
-        `[longitude, latitude]` or `[longitude, latitude, altitude]` if altitude is available.
+        `[longitude, latitude]`.
 
         ### Reading location is poll-based
 
@@ -938,7 +938,7 @@ class AsyncChatsResource(AsyncAPIResource):
         and subscribe to webhooks when someone starts or stops sharing.
 
         **Coordinates** are returned in [GeoJSON](https://datatracker.ietf.org/doc/html/rfc7946) format:
-        `[longitude, latitude]` or `[longitude, latitude, altitude]` if altitude is available.
+        `[longitude, latitude]`.
 
         ### Reading location is poll-based
 
@@ -1711,7 +1711,7 @@ class ChatsResourceWithRawResponse:
         and subscribe to webhooks when someone starts or stops sharing.
 
         **Coordinates** are returned in [GeoJSON](https://datatracker.ietf.org/doc/html/rfc7946) format:
-        `[longitude, latitude]` or `[longitude, latitude, altitude]` if altitude is available.
+        `[longitude, latitude]`.
 
         ### Reading location is poll-based
 
@@ -1972,7 +1972,7 @@ class AsyncChatsResourceWithRawResponse:
         and subscribe to webhooks when someone starts or stops sharing.
 
         **Coordinates** are returned in [GeoJSON](https://datatracker.ietf.org/doc/html/rfc7946) format:
-        `[longitude, latitude]` or `[longitude, latitude, altitude]` if altitude is available.
+        `[longitude, latitude]`.
 
         ### Reading location is poll-based
 
@@ -2233,7 +2233,7 @@ class ChatsResourceWithStreamingResponse:
         and subscribe to webhooks when someone starts or stops sharing.
 
         **Coordinates** are returned in [GeoJSON](https://datatracker.ietf.org/doc/html/rfc7946) format:
-        `[longitude, latitude]` or `[longitude, latitude, altitude]` if altitude is available.
+        `[longitude, latitude]`.
 
         ### Reading location is poll-based
 
@@ -2494,7 +2494,7 @@ class AsyncChatsResourceWithStreamingResponse:
         and subscribe to webhooks when someone starts or stops sharing.
 
         **Coordinates** are returned in [GeoJSON](https://datatracker.ietf.org/doc/html/rfc7946) format:
-        `[longitude, latitude]` or `[longitude, latitude, altitude]` if altitude is available.
+        `[longitude, latitude]`.
 
         ### Reading location is poll-based
 
