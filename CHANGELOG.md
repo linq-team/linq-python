@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.32.0](https://github.com/linq-team/linq-python/compare/v0.31.0...v0.32.0) (2026-08-25)
+
+
+### Features
+
+* add contact_card.received webhook event ([bf29877](https://github.com/linq-team/linq-python/commit/bf29877ee775f235a273fb693c364592bfe8641a))
+
 ## [0.31.0](https://github.com/linq-team/linq-python/compare/v0.30.3...v0.31.0) (2026-08-24)
 
 
