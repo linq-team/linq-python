@@ -24,6 +24,7 @@ from .payments import (
     PaymentsResourceWithStreamingResponse,
     AsyncPaymentsResourceWithStreamingResponse,
 )
+from .webhooks import WebhooksResource, AsyncWebhooksResource
 from .capability import (
     CapabilityResource,
     AsyncCapabilityResource,
@@ -220,6 +221,8 @@ __all__ = [
     "AsyncCapabilityResourceWithRawResponse",
     "CapabilityResourceWithStreamingResponse",
     "AsyncCapabilityResourceWithStreamingResponse",
+    "WebhooksResource",
+    "AsyncWebhooksResource",
     "ContactCardResource",
     "AsyncContactCardResource",
     "ContactCardResourceWithRawResponse",
