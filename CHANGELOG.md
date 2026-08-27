@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.35.0](https://github.com/linq-team/linq-python/compare/v0.34.0...v0.35.0) (2026-08-27)
+
+
+### Features
+
+* add image_url field to app clip card configuration ([449f6d9](https://github.com/linq-team/linq-python/commit/449f6d93a52c406de53c06ba4be03be39685a5b9))
+
 ## [0.34.0](https://github.com/linq-team/linq-python/compare/v0.33.1...v0.34.0) (2026-08-27)
 
 
