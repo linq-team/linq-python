@@ -263,6 +263,22 @@ Methods:
 - <code title="post /v3/payments/{paymentId}/cancel">client.payments.<a href="./src/linq/resources/payments.py">cancel</a>(payment_id) -> <a href="./src/linq/types/payment.py">Payment</a></code>
 - <code title="get /v3/payments/{paymentId}/credentials">client.payments.<a href="./src/linq/resources/payments.py">credentials</a>(payment_id) -> <a href="./src/linq/types/payment_credentials_response.py">PaymentCredentialsResponse</a></code>
 
+# LinkConnections
+
+Types:
+
+```python
+from linq.types import LinkConnectionStatus
+```
+
+# LinkPayments
+
+Types:
+
+```python
+from linq.types import LinkPayment
+```
+
 # BlockedHandles
 
 Types:
