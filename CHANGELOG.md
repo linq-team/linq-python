@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.34.0](https://github.com/linq-team/linq-python/compare/v0.33.1...v0.34.0) (2026-08-27)
+
+
+### Features
+
+* add Link wallet payment support ([a755998](https://github.com/linq-team/linq-python/commit/a7559989baded5f372cbf47197072b2ce598ebf9))
+
 ## [0.33.1](https://github.com/linq-team/linq-python/compare/v0.33.0...v0.33.1) (2026-08-26)
 
 
