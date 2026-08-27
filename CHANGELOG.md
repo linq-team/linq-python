@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.35.1](https://github.com/linq-team/linq-python/compare/v0.35.0...v0.35.1) (2026-08-27)
+
+
+### Bug Fixes
+
+* clarify reputation audit rate limiting and response behavior ([94c274c](https://github.com/linq-team/linq-python/commit/94c274c3b6e85cb8d313397682e0bf065fd5a0d7))
+
 ## [0.35.0](https://github.com/linq-team/linq-python/compare/v0.34.0...v0.35.0) (2026-08-27)
 
 
