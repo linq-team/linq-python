@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.36.0](https://github.com/linq-team/linq-python/compare/v0.35.1...v0.36.0) (2026-08-28)
+
+
+### Features
+
+* support multiple mentions per message part ([49030ee](https://github.com/linq-team/linq-python/commit/49030ee5414481cca4606b9511aa87177ed83ddf))
+
 ## [0.35.1](https://github.com/linq-team/linq-python/compare/v0.35.0...v0.35.1) (2026-08-27)
 
 
