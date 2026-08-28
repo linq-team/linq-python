@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.36.1](https://github.com/linq-team/linq-python/compare/v0.36.0...v0.36.1) (2026-08-28)
+
+
+### Bug Fixes
+
+* simplify mention fields in text parts, remove mentions array ([1c73ab2](https://github.com/linq-team/linq-python/commit/1c73ab2292cce66ad1f59f8b097c7b98ca2ca421))
+
 ## [0.36.0](https://github.com/linq-team/linq-python/compare/v0.35.1...v0.36.0) (2026-08-28)
 
 
