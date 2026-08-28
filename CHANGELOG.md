@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.37.0](https://github.com/linq-team/linq-python/compare/v0.36.1...v0.37.0) (2026-08-28)
+
+
+### Features
+
+* add discount support with coupons and promotion codes ([5427381](https://github.com/linq-team/linq-python/commit/5427381d5591b92d80cf169774f4bde887fcd28b))
+
 ## [0.36.1](https://github.com/linq-team/linq-python/compare/v0.36.0...v0.36.1) (2026-08-28)
 
 
