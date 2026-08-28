@@ -35,6 +35,11 @@ class TestPaymentRequests:
             currency="usd",
             customer_id="cus_QAbCdEfGhIjKlMn",
             description="Coffee with Ava",
+            discount={
+                "coupon": "7fKCMvBh",
+                "label": "15% OFF FIRST 3 MONTHS",
+                "promotion_code": "promo_1QAbCdEfGhIjKlMn",
+            },
             from_="+12025550123",
             metadata={"order_id": "order_8675309"},
             mode="payment",
@@ -212,6 +217,11 @@ class TestAsyncPaymentRequests:
             currency="usd",
             customer_id="cus_QAbCdEfGhIjKlMn",
             description="Coffee with Ava",
+            discount={
+                "coupon": "7fKCMvBh",
+                "label": "15% OFF FIRST 3 MONTHS",
+                "promotion_code": "promo_1QAbCdEfGhIjKlMn",
+            },
             from_="+12025550123",
             metadata={"order_id": "order_8675309"},
             mode="payment",

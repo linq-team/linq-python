@@ -6,7 +6,20 @@ from typing_extensions import Literal
 
 from .._models import BaseModel
 
-__all__ = ["PaymentRequest", "Natural", "Stripe"]
+__all__ = ["PaymentRequest", "Discount", "Natural", "Stripe"]
+
+
+class Discount(BaseModel):
+    """Subscription mode — the discount applied, as Stripe applied it."""
+
+    coupon: Optional[str] = None
+    """The ID of the coupon applied."""
+
+    label: Optional[str] = None
+    """The customer-facing discount description shown at checkout."""
+
+    promotion_code: Optional[str] = None
+    """The ID of the promotion code applied, if you passed one."""
 
 
 class Natural(BaseModel):
@@ -47,10 +60,11 @@ class PaymentRequest(BaseModel):
     """Unique identifier of the payment request."""
 
     amount: int
-    """Amount in the currency's minor units.
+    """What the recipient is charged at checkout, in the currency's minor units.
 
-    In `subscription` mode this is the recurring amount (price × quantity) the
-    recipient pays per interval, starting at checkout.
+    In `subscription` mode this is the first invoice's amount due — all items after
+    any discounts are applied — so a discount that covers the whole invoice returns
+    `0` and checkout shows $0.00.
     """
 
     checkout_url: str
@@ -73,6 +87,9 @@ class PaymentRequest(BaseModel):
     """Lifecycle status of the payment request."""
 
     description: Optional[str] = None
+
+    discount: Optional[Discount] = None
+    """Subscription mode — the discount applied, as Stripe applied it."""
 
     expires_at: Optional[datetime] = None
     """When an unpaid request auto-expires."""
