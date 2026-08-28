@@ -8,7 +8,7 @@ from typing_extensions import Literal, Annotated, TypedDict
 
 from .._utils import PropertyInfo
 
-__all__ = ["PaymentRequestCreateParams"]
+__all__ = ["PaymentRequestCreateParams", "Discount"]
 
 
 class PaymentRequestCreateParams(TypedDict, total=False):
@@ -38,6 +38,13 @@ class PaymentRequestCreateParams(TypedDict, total=False):
 
     description: str
     """Optional description shown to the recipient at checkout."""
+
+    discount: Discount
+    """Subscription mode only.
+
+    The coupon or promotion code to apply to this subscription payment. Currently,
+    only accept one coupon or one promo code.
+    """
 
     from_: Annotated[str, PropertyInfo(alias="from")]
     """Required for `rail: natural`.
@@ -102,3 +109,21 @@ class PaymentRequestCreateParams(TypedDict, total=False):
     """
 
     idempotency_key: Annotated[str, PropertyInfo(alias="Idempotency-Key")]
+
+
+class Discount(TypedDict, total=False):
+    """Subscription mode only.
+
+    The coupon or promotion code to apply to
+    this subscription payment. Currently, only accept one coupon or one
+    promo code.
+    """
+
+    coupon: str
+    """The ID of the coupon to apply to this subscription."""
+
+    label: str
+    """Name of the coupon/promo code displayed to customers."""
+
+    promotion_code: str
+    """The ID of a promotion code to apply to this subscription."""
