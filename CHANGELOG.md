@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.37.1](https://github.com/linq-team/linq-python/compare/v0.37.0...v0.37.1) (2026-08-31)
+
+
+### Documentation
+
+* clarify backstop behavior for ephemeral message storage ([c6efb3b](https://github.com/linq-team/linq-python/commit/c6efb3be895b90f4349c2e01b7c5904818c93fe2))
+
 ## [0.37.0](https://github.com/linq-team/linq-python/compare/v0.36.1...v0.37.0) (2026-08-28)
 
 
