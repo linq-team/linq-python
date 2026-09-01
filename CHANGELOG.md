@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.41.1](https://github.com/linq-team/linq-python/compare/v0.41.0...v0.41.1) (2026-09-01)
+
+
+### Bug Fixes
+
+* clarify ephemeral message and attachment retention windows ([b4a08fa](https://github.com/linq-team/linq-python/commit/b4a08fa5341e6aa861beb74789bf3d992cd7f2cb))
+
 ## [0.41.0](https://github.com/linq-team/linq-python/compare/v0.40.0...v0.41.0) (2026-09-01)
 
 
