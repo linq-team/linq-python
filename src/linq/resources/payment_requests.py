@@ -163,7 +163,7 @@ class PaymentRequestsResource(SyncAPIResource):
     `POST /v3/chats/{chatId}/messages` — it renders as a rich card with your
     branding (title, amount, image) instead of a bare URL, which converts far
     better. A `link` part must be the only part in the message. See
-    [Rich Link Previews](/guides/messaging/sending-messages).
+    [Rich Link Previews](/channel/imessage/guides/messaging/sending-messages).
 
     On a supported iPhone the link opens an **Apple Pay App Clip** — a native,
     no-install checkout sheet. Everywhere else (Android, desktop, iPhones
@@ -213,7 +213,7 @@ class PaymentRequestsResource(SyncAPIResource):
     Subscribe to payment lifecycle events to reconcile server-side rather than
     polling: `payment.succeeded`, `payment.canceled`, and `payment.expired`.
     Each event carries the payment request id, amount, currency, and your
-    `metadata`. See [Webhooks](/guides/webhooks).
+    `metadata`. See [Webhooks](/channel/imessage/guides/webhooks).
     """
 
     @cached_property
@@ -628,7 +628,7 @@ class AsyncPaymentRequestsResource(AsyncAPIResource):
     `POST /v3/chats/{chatId}/messages` — it renders as a rich card with your
     branding (title, amount, image) instead of a bare URL, which converts far
     better. A `link` part must be the only part in the message. See
-    [Rich Link Previews](/guides/messaging/sending-messages).
+    [Rich Link Previews](/channel/imessage/guides/messaging/sending-messages).
 
     On a supported iPhone the link opens an **Apple Pay App Clip** — a native,
     no-install checkout sheet. Everywhere else (Android, desktop, iPhones
@@ -678,7 +678,7 @@ class AsyncPaymentRequestsResource(AsyncAPIResource):
     Subscribe to payment lifecycle events to reconcile server-side rather than
     polling: `payment.succeeded`, `payment.canceled`, and `payment.expired`.
     Each event carries the payment request id, amount, currency, and your
-    `metadata`. See [Webhooks](/guides/webhooks).
+    `metadata`. See [Webhooks](/channel/imessage/guides/webhooks).
     """
 
     @cached_property

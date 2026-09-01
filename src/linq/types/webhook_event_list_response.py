@@ -10,7 +10,7 @@ __all__ = ["WebhookEventListResponse"]
 
 
 class WebhookEventListResponse(BaseModel):
-    doc_url: Literal["https://docs.linqapp.com/guides/webhooks/events"]
+    doc_url: Literal["https://docs.linqapp.com/channel/imessage/guides/webhooks/events"]
     """URL to the webhook events documentation"""
 
     events: List[WebhookEventType]

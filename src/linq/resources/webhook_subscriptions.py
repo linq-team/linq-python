@@ -213,7 +213,7 @@ class WebhookSubscriptionsResource(SyncAPIResource):
         - Legacy `X-Webhook-*` headers are also sent for backwards compatibility
           (deprecated)
         - See
-          [Verifying Webhook Signatures](https://docs.linqapp.com/guides/webhooks#verifying-webhook-signatures)
+          [Verifying Webhook Signatures](https://docs.linqapp.com/channel/imessage/guides/webhooks#verifying-webhook-signatures)
           for verification details
         - Failed deliveries (5xx, 429, network errors) are retried up to 10 times over
           ~25 minutes with exponential backoff
@@ -593,7 +593,7 @@ class AsyncWebhookSubscriptionsResource(AsyncAPIResource):
         - Legacy `X-Webhook-*` headers are also sent for backwards compatibility
           (deprecated)
         - See
-          [Verifying Webhook Signatures](https://docs.linqapp.com/guides/webhooks#verifying-webhook-signatures)
+          [Verifying Webhook Signatures](https://docs.linqapp.com/channel/imessage/guides/webhooks#verifying-webhook-signatures)
           for verification details
         - Failed deliveries (5xx, 429, network errors) are retried up to 10 times over
           ~25 minutes with exponential backoff

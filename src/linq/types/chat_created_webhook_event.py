@@ -19,7 +19,7 @@ class DataHealthStatus(BaseModel):
 
     Switch on `status` to surface chat and line health in your UI — the enum is the long-term contract. Each status carries a `doc_url` that deep-links to the relevant section of the Chat Health guide. To gate a send, act on the response rather than the status: a `403` is the authoritative answer.
 
-    See the [Chat Health guide](/guides/chats/chat-health) for what each status means and how to react.
+    See the [Chat Health guide](/channel/imessage/guides/chats/chat-health) for what each status means and how to react.
     """
 
     doc_url: str
@@ -28,8 +28,8 @@ class DataHealthStatus(BaseModel):
     status: Literal["HEALTHY", "AT_RISK", "CRITICAL", "OPTED_OUT"]
     """Current health bucket for the chat.
 
-    See the [Chat Health guide](/guides/chats/chat-health) for what each value means
-    and how to react. `doc_url` deep-links to the relevant section.
+    See the [Chat Health guide](/channel/imessage/guides/chats/chat-health) for what
+    each value means and how to react. `doc_url` deep-links to the relevant section.
 
     `OPTED_OUT` — the recipient sent `STOP`, `UNSUBSCRIBE`, `OPTOUT`, `CANCEL`,
     `END`, or `QUIT`. The keyword must be the whole trimmed message, never part of a
@@ -94,8 +94,8 @@ class Data(BaseModel):
     relevant section of the Chat Health guide. To gate a send, act on the response
     rather than the status: a `403` is the authoritative answer.
 
-    See the [Chat Health guide](/guides/chats/chat-health) for what each status
-    means and how to react.
+    See the [Chat Health guide](/channel/imessage/guides/chats/chat-health) for what
+    each status means and how to react.
     """
 
     is_group: bool
