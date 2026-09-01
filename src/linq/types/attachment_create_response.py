@@ -14,10 +14,12 @@ class AttachmentCreateResponse(BaseModel):
     """Unique identifier for the attachment"""
 
     download_url: str
-    """Permanent CDN URL for the file.
+    """Stable CDN URL for the file.
 
-    Does not expire. Use the `attachment_id` to reference this file in media parts
-    when sending messages.
+    Use the `attachment_id` to reference this file in media parts when sending
+    messages. Files on the ephemeral attachments tier — and this URL — are removed
+    within roughly 24–48 hours of upload, independently of any message retention
+    window.
     """
 
     expires_at: datetime
