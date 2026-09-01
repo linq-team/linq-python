@@ -391,6 +391,7 @@ from linq.types import (
     ChatTypingIndicatorStoppedWebhookEvent,
     ChatBackgroundUpdatedWebhookEvent,
     ChatBackgroundUpdateFailedWebhookEvent,
+    ContactCardReceivedWebhookEvent,
     PhoneNumberStatusUpdatedWebhookEvent,
     UnwrapWebhookEvent,
 )
