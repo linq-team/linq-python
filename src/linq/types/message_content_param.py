@@ -212,6 +212,13 @@ class PartAppClipPart(TypedDict, total=False):
     is rejected.
     """
 
+    caption: str
+    """Optional caption for the card's **Open** button row.
+
+    Omit it and the card uses the App Clip's own default (`Tap open`). Set it to
+    override that with your own short call to action.
+    """
+
 
 Part: TypeAlias = Union[TextPartParam, MediaPartParam, LinkPartParam, PartIMessageAppPart, PartAppClipPart]
 
