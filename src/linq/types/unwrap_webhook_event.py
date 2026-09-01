@@ -24,6 +24,7 @@ from .participant_added_webhook_event import ParticipantAddedWebhookEvent
 from .poll_vote_removed_webhook_event import PollVoteRemovedWebhookEvent
 from .participant_removed_webhook_event import ParticipantRemovedWebhookEvent
 from .poll_reaction_added_webhook_event import PollReactionAddedWebhookEvent
+from .contact_card_received_webhook_event import ContactCardReceivedWebhookEvent
 from .chat_background_updated_webhook_event import ChatBackgroundUpdatedWebhookEvent
 from .chat_group_icon_updated_webhook_event import ChatGroupIconUpdatedWebhookEvent
 from .chat_group_name_updated_webhook_event import ChatGroupNameUpdatedWebhookEvent
@@ -66,6 +67,7 @@ UnwrapWebhookEvent: TypeAlias = Annotated[
         ChatTypingIndicatorStoppedWebhookEvent,
         ChatBackgroundUpdatedWebhookEvent,
         ChatBackgroundUpdateFailedWebhookEvent,
+        ContactCardReceivedWebhookEvent,
         PhoneNumberStatusUpdatedWebhookEvent,
     ],
     PropertyInfo(discriminator="event_type"),
