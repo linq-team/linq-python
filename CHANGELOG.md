@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.39.1](https://github.com/linq-team/linq-python/compare/v0.39.0...v0.39.1) (2026-09-01)
+
+
+### Bug Fixes
+
+* update documentation links to include imessage channel path ([ee83a35](https://github.com/linq-team/linq-python/commit/ee83a355f4b017634bb477e794ea3bf5434ff26b))
+
 ## [0.39.0](https://github.com/linq-team/linq-python/compare/v0.38.0...v0.39.0) (2026-09-01)
 
 
