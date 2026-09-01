@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.38.0](https://github.com/linq-team/linq-python/compare/v0.37.1...v0.38.0) (2026-09-01)
+
+
+### Features
+
+* add mentions array to text parts, deprecate singular mention fields ([de49b5c](https://github.com/linq-team/linq-python/commit/de49b5cc2db3cf5be4e6a87c3c938c8cc6237d25))
+
 ## [0.37.1](https://github.com/linq-team/linq-python/compare/v0.37.0...v0.37.1) (2026-08-31)
 
 
