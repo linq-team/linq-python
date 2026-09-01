@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.39.0](https://github.com/linq-team/linq-python/compare/v0.38.0...v0.39.0) (2026-09-01)
+
+
+### Features
+
+* add optional caption field to app clip card button ([2bc4d17](https://github.com/linq-team/linq-python/commit/2bc4d17c395ddd96d500800164247c9e9220885d))
+
 ## [0.38.0](https://github.com/linq-team/linq-python/compare/v0.37.1...v0.38.0) (2026-09-01)
 
 
