@@ -23,7 +23,7 @@ class TextPartParam(TypedDict, total=False):
     """
 
     mention: str
-    """@mention a chat participant.
+    """Mention a chat participant.
 
     Group chats only — sending a mention to a direct chat is rejected with `409` /
     `2023`. The chat's service is not a constraint: a mention is accepted in any
