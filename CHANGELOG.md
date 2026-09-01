@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.41.0](https://github.com/linq-team/linq-python/compare/v0.40.0...v0.41.0) (2026-09-01)
+
+
+### Features
+
+* add metadata and merchant fields to payment handle response ([fcb6c31](https://github.com/linq-team/linq-python/commit/fcb6c3168ffd87f7160dd8ef75125a68f327a075))
+
 ## [0.40.0](https://github.com/linq-team/linq-python/compare/v0.39.1...v0.40.0) (2026-09-01)
 
 
