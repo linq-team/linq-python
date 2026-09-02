@@ -203,7 +203,7 @@ class AttachmentsResource(SyncAPIResource):
     |---|---|---|
     | Attachment bytes | Retained until you `DELETE` | **Auto-removed within roughly 24–48 hours** of upload, independently of any message window. Also removable via `DELETE` |
     | Attachment metadata (id, filename, mime type, size) | Retained until you `DELETE` | Removed alongside the bytes |
-    | Message body & parts | Retained per message-retention policy | Retained per message-retention policy — unless the line also has **ephemeral messages** enabled (see the Messages page), in which case the message and its parts are deleted after that account's configured retention window (60 minutes – 24 hours, default 24 hours) from creation |
+    | Message body & parts | Retained per message-retention policy | Retained per message-retention policy — unless the line also has **ephemeral messages** enabled (see the Messages page), in which case the message's text, formatting, and attachment references are no longer retrievable through the API after that account's configured retention window (60 minutes – 24 hours, default 24 hours) from creation. Metadata is retained; see the Messages page for details |
     | Audit log of deletions | Retained per platform retention policy | Retained per platform retention policy |
 
     **In transit:** TLS 1.2+ everywhere. **At rest:** AES-256 (server-side encryption).
@@ -650,7 +650,7 @@ class AsyncAttachmentsResource(AsyncAPIResource):
     |---|---|---|
     | Attachment bytes | Retained until you `DELETE` | **Auto-removed within roughly 24–48 hours** of upload, independently of any message window. Also removable via `DELETE` |
     | Attachment metadata (id, filename, mime type, size) | Retained until you `DELETE` | Removed alongside the bytes |
-    | Message body & parts | Retained per message-retention policy | Retained per message-retention policy — unless the line also has **ephemeral messages** enabled (see the Messages page), in which case the message and its parts are deleted after that account's configured retention window (60 minutes – 24 hours, default 24 hours) from creation |
+    | Message body & parts | Retained per message-retention policy | Retained per message-retention policy — unless the line also has **ephemeral messages** enabled (see the Messages page), in which case the message's text, formatting, and attachment references are no longer retrievable through the API after that account's configured retention window (60 minutes – 24 hours, default 24 hours) from creation. Metadata is retained; see the Messages page for details |
     | Audit log of deletions | Retained per platform retention policy | Retained per platform retention policy |
 
     **In transit:** TLS 1.2+ everywhere. **At rest:** AES-256 (server-side encryption).
