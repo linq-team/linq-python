@@ -1068,6 +1068,12 @@ class LinqAPIV3(SyncAPIClient):
         return WebhookSubscriptionsResource(self)
 
     @cached_property
+    def webhooks(self) -> WebhooksResource:
+        from .resources.webhooks import WebhooksResource
+
+        return WebhooksResource(self)
+
+    @cached_property
     def capability(self) -> CapabilityResource:
         """
         Check whether a recipient address supports iMessage or RCS before sending a message.
@@ -1075,12 +1081,6 @@ class LinqAPIV3(SyncAPIClient):
         from .resources.capability import CapabilityResource
 
         return CapabilityResource(self)
-
-    @cached_property
-    def webhooks(self) -> WebhooksResource:
-        from .resources.webhooks import WebhooksResource
-
-        return WebhooksResource(self)
 
     @cached_property
     def contact_card(self) -> ContactCardResource:
@@ -2203,6 +2203,12 @@ class AsyncLinqAPIV3(AsyncAPIClient):
         return AsyncWebhookSubscriptionsResource(self)
 
     @cached_property
+    def webhooks(self) -> AsyncWebhooksResource:
+        from .resources.webhooks import AsyncWebhooksResource
+
+        return AsyncWebhooksResource(self)
+
+    @cached_property
     def capability(self) -> AsyncCapabilityResource:
         """
         Check whether a recipient address supports iMessage or RCS before sending a message.
@@ -2210,12 +2216,6 @@ class AsyncLinqAPIV3(AsyncAPIClient):
         from .resources.capability import AsyncCapabilityResource
 
         return AsyncCapabilityResource(self)
-
-    @cached_property
-    def webhooks(self) -> AsyncWebhooksResource:
-        from .resources.webhooks import AsyncWebhooksResource
-
-        return AsyncWebhooksResource(self)
 
     @cached_property
     def contact_card(self) -> AsyncContactCardResource:

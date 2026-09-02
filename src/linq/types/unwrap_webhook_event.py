@@ -16,18 +16,27 @@ from .message_edited_webhook_event import MessageEditedWebhookEvent
 from .message_failed_webhook_event import MessageFailedWebhookEvent
 from .poll_delivered_webhook_event import PollDeliveredWebhookEvent
 from .reaction_added_webhook_event import ReactionAddedWebhookEvent
+from .payment_expired_webhook_event import PaymentExpiredWebhookEvent
 from .poll_vote_added_webhook_event import PollVoteAddedWebhookEvent
 from .message_received_webhook_event import MessageReceivedWebhookEvent
+from .payment_canceled_webhook_event import PaymentCanceledWebhookEvent
+from .payment_declined_webhook_event import PaymentDeclinedWebhookEvent
 from .reaction_removed_webhook_event import ReactionRemovedWebhookEvent
 from .message_delivered_webhook_event import MessageDeliveredWebhookEvent
 from .participant_added_webhook_event import ParticipantAddedWebhookEvent
+from .payment_succeeded_webhook_event import PaymentSucceededWebhookEvent
 from .poll_vote_removed_webhook_event import PollVoteRemovedWebhookEvent
+from .connection_created_webhook_event import ConnectionCreatedWebhookEvent
+from .connection_revoked_webhook_event import ConnectionRevokedWebhookEvent
+from .payment_authorized_webhook_event import PaymentAuthorizedWebhookEvent
 from .participant_removed_webhook_event import ParticipantRemovedWebhookEvent
 from .poll_reaction_added_webhook_event import PollReactionAddedWebhookEvent
 from .contact_card_received_webhook_event import ContactCardReceivedWebhookEvent
 from .chat_background_updated_webhook_event import ChatBackgroundUpdatedWebhookEvent
 from .chat_group_icon_updated_webhook_event import ChatGroupIconUpdatedWebhookEvent
 from .chat_group_name_updated_webhook_event import ChatGroupNameUpdatedWebhookEvent
+from .location_sharing_started_webhook_event import LocationSharingStartedWebhookEvent
+from .location_sharing_stopped_webhook_event import LocationSharingStoppedWebhookEvent
 from .phone_number_status_updated_webhook_event import PhoneNumberStatusUpdatedWebhookEvent
 from .chat_background_update_failed_webhook_event import ChatBackgroundUpdateFailedWebhookEvent
 from .chat_group_icon_update_failed_webhook_event import ChatGroupIconUpdateFailedWebhookEvent
@@ -69,6 +78,15 @@ UnwrapWebhookEvent: TypeAlias = Annotated[
         ChatBackgroundUpdateFailedWebhookEvent,
         ContactCardReceivedWebhookEvent,
         PhoneNumberStatusUpdatedWebhookEvent,
+        ConnectionCreatedWebhookEvent,
+        ConnectionRevokedWebhookEvent,
+        LocationSharingStartedWebhookEvent,
+        LocationSharingStoppedWebhookEvent,
+        PaymentAuthorizedWebhookEvent,
+        PaymentCanceledWebhookEvent,
+        PaymentDeclinedWebhookEvent,
+        PaymentExpiredWebhookEvent,
+        PaymentSucceededWebhookEvent,
     ],
     PropertyInfo(discriminator="event_type"),
 ]

@@ -338,19 +338,6 @@ Methods:
 - <code title="get /v3/webhook-subscriptions">client.webhook_subscriptions.<a href="./src/linq/resources/webhook_subscriptions.py">list</a>() -> <a href="./src/linq/types/webhook_subscription_list_response.py">WebhookSubscriptionListResponse</a></code>
 - <code title="delete /v3/webhook-subscriptions/{subscriptionId}">client.webhook_subscriptions.<a href="./src/linq/resources/webhook_subscriptions.py">delete</a>(subscription_id) -> None</code>
 
-# Capability
-
-Types:
-
-```python
-from linq.types import HandleCheck, HandleCheckResponse
-```
-
-Methods:
-
-- <code title="post /v3/capability/check_imessage">client.capability.<a href="./src/linq/resources/capability.py">check_i_message</a>(\*\*<a href="src/linq/types/capability_check_i_message_params.py">params</a>) -> <a href="./src/linq/types/handle_check_response.py">HandleCheckResponse</a></code>
-- <code title="post /v3/capability/check_rcs">client.capability.<a href="./src/linq/resources/capability.py">check_RCS</a>(\*\*<a href="src/linq/types/capability_check_RCS_params.py">params</a>) -> <a href="./src/linq/types/handle_check_response.py">HandleCheckResponse</a></code>
-
 # Webhooks
 
 Types:
@@ -393,9 +380,31 @@ from linq.types import (
     ChatBackgroundUpdateFailedWebhookEvent,
     ContactCardReceivedWebhookEvent,
     PhoneNumberStatusUpdatedWebhookEvent,
+    ConnectionCreatedWebhookEvent,
+    ConnectionRevokedWebhookEvent,
+    LocationSharingStartedWebhookEvent,
+    LocationSharingStoppedWebhookEvent,
+    PaymentAuthorizedWebhookEvent,
+    PaymentCanceledWebhookEvent,
+    PaymentDeclinedWebhookEvent,
+    PaymentExpiredWebhookEvent,
+    PaymentSucceededWebhookEvent,
     UnwrapWebhookEvent,
 )
 ```
+
+# Capability
+
+Types:
+
+```python
+from linq.types import HandleCheck, HandleCheckResponse
+```
+
+Methods:
+
+- <code title="post /v3/capability/check_imessage">client.capability.<a href="./src/linq/resources/capability.py">check_i_message</a>(\*\*<a href="src/linq/types/capability_check_i_message_params.py">params</a>) -> <a href="./src/linq/types/handle_check_response.py">HandleCheckResponse</a></code>
+- <code title="post /v3/capability/check_rcs">client.capability.<a href="./src/linq/resources/capability.py">check_RCS</a>(\*\*<a href="src/linq/types/capability_check_RCS_params.py">params</a>) -> <a href="./src/linq/types/handle_check_response.py">HandleCheckResponse</a></code>
 
 # ContactCard
 
