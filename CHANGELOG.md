@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.41.2](https://github.com/linq-team/linq-python/compare/v0.41.1...v0.41.2) (2026-09-02)
+
+
+### Bug Fixes
+
+* clarify ephemeral message retention behavior and metadata handling ([e3c6d03](https://github.com/linq-team/linq-python/commit/e3c6d038c92e3e00ac0b5b20dfae917164e9f89b))
+
 ## [0.41.1](https://github.com/linq-team/linq-python/compare/v0.41.0...v0.41.1) (2026-09-01)
 
 
