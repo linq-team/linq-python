@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.42.0](https://github.com/linq-team/linq-python/compare/v0.41.2...v0.42.0) (2026-09-02)
+
+
+### Features
+
+* add webhook events for connections, location sharing, and payments ([1ebce1a](https://github.com/linq-team/linq-python/commit/1ebce1a87a0bf9f93559fcfbc250694753bfa01b))
+
 ## [0.41.2](https://github.com/linq-team/linq-python/compare/v0.41.1...v0.41.2) (2026-09-02)
 
 
