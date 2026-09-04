@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.43.0](https://github.com/linq-team/linq-python/compare/v0.42.0...v0.43.0) (2026-09-04)
+
+
+### Features
+
+* expand app_clip part to support any registered app clip ([54f63b2](https://github.com/linq-team/linq-python/commit/54f63b2d264736bf91fe501069042cd289abbd15))
+
 ## [0.42.0](https://github.com/linq-team/linq-python/compare/v0.41.2...v0.42.0) (2026-09-02)
 
 
