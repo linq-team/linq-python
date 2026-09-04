@@ -530,7 +530,7 @@ wheels = [
 
 [[package]]
 name = "linq-python"
-version = "0.41.2"
+version = "0.42.0"
 source = { editable = "." }
 dependencies = [
     { name = "anyio" },
