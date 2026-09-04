@@ -137,25 +137,25 @@ class PartIMessageAppPartResponse(BaseModel):
 
 
 class PartAppClipPartResponse(BaseModel):
-    """An Apple Pay App Clip payment card part"""
+    """An App Clip card part"""
 
     reactions: Optional[List[Reaction]] = None
     """Reactions on this message part"""
 
     type: Literal["app_clip"]
-    """Indicates this is an App Clip payment card part"""
+    """Indicates this is an App Clip card part"""
 
     value: str
-    """The checkout link the card opens"""
+    """The App Clip link the card opens"""
 
     description: Optional[str] = None
-    """The card's summary line, composed by Linq from the checkout session"""
+    """The card's summary line, composed by Linq from the App Clip page"""
 
     image_url: Optional[str] = None
     """The card's preview image"""
 
     title: Optional[str] = None
-    """The card's headline, composed by Linq from the checkout session"""
+    """The card's headline, composed by Linq from the App Clip page"""
 
 
 Part: TypeAlias = Union[
