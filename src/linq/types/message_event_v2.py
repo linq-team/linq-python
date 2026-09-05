@@ -272,3 +272,11 @@ class MessageEventV2(BaseModel):
 
     sent_at: Optional[datetime] = None
     """When the message was sent. Null if not yet sent."""
+
+    zero_retention: Optional[bool] = None
+    """True when this message was sent on a zero-day-retention line.
+
+    `parts` is always empty in that case — Linq never persists this message's
+    content, so there is nothing to include here, not even a count or type of what
+    was sent.
+    """
