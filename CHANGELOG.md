@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.44.0](https://github.com/linq-team/linq-python/compare/v0.43.0...v0.44.0) (2026-09-05)
+
+
+### Features
+
+* add sticker reactions and placement adjustment ([de31a11](https://github.com/linq-team/linq-python/commit/de31a112a43dd89c42116fef0bd01cf8a3811976))
+
 ## [0.43.0](https://github.com/linq-team/linq-python/compare/v0.42.0...v0.43.0) (2026-09-04)
 
 
