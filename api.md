@@ -119,6 +119,7 @@ from linq.types import (
     MessageCreateResponse,
     MessageAddReactionResponse,
     MessageUpdateAppCardResponse,
+    MessageUpdateStickerPlacementResponse,
 )
 ```
 
@@ -131,6 +132,7 @@ Methods:
 - <code title="post /v3/messages/{messageId}/reactions">client.messages.<a href="./src/linq/resources/messages/messages.py">add_reaction</a>(message_id, \*\*<a href="src/linq/types/message_add_reaction_params.py">params</a>) -> <a href="./src/linq/types/message_add_reaction_response.py">MessageAddReactionResponse</a></code>
 - <code title="get /v3/messages/{messageId}/thread">client.messages.<a href="./src/linq/resources/messages/messages.py">list_messages_thread</a>(message_id, \*\*<a href="src/linq/types/message_list_messages_thread_params.py">params</a>) -> <a href="./src/linq/types/message.py">SyncListMessagesPagination[Message]</a></code>
 - <code title="post /v3/messages/{messageId}/update">client.messages.<a href="./src/linq/resources/messages/messages.py">update_app_card</a>(message_id, \*\*<a href="src/linq/types/message_update_app_card_params.py">params</a>) -> <a href="./src/linq/types/message_update_app_card_response.py">MessageUpdateAppCardResponse</a></code>
+- <code title="patch /v3/messages/{messageId}/reactions/{reactionId}">client.messages.<a href="./src/linq/resources/messages/messages.py">update_sticker_placement</a>(reaction_id, \*, message_id, \*\*<a href="src/linq/types/message_update_sticker_placement_params.py">params</a>) -> <a href="./src/linq/types/message_update_sticker_placement_response.py">MessageUpdateStickerPlacementResponse</a></code>
 
 ## Poll
 

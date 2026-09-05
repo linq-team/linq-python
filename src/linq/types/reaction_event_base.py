@@ -75,6 +75,14 @@ class ReactionEventBase(BaseModel):
     reacted_at: Optional[datetime] = None
     """When the reaction was added or removed"""
 
+    reaction_id: Optional[str] = None
+    """Identifier for this reaction.
+
+    Pass it to `PATCH /v3/messages/{messageId}/reactions/{reactionId}` to move a
+    sticker. Stickers stack, so this is what distinguishes one sticker from another
+    on the same message.
+    """
+
     service: Optional[ServiceType] = None
     """Messaging service type"""
 

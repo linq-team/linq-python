@@ -46,6 +46,17 @@ class Reaction(BaseModel):
     attachment details in the sticker field.
     """
 
+    id: Optional[str] = None
+    """Identifier for this reaction.
+
+    Pass it to `PATCH /v3/messages/{messageId}/reactions/{reactionId}` to move a
+    sticker.
+
+    Stickers placed before this API shipped can be read but not moved: the
+    device-side reference needed to reposition them was never recorded, so `PATCH`
+    returns 404 for those.
+    """
+
     custom_emoji: Optional[str] = None
     """Custom emoji if type is "custom", null otherwise"""
 
