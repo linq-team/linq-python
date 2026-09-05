@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.45.0](https://github.com/linq-team/linq-python/compare/v0.44.0...v0.45.0) (2026-09-05)
+
+
+### Features
+
+* add zero_retention field to message responses ([1c47484](https://github.com/linq-team/linq-python/commit/1c474846e44ec3c830bac2acfe97ba8b0fec5650))
+
 ## [0.44.0](https://github.com/linq-team/linq-python/compare/v0.43.0...v0.44.0) (2026-09-05)
 
 
