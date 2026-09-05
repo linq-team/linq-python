@@ -20,6 +20,7 @@ from ...types import (
     message_add_reaction_params,
     message_update_app_card_params,
     message_list_messages_thread_params,
+    message_update_sticker_placement_params,
 )
 from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, SequenceNotStr, omit, not_given
 from ..._utils import path_template, maybe_transform, strip_not_given, async_maybe_transform
@@ -39,6 +40,7 @@ from ...types.message_content_param import MessageContentParam
 from ...types.message_create_response import MessageCreateResponse
 from ...types.message_add_reaction_response import MessageAddReactionResponse
 from ...types.message_update_app_card_response import MessageUpdateAppCardResponse
+from ...types.message_update_sticker_placement_response import MessageUpdateStickerPlacementResponse
 
 __all__ = ["MessagesResource", "AsyncMessagesResource"]
 
@@ -478,8 +480,11 @@ class MessagesResource(SyncAPIResource):
         *,
         operation: Literal["add", "remove"],
         type: ReactionType,
+        attachment_id: str | Omit = omit,
         custom_emoji: str | Omit = omit,
         part_index: int | Omit = omit,
+        placement: message_add_reaction_params.Placement | Omit = omit,
+        url: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -501,6 +506,12 @@ class MessagesResource(SyncAPIResource):
         - emphasize ‼️
         - question ❓
         - custom - any emoji (use `custom_emoji` field to specify)
+        - sticker - an image peeled onto the message (use `url` or `attachment_id`)
+
+        **Stickers** are iMessage-only and cannot be removed — iMessage has no unpeel
+        operation, so `operation: "remove"` with `type: "sticker"` is rejected.
+        Position, size and rotation are optional via `placement`, and can be changed
+        afterwards with `PATCH /v3/messages/{messageId}/reactions/{reactionId}`.
 
         Args:
           operation: Whether to add or remove the reaction
@@ -510,10 +521,32 @@ class MessagesResource(SyncAPIResource):
               emoji in the custom_emoji field. Sticker reactions have type "sticker" with
               sticker attachment details in the sticker field.
 
+          attachment_id: Reference to a sticker image pre-uploaded via `POST /v3/attachments`. Only valid
+              when type is "sticker".
+
+              Either `url` or `attachment_id` must be provided when type is "sticker", but not
+              both.
+
           custom_emoji: Custom emoji string. Required when type is "custom".
 
           part_index: Optional index of the message part to react to. If not provided, reacts to the
               entire message (part 0).
+
+          placement: Optional position, size and rotation of a sticker on the target bubble. Only
+              valid when type is "sticker".
+
+              Every field is independent and optional — omit the object entirely, or any field
+              within it, to keep the default (centred, default size, unrotated).
+
+          url: Linq attachment URL of the sticker image — the `download_url` returned by
+              `POST /v3/attachments`. Only valid when type is "sticker".
+
+              Unlike a media part, this does **not** accept an arbitrary host: reactions have
+              no download step, so the image must already be stored. To send a sticker from
+              elsewhere, upload it with `POST /v3/attachments` first and pass `attachment_id`.
+
+              Either `url` or `attachment_id` must be provided when type is "sticker", but not
+              both.
 
           extra_headers: Send extra headers
 
@@ -531,8 +564,11 @@ class MessagesResource(SyncAPIResource):
                 {
                     "operation": operation,
                     "type": type,
+                    "attachment_id": attachment_id,
                     "custom_emoji": custom_emoji,
                     "part_index": part_index,
+                    "placement": placement,
+                    "url": url,
                 },
                 message_add_reaction_params.MessageAddReactionParams,
             ),
@@ -708,6 +744,67 @@ class MessagesResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=MessageUpdateAppCardResponse,
+        )
+
+    def update_sticker_placement(
+        self,
+        reaction_id: str,
+        *,
+        message_id: str,
+        placement: message_update_sticker_placement_params.Placement,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> MessageUpdateStickerPlacementResponse:
+        """
+        Move, resize or rotate a sticker that has already been peeled onto a message.
+        The change is sent to every device in the conversation, exactly as dragging the
+        sticker by hand would.
+
+        Only stickers can be repositioned — a tapback has no placement, so a non-sticker
+        `reactionId` is rejected. Any field omitted from `placement` keeps its current
+        value.
+
+        `reactionId` is the `id` from the reaction on the message, or from the
+        `reaction.added` webhook. Stickers stack, so this id is what distinguishes one
+        sticker from another on the same message.
+
+        Stickers peeled before this endpoint existed cannot be moved: addressing one
+        requires an identifier that was not recorded at the time, and it returns 404.
+
+        Args:
+          placement: Optional position, size and rotation of a sticker on the target bubble. Only
+              valid when type is "sticker".
+
+              Every field is independent and optional — omit the object entirely, or any field
+              within it, to keep the default (centred, default size, unrotated).
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not message_id:
+            raise ValueError(f"Expected a non-empty value for `message_id` but received {message_id!r}")
+        if not reaction_id:
+            raise ValueError(f"Expected a non-empty value for `reaction_id` but received {reaction_id!r}")
+        return self._patch(
+            path_template(
+                "/v3/messages/{message_id}/reactions/{reaction_id}", message_id=message_id, reaction_id=reaction_id
+            ),
+            body=maybe_transform(
+                {"placement": placement}, message_update_sticker_placement_params.MessageUpdateStickerPlacementParams
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=MessageUpdateStickerPlacementResponse,
         )
 
 
@@ -1146,8 +1243,11 @@ class AsyncMessagesResource(AsyncAPIResource):
         *,
         operation: Literal["add", "remove"],
         type: ReactionType,
+        attachment_id: str | Omit = omit,
         custom_emoji: str | Omit = omit,
         part_index: int | Omit = omit,
+        placement: message_add_reaction_params.Placement | Omit = omit,
+        url: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -1169,6 +1269,12 @@ class AsyncMessagesResource(AsyncAPIResource):
         - emphasize ‼️
         - question ❓
         - custom - any emoji (use `custom_emoji` field to specify)
+        - sticker - an image peeled onto the message (use `url` or `attachment_id`)
+
+        **Stickers** are iMessage-only and cannot be removed — iMessage has no unpeel
+        operation, so `operation: "remove"` with `type: "sticker"` is rejected.
+        Position, size and rotation are optional via `placement`, and can be changed
+        afterwards with `PATCH /v3/messages/{messageId}/reactions/{reactionId}`.
 
         Args:
           operation: Whether to add or remove the reaction
@@ -1178,10 +1284,32 @@ class AsyncMessagesResource(AsyncAPIResource):
               emoji in the custom_emoji field. Sticker reactions have type "sticker" with
               sticker attachment details in the sticker field.
 
+          attachment_id: Reference to a sticker image pre-uploaded via `POST /v3/attachments`. Only valid
+              when type is "sticker".
+
+              Either `url` or `attachment_id` must be provided when type is "sticker", but not
+              both.
+
           custom_emoji: Custom emoji string. Required when type is "custom".
 
           part_index: Optional index of the message part to react to. If not provided, reacts to the
               entire message (part 0).
+
+          placement: Optional position, size and rotation of a sticker on the target bubble. Only
+              valid when type is "sticker".
+
+              Every field is independent and optional — omit the object entirely, or any field
+              within it, to keep the default (centred, default size, unrotated).
+
+          url: Linq attachment URL of the sticker image — the `download_url` returned by
+              `POST /v3/attachments`. Only valid when type is "sticker".
+
+              Unlike a media part, this does **not** accept an arbitrary host: reactions have
+              no download step, so the image must already be stored. To send a sticker from
+              elsewhere, upload it with `POST /v3/attachments` first and pass `attachment_id`.
+
+              Either `url` or `attachment_id` must be provided when type is "sticker", but not
+              both.
 
           extra_headers: Send extra headers
 
@@ -1199,8 +1327,11 @@ class AsyncMessagesResource(AsyncAPIResource):
                 {
                     "operation": operation,
                     "type": type,
+                    "attachment_id": attachment_id,
                     "custom_emoji": custom_emoji,
                     "part_index": part_index,
+                    "placement": placement,
+                    "url": url,
                 },
                 message_add_reaction_params.MessageAddReactionParams,
             ),
@@ -1378,6 +1509,67 @@ class AsyncMessagesResource(AsyncAPIResource):
             cast_to=MessageUpdateAppCardResponse,
         )
 
+    async def update_sticker_placement(
+        self,
+        reaction_id: str,
+        *,
+        message_id: str,
+        placement: message_update_sticker_placement_params.Placement,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> MessageUpdateStickerPlacementResponse:
+        """
+        Move, resize or rotate a sticker that has already been peeled onto a message.
+        The change is sent to every device in the conversation, exactly as dragging the
+        sticker by hand would.
+
+        Only stickers can be repositioned — a tapback has no placement, so a non-sticker
+        `reactionId` is rejected. Any field omitted from `placement` keeps its current
+        value.
+
+        `reactionId` is the `id` from the reaction on the message, or from the
+        `reaction.added` webhook. Stickers stack, so this id is what distinguishes one
+        sticker from another on the same message.
+
+        Stickers peeled before this endpoint existed cannot be moved: addressing one
+        requires an identifier that was not recorded at the time, and it returns 404.
+
+        Args:
+          placement: Optional position, size and rotation of a sticker on the target bubble. Only
+              valid when type is "sticker".
+
+              Every field is independent and optional — omit the object entirely, or any field
+              within it, to keep the default (centred, default size, unrotated).
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not message_id:
+            raise ValueError(f"Expected a non-empty value for `message_id` but received {message_id!r}")
+        if not reaction_id:
+            raise ValueError(f"Expected a non-empty value for `reaction_id` but received {reaction_id!r}")
+        return await self._patch(
+            path_template(
+                "/v3/messages/{message_id}/reactions/{reaction_id}", message_id=message_id, reaction_id=reaction_id
+            ),
+            body=await async_maybe_transform(
+                {"placement": placement}, message_update_sticker_placement_params.MessageUpdateStickerPlacementParams
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=MessageUpdateStickerPlacementResponse,
+        )
+
 
 class MessagesResourceWithRawResponse:
     def __init__(self, messages: MessagesResource) -> None:
@@ -1403,6 +1595,9 @@ class MessagesResourceWithRawResponse:
         )
         self.update_app_card = to_raw_response_wrapper(
             messages.update_app_card,
+        )
+        self.update_sticker_placement = to_raw_response_wrapper(
+            messages.update_sticker_placement,
         )
 
     @cached_property
@@ -1507,6 +1702,9 @@ class AsyncMessagesResourceWithRawResponse:
         self.update_app_card = async_to_raw_response_wrapper(
             messages.update_app_card,
         )
+        self.update_sticker_placement = async_to_raw_response_wrapper(
+            messages.update_sticker_placement,
+        )
 
     @cached_property
     def poll(self) -> AsyncPollResourceWithRawResponse:
@@ -1610,6 +1808,9 @@ class MessagesResourceWithStreamingResponse:
         self.update_app_card = to_streamed_response_wrapper(
             messages.update_app_card,
         )
+        self.update_sticker_placement = to_streamed_response_wrapper(
+            messages.update_sticker_placement,
+        )
 
     @cached_property
     def poll(self) -> PollResourceWithStreamingResponse:
@@ -1712,6 +1913,9 @@ class AsyncMessagesResourceWithStreamingResponse:
         )
         self.update_app_card = async_to_streamed_response_wrapper(
             messages.update_app_card,
+        )
+        self.update_sticker_placement = async_to_streamed_response_wrapper(
+            messages.update_sticker_placement,
         )
 
     @cached_property

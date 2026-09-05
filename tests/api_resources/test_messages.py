@@ -13,6 +13,7 @@ from linq.types import (
     MessageCreateResponse,
     MessageAddReactionResponse,
     MessageUpdateAppCardResponse,
+    MessageUpdateStickerPlacementResponse,
 )
 from tests.utils import assert_matches_type
 from linq.pagination import SyncListMessagesPagination, AsyncListMessagesPagination
@@ -266,8 +267,16 @@ class TestMessages:
             message_id="69a37c7d-af4f-4b5e-af42-e28e98ce873a",
             operation="add",
             type="love",
+            attachment_id="550e8400-e29b-41d4-a716-446655440000",
             custom_emoji="custom_emoji",
             part_index=1,
+            placement={
+                "rotation": 15,
+                "scale": 1.25,
+                "x": -0.25,
+                "y": 0.4,
+            },
+            url="https://cdn.linqapp.com/attachments/example/sticker.png",
         )
         assert_matches_type(MessageAddReactionResponse, message, path=["response"])
 
@@ -433,6 +442,78 @@ class TestMessages:
             client.messages.with_raw_response.update_app_card(
                 message_id="",
                 layout={},
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_update_sticker_placement(self, client: LinqAPIV3) -> None:
+        message = client.messages.update_sticker_placement(
+            reaction_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            message_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            placement={},
+        )
+        assert_matches_type(MessageUpdateStickerPlacementResponse, message, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_update_sticker_placement_with_all_params(self, client: LinqAPIV3) -> None:
+        message = client.messages.update_sticker_placement(
+            reaction_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            message_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            placement={
+                "rotation": 15,
+                "scale": 0.75,
+                "x": 0.6,
+                "y": 0.5,
+            },
+        )
+        assert_matches_type(MessageUpdateStickerPlacementResponse, message, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_update_sticker_placement(self, client: LinqAPIV3) -> None:
+        response = client.messages.with_raw_response.update_sticker_placement(
+            reaction_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            message_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            placement={},
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        message = response.parse()
+        assert_matches_type(MessageUpdateStickerPlacementResponse, message, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_update_sticker_placement(self, client: LinqAPIV3) -> None:
+        with client.messages.with_streaming_response.update_sticker_placement(
+            reaction_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            message_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            placement={},
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            message = response.parse()
+            assert_matches_type(MessageUpdateStickerPlacementResponse, message, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_update_sticker_placement(self, client: LinqAPIV3) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `message_id` but received ''"):
+            client.messages.with_raw_response.update_sticker_placement(
+                reaction_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+                message_id="",
+                placement={},
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `reaction_id` but received ''"):
+            client.messages.with_raw_response.update_sticker_placement(
+                reaction_id="",
+                message_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+                placement={},
             )
 
 
@@ -684,8 +765,16 @@ class TestAsyncMessages:
             message_id="69a37c7d-af4f-4b5e-af42-e28e98ce873a",
             operation="add",
             type="love",
+            attachment_id="550e8400-e29b-41d4-a716-446655440000",
             custom_emoji="custom_emoji",
             part_index=1,
+            placement={
+                "rotation": 15,
+                "scale": 1.25,
+                "x": -0.25,
+                "y": 0.4,
+            },
+            url="https://cdn.linqapp.com/attachments/example/sticker.png",
         )
         assert_matches_type(MessageAddReactionResponse, message, path=["response"])
 
@@ -851,4 +940,76 @@ class TestAsyncMessages:
             await async_client.messages.with_raw_response.update_app_card(
                 message_id="",
                 layout={},
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_update_sticker_placement(self, async_client: AsyncLinqAPIV3) -> None:
+        message = await async_client.messages.update_sticker_placement(
+            reaction_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            message_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            placement={},
+        )
+        assert_matches_type(MessageUpdateStickerPlacementResponse, message, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_update_sticker_placement_with_all_params(self, async_client: AsyncLinqAPIV3) -> None:
+        message = await async_client.messages.update_sticker_placement(
+            reaction_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            message_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            placement={
+                "rotation": 15,
+                "scale": 0.75,
+                "x": 0.6,
+                "y": 0.5,
+            },
+        )
+        assert_matches_type(MessageUpdateStickerPlacementResponse, message, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_update_sticker_placement(self, async_client: AsyncLinqAPIV3) -> None:
+        response = await async_client.messages.with_raw_response.update_sticker_placement(
+            reaction_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            message_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            placement={},
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        message = await response.parse()
+        assert_matches_type(MessageUpdateStickerPlacementResponse, message, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_update_sticker_placement(self, async_client: AsyncLinqAPIV3) -> None:
+        async with async_client.messages.with_streaming_response.update_sticker_placement(
+            reaction_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            message_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            placement={},
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            message = await response.parse()
+            assert_matches_type(MessageUpdateStickerPlacementResponse, message, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_update_sticker_placement(self, async_client: AsyncLinqAPIV3) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `message_id` but received ''"):
+            await async_client.messages.with_raw_response.update_sticker_placement(
+                reaction_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+                message_id="",
+                placement={},
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `reaction_id` but received ''"):
+            await async_client.messages.with_raw_response.update_sticker_placement(
+                reaction_id="",
+                message_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+                placement={},
             )

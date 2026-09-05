@@ -136,6 +136,12 @@ from .location_sharing_started_webhook_event import (
 from .location_sharing_stopped_webhook_event import (
     LocationSharingStoppedWebhookEvent as LocationSharingStoppedWebhookEvent,
 )
+from .message_update_sticker_placement_params import (
+    MessageUpdateStickerPlacementParams as MessageUpdateStickerPlacementParams,
+)
+from .message_update_sticker_placement_response import (
+    MessageUpdateStickerPlacementResponse as MessageUpdateStickerPlacementResponse,
+)
 from .phone_number_status_updated_webhook_event import (
     PhoneNumberStatusUpdatedWebhookEvent as PhoneNumberStatusUpdatedWebhookEvent,
 )
