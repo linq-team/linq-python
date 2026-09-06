@@ -70,6 +70,15 @@ class Data(BaseModel):
 
     service: str
 
+    zero_retention: Optional[bool] = None
+    """True when zero-day-retention applies to this update.
+
+    Behavior differs by `direction`: on an inbound update, `added_options[].text` is
+    the real text a participant just added; on an outbound update, it is empty — you
+    already saw the real text once, synchronously, in the API response when you made
+    the add, and this webhook is built from a database read, which never stored it.
+    """
+
 
 class PollUpdatedWebhookEvent(BaseModel):
     """Complete webhook payload for poll.updated events"""

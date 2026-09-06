@@ -38,6 +38,15 @@ class Data(BaseModel):
 
     service: str
 
+    zero_retention: Optional[bool] = None
+    """True when this poll is on a zero-day-retention line.
+
+    Votes are unaffected by zero-day-retention — a vote choice is always persisted
+    and delivered regardless — this flag is informational only, telling you why this
+    poll's other webhooks (poll.sent, poll.updated, etc.) may carry empty option
+    text.
+    """
+
 
 class PollVoteRemovedWebhookEvent(BaseModel):
     """Complete webhook payload for poll.vote.removed events"""

@@ -98,6 +98,13 @@ class Data(BaseModel):
     sender_handle: Optional[ChatHandle] = None
     """Null on failure (the send never landed)."""
 
+    zero_retention: Optional[bool] = None
+    """True when this poll was sent on a zero-day-retention line.
+
+    `poll` is built from the same database read as poll.sent/delivered/read, so
+    every option's `text` is empty.
+    """
+
 
 class PollFailedWebhookEvent(BaseModel):
     """Complete webhook payload for poll.failed events"""

@@ -83,6 +83,14 @@ class Data(BaseModel):
 
     sent_at: Optional[datetime] = None
 
+    zero_retention: Optional[bool] = None
+    """True when this poll was sent on a zero-day-retention line.
+
+    Every option's `text` is empty in that case — Linq never persists poll option
+    text, so there is nothing to include here. The real text was only ever shown
+    once, synchronously, in the API response when the poll was created or added to.
+    """
+
 
 class PollReadWebhookEvent(BaseModel):
     """Complete webhook payload for poll.read events"""
