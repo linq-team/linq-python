@@ -643,6 +643,7 @@ class MessagesResource(SyncAPIResource):
         message_id: str,
         *,
         layout: message_update_app_card_params.Layout,
+        app: message_update_app_card_params.App | Omit = omit,
         experience: message_update_app_card_params.Experience | Omit = omit,
         fallback_text: str | Omit = omit,
         interactive: bool | Omit = omit,
@@ -694,6 +695,8 @@ class MessagesResource(SyncAPIResource):
               an image there is nothing to overlay — so setting either without `image_url` is
               rejected.
 
+          app: Identifies the iMessage app (Messages app extension) that backs the card.
+
           experience: Invokes an action on an experience — a third party that renders inside Linq's
               iMessage app. Linq resolves the recipient's connection, mints any session the
               action needs, composes the card and sends it; none of that is visible to you.
@@ -733,6 +736,7 @@ class MessagesResource(SyncAPIResource):
             body=maybe_transform(
                 {
                     "layout": layout,
+                    "app": app,
                     "experience": experience,
                     "fallback_text": fallback_text,
                     "interactive": interactive,
@@ -1406,6 +1410,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         message_id: str,
         *,
         layout: message_update_app_card_params.Layout,
+        app: message_update_app_card_params.App | Omit = omit,
         experience: message_update_app_card_params.Experience | Omit = omit,
         fallback_text: str | Omit = omit,
         interactive: bool | Omit = omit,
@@ -1457,6 +1462,8 @@ class AsyncMessagesResource(AsyncAPIResource):
               an image there is nothing to overlay — so setting either without `image_url` is
               rejected.
 
+          app: Identifies the iMessage app (Messages app extension) that backs the card.
+
           experience: Invokes an action on an experience — a third party that renders inside Linq's
               iMessage app. Linq resolves the recipient's connection, mints any session the
               action needs, composes the card and sends it; none of that is visible to you.
@@ -1496,6 +1503,7 @@ class AsyncMessagesResource(AsyncAPIResource):
             body=await async_maybe_transform(
                 {
                     "layout": layout,
+                    "app": app,
                     "experience": experience,
                     "fallback_text": fallback_text,
                     "interactive": interactive,
