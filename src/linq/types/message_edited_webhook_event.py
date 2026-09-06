@@ -1,5 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+from typing import Optional
 from datetime import datetime
 from typing_extensions import Literal
 
@@ -117,6 +118,15 @@ class Data(BaseModel):
 
     sender_handle: ChatHandle
     """The handle that sent (and edited) this message"""
+
+    zero_retention: Optional[bool] = None
+    """True when the edited message is on a zero-day-retention line.
+
+    Behavior differs by `direction`: on an outbound edit, `part.text` is empty — you
+    already saw the real edited text once, synchronously, in the edit API response,
+    and Linq never persists it. On an inbound edit, `part.text` is still the real
+    text as received; zero-day-retention only means Linq never persists it.
+    """
 
 
 class MessageEditedWebhookEvent(BaseModel):
