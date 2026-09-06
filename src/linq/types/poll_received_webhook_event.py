@@ -78,6 +78,15 @@ class Data(BaseModel):
     sender_handle: Optional[ChatHandle] = None
     """The line that created the poll (is_me=false for an inbound poll)."""
 
+    zero_retention: Optional[bool] = None
+    """True when your line has zero-day-retention enabled.
+
+    Unlike other poll webhooks, option `text` here is still the real, unstripped
+    text as received — Linq never persists it in the database, but this webhook
+    fires from the live inbound event, not a database read, so this is the one place
+    it's shown.
+    """
+
 
 class PollReceivedWebhookEvent(BaseModel):
     """Complete webhook payload for poll.received events"""
