@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.48.0](https://github.com/linq-team/linq-python/compare/v0.47.0...v0.48.0) (2026-09-06)
+
+
+### Features
+
+* add app identity override for card updates on zero-day-retention lines ([52bb65c](https://github.com/linq-team/linq-python/commit/52bb65cd5a7be756d266e7fd686ae75b0d96f1ab))
+
 ## [0.47.0](https://github.com/linq-team/linq-python/compare/v0.46.0...v0.47.0) (2026-09-06)
 
 
