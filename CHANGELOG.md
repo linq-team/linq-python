@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.47.0](https://github.com/linq-team/linq-python/compare/v0.46.0...v0.47.0) (2026-09-06)
+
+
+### Features
+
+* add zero_retention field to message edited webhook ([0074166](https://github.com/linq-team/linq-python/commit/00741662a81630e887df53567080e7398f69e80e))
+
 ## [0.46.0](https://github.com/linq-team/linq-python/compare/v0.45.0...v0.46.0) (2026-09-06)
 
 
