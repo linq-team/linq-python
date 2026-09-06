@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.46.0](https://github.com/linq-team/linq-python/compare/v0.45.0...v0.46.0) (2026-09-06)
+
+
+### Features
+
+* add zero_retention field to poll webhooks and update add options docs ([c40732c](https://github.com/linq-team/linq-python/commit/c40732c386dbbc6ea7631d5c967aca2f30d735e9))
+
 ## [0.45.0](https://github.com/linq-team/linq-python/compare/v0.44.0...v0.45.0) (2026-09-05)
 
 
