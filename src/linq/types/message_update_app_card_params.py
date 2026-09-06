@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Dict
 from typing_extensions import Required, TypedDict
 
-__all__ = ["MessageUpdateAppCardParams", "Layout", "Experience"]
+__all__ = ["MessageUpdateAppCardParams", "Layout", "App", "Experience"]
 
 
 class MessageUpdateAppCardParams(TypedDict, total=False):
@@ -27,6 +27,9 @@ class MessageUpdateAppCardParams(TypedDict, total=False):
     an image there is nothing to overlay — so setting either without `image_url` is
     rejected.
     """
+
+    app: App
+    """Identifies the iMessage app (Messages app extension) that backs the card."""
 
     experience: Experience
     """
@@ -114,6 +117,26 @@ class Layout(TypedDict, total=False):
 
     trailing_subcaption: str
     """Label shown below `trailing_caption`, on the right."""
+
+
+class App(TypedDict, total=False):
+    """Identifies the iMessage app (Messages app extension) that backs the card."""
+
+    bundle_id: Required[str]
+    """Bundle identifier of the Messages app extension. Must not contain `:`."""
+
+    name: Required[str]
+    """Display name of the app, shown by Messages' fallback UI."""
+
+    team_id: Required[str]
+    """The app's 10-character uppercase alphanumeric team identifier."""
+
+    app_store_id: int
+    """The owning app's App Store id (optional).
+
+    When set, recipients without the iMessage app installed see a "Get the app"
+    affordance.
+    """
 
 
 class Experience(TypedDict, total=False):
