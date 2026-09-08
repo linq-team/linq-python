@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.48.1](https://github.com/linq-team/linq-python/compare/v0.48.0...v0.48.1) (2026-09-08)
+
+
+### Bug Fixes
+
+* clarify chat service field reflects message transport history ([44a34a9](https://github.com/linq-team/linq-python/commit/44a34a91921ddff10c0f0dccd3f36ca785215821))
+
 ## [0.48.0](https://github.com/linq-team/linq-python/compare/v0.47.0...v0.48.0) (2026-09-06)
 
 
