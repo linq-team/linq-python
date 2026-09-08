@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.49.0](https://github.com/linq-team/linq-python/compare/v0.48.1...v0.49.0) (2026-09-08)
+
+
+### Features
+
+* add contact card delete operation support ([55716ba](https://github.com/linq-team/linq-python/commit/55716ba651a353063a44568ba5136bc51536d40b))
+
 ## [0.48.1](https://github.com/linq-team/linq-python/compare/v0.48.0...v0.48.1) (2026-09-08)
 
 
