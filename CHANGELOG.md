@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.51.1](https://github.com/linq-team/linq-python/compare/v0.51.0...v0.51.1) (2026-09-09)
+
+
+### Bug Fixes
+
+* add 503 rate limit error responses to contact card endpoints ([8569c35](https://github.com/linq-team/linq-python/commit/8569c356e9f149e9ef5d34d1a00e427e521a831c))
+
 ## [0.51.0](https://github.com/linq-team/linq-python/compare/v0.50.0...v0.51.0) (2026-09-09)
 
 
