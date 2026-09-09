@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.51.0](https://github.com/linq-team/linq-python/compare/v0.50.0...v0.51.0) (2026-09-09)
+
+
+### Features
+
+* add stop location sharing endpoint for chats ([4519df7](https://github.com/linq-team/linq-python/commit/4519df7219e38b11a909ec803f6bdbc0fd733e70))
+
 ## [0.50.0](https://github.com/linq-team/linq-python/compare/v0.49.0...v0.50.0) (2026-09-09)
 
 
