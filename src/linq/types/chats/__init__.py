@@ -8,6 +8,7 @@ from .poll_envelope import PollEnvelope as PollEnvelope
 from .poll_create_params import PollCreateParams as PollCreateParams
 from .message_list_params import MessageListParams as MessageListParams
 from .message_send_params import MessageSendParams as MessageSendParams
+from .location_stop_params import LocationStopParams as LocationStopParams
 from .background_set_params import BackgroundSetParams as BackgroundSetParams
 from .message_send_response import MessageSendResponse as MessageSendResponse
 from .participant_add_params import ParticipantAddParams as ParticipantAddParams
@@ -16,3 +17,4 @@ from .location_request_response import LocationRequestResponse as LocationReques
 from .participant_remove_params import ParticipantRemoveParams as ParticipantRemoveParams
 from .get_chat_location_response import GetChatLocationResponse as GetChatLocationResponse
 from .participant_remove_response import ParticipantRemoveResponse as ParticipantRemoveResponse
+from .stop_chat_location_sharing_response import StopChatLocationSharingResponse as StopChatLocationSharingResponse

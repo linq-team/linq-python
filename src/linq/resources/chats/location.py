@@ -5,7 +5,7 @@ from __future__ import annotations
 import httpx
 
 from ..._types import Body, Query, Headers, NotGiven, not_given
-from ..._utils import path_template
+from ..._utils import path_template, maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
 from ..._response import (
@@ -14,9 +14,11 @@ from ..._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
+from ...types.chats import location_stop_params
 from ..._base_client import make_request_options
 from ...types.chats.location_request_response import LocationRequestResponse
 from ...types.chats.get_chat_location_response import GetChatLocationResponse
+from ...types.chats.stop_chat_location_sharing_response import StopChatLocationSharingResponse
 
 __all__ = ["LocationResource", "AsyncLocationResource"]
 
@@ -187,6 +189,68 @@ class LocationResource(SyncAPIResource):
             cast_to=LocationRequestResponse,
         )
 
+    def stop(
+        self,
+        chat_id: str,
+        *,
+        handle: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> StopChatLocationSharingResponse:
+        """
+        End the location share a contact started with you, as though they had stopped it
+        themselves. Their device stops listing you as someone they share with, so they
+        can start a fresh share cleanly.
+
+        Use this to recover when a share has gone stale — coordinates that stop
+        advancing, or a share you believe has ended but is still reported as active.
+        Without it the only remedy is asking the contact to stop and re-share, which is
+        confusing for them because their phone still shows everything as working.
+
+        This is not reversible from the API. Sharing can only resume when the contact
+        starts a new share, so prompt them to re-share afterwards. Request a new one
+        with `POST /v3/chats/{chatId}/location/request`.
+
+        Apple keeps one location-sharing relationship per person rather than per chat,
+        so this ends that contact's share everywhere, not only in this chat.
+
+        `handle` names whose share to end, and is always required — a group chat can
+        have several people sharing, and this is not an operation to infer a target for.
+
+        **This returns `202`, not `200`.** The removal happens on the device that holds
+        the sharing relationship, so a success here means the request was accepted, not
+        that sharing has ended. Wait for the `location.sharing.stopped` webhook to
+        confirm it — that webhook is what tells you the contact's device has actually
+        let go.
+
+        Returns `404` if the contact is not currently sharing.
+
+        Args:
+          handle: Phone number (E.164 format) or email address of the contact whose share to end
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not chat_id:
+            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        return self._delete(
+            path_template("/v3/chats/{chat_id}/location", chat_id=chat_id),
+            body=maybe_transform({"handle": handle}, location_stop_params.LocationStopParams),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=StopChatLocationSharingResponse,
+        )
+
 
 class AsyncLocationResource(AsyncAPIResource):
     """
@@ -354,6 +418,68 @@ class AsyncLocationResource(AsyncAPIResource):
             cast_to=LocationRequestResponse,
         )
 
+    async def stop(
+        self,
+        chat_id: str,
+        *,
+        handle: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> StopChatLocationSharingResponse:
+        """
+        End the location share a contact started with you, as though they had stopped it
+        themselves. Their device stops listing you as someone they share with, so they
+        can start a fresh share cleanly.
+
+        Use this to recover when a share has gone stale — coordinates that stop
+        advancing, or a share you believe has ended but is still reported as active.
+        Without it the only remedy is asking the contact to stop and re-share, which is
+        confusing for them because their phone still shows everything as working.
+
+        This is not reversible from the API. Sharing can only resume when the contact
+        starts a new share, so prompt them to re-share afterwards. Request a new one
+        with `POST /v3/chats/{chatId}/location/request`.
+
+        Apple keeps one location-sharing relationship per person rather than per chat,
+        so this ends that contact's share everywhere, not only in this chat.
+
+        `handle` names whose share to end, and is always required — a group chat can
+        have several people sharing, and this is not an operation to infer a target for.
+
+        **This returns `202`, not `200`.** The removal happens on the device that holds
+        the sharing relationship, so a success here means the request was accepted, not
+        that sharing has ended. Wait for the `location.sharing.stopped` webhook to
+        confirm it — that webhook is what tells you the contact's device has actually
+        let go.
+
+        Returns `404` if the contact is not currently sharing.
+
+        Args:
+          handle: Phone number (E.164 format) or email address of the contact whose share to end
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not chat_id:
+            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        return await self._delete(
+            path_template("/v3/chats/{chat_id}/location", chat_id=chat_id),
+            body=await async_maybe_transform({"handle": handle}, location_stop_params.LocationStopParams),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=StopChatLocationSharingResponse,
+        )
+
 
 class LocationResourceWithRawResponse:
     def __init__(self, location: LocationResource) -> None:
@@ -364,6 +490,9 @@ class LocationResourceWithRawResponse:
         )
         self.request = to_raw_response_wrapper(
             location.request,
+        )
+        self.stop = to_raw_response_wrapper(
+            location.stop,
         )
 
 
@@ -377,6 +506,9 @@ class AsyncLocationResourceWithRawResponse:
         self.request = async_to_raw_response_wrapper(
             location.request,
         )
+        self.stop = async_to_raw_response_wrapper(
+            location.stop,
+        )
 
 
 class LocationResourceWithStreamingResponse:
@@ -389,6 +521,9 @@ class LocationResourceWithStreamingResponse:
         self.request = to_streamed_response_wrapper(
             location.request,
         )
+        self.stop = to_streamed_response_wrapper(
+            location.stop,
+        )
 
 
 class AsyncLocationResourceWithStreamingResponse:
@@ -400,4 +535,7 @@ class AsyncLocationResourceWithStreamingResponse:
         )
         self.request = async_to_streamed_response_wrapper(
             location.request,
+        )
+        self.stop = async_to_streamed_response_wrapper(
+            location.stop,
         )

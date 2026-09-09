@@ -80,13 +80,18 @@ Methods:
 Types:
 
 ```python
-from linq.types.chats import GetChatLocationResponse, LocationRequestResponse
+from linq.types.chats import (
+    GetChatLocationResponse,
+    LocationRequestResponse,
+    StopChatLocationSharingResponse,
+)
 ```
 
 Methods:
 
 - <code title="get /v3/chats/{chatId}/location">client.chats.location.<a href="./src/linq/resources/chats/location.py">retrieve</a>(chat_id) -> <a href="./src/linq/types/chats/get_chat_location_response.py">GetChatLocationResponse</a></code>
 - <code title="post /v3/chats/{chatId}/location/request">client.chats.location.<a href="./src/linq/resources/chats/location.py">request</a>(chat_id) -> <a href="./src/linq/types/chats/location_request_response.py">LocationRequestResponse</a></code>
+- <code title="delete /v3/chats/{chatId}/location">client.chats.location.<a href="./src/linq/resources/chats/location.py">stop</a>(chat_id, \*\*<a href="src/linq/types/chats/location_stop_params.py">params</a>) -> <a href="./src/linq/types/chats/stop_chat_location_sharing_response.py">StopChatLocationSharingResponse</a></code>
 
 ## Polls
 

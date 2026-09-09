@@ -9,7 +9,11 @@ import pytest
 
 from linq import LinqAPIV3, AsyncLinqAPIV3
 from tests.utils import assert_matches_type
-from linq.types.chats import GetChatLocationResponse, LocationRequestResponse
+from linq.types.chats import (
+    GetChatLocationResponse,
+    LocationRequestResponse,
+    StopChatLocationSharingResponse,
+)
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -101,6 +105,52 @@ class TestLocation:
                 "",
             )
 
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_stop(self, client: LinqAPIV3) -> None:
+        location = client.chats.location.stop(
+            chat_id="975d0776-bd17-4273-8337-f346b4c661b0",
+            handle="+15551234567",
+        )
+        assert_matches_type(StopChatLocationSharingResponse, location, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_stop(self, client: LinqAPIV3) -> None:
+        response = client.chats.location.with_raw_response.stop(
+            chat_id="975d0776-bd17-4273-8337-f346b4c661b0",
+            handle="+15551234567",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        location = response.parse()
+        assert_matches_type(StopChatLocationSharingResponse, location, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_stop(self, client: LinqAPIV3) -> None:
+        with client.chats.location.with_streaming_response.stop(
+            chat_id="975d0776-bd17-4273-8337-f346b4c661b0",
+            handle="+15551234567",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            location = response.parse()
+            assert_matches_type(StopChatLocationSharingResponse, location, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_stop(self, client: LinqAPIV3) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `chat_id` but received ''"):
+            client.chats.location.with_raw_response.stop(
+                chat_id="",
+                handle="+15551234567",
+            )
+
 
 class TestAsyncLocation:
     parametrize = pytest.mark.parametrize(
@@ -189,4 +239,50 @@ class TestAsyncLocation:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `chat_id` but received ''"):
             await async_client.chats.location.with_raw_response.request(
                 "",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_stop(self, async_client: AsyncLinqAPIV3) -> None:
+        location = await async_client.chats.location.stop(
+            chat_id="975d0776-bd17-4273-8337-f346b4c661b0",
+            handle="+15551234567",
+        )
+        assert_matches_type(StopChatLocationSharingResponse, location, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_stop(self, async_client: AsyncLinqAPIV3) -> None:
+        response = await async_client.chats.location.with_raw_response.stop(
+            chat_id="975d0776-bd17-4273-8337-f346b4c661b0",
+            handle="+15551234567",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        location = await response.parse()
+        assert_matches_type(StopChatLocationSharingResponse, location, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_stop(self, async_client: AsyncLinqAPIV3) -> None:
+        async with async_client.chats.location.with_streaming_response.stop(
+            chat_id="975d0776-bd17-4273-8337-f346b4c661b0",
+            handle="+15551234567",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            location = await response.parse()
+            assert_matches_type(StopChatLocationSharingResponse, location, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_stop(self, async_client: AsyncLinqAPIV3) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `chat_id` but received ''"):
+            await async_client.chats.location.with_raw_response.stop(
+                chat_id="",
+                handle="+15551234567",
             )
