@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.50.0](https://github.com/linq-team/linq-python/compare/v0.49.0...v0.50.0) (2026-09-09)
+
+
+### Features
+
+* add sticker support to media message parts ([ebdb40c](https://github.com/linq-team/linq-python/commit/ebdb40cb507baf1d52ddd973417ffb7a0d6b35eb))
+
 ## [0.49.0](https://github.com/linq-team/linq-python/compare/v0.48.1...v0.49.0) (2026-09-08)
 
 
