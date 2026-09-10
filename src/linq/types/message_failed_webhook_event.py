@@ -54,7 +54,12 @@ class Data(BaseModel):
     """Human-readable description of the failure"""
 
     service: Optional[ServiceType] = None
-    """Messaging service type"""
+    """Messaging service type.
+
+    Where this names the transport a message used, it is per-message: a chat's own
+    `service` can differ from a message in it, and Apple can downgrade an individual
+    message.
+    """
 
 
 class MessageFailedWebhookEvent(BaseModel):

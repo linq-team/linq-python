@@ -236,7 +236,12 @@ class MessageEventV2(BaseModel):
     """The handle that sent this message"""
 
     service: ServiceType
-    """Messaging service type"""
+    """Messaging service type.
+
+    Where this names the transport a message used, it is per-message: a chat's own
+    `service` can differ from a message in it, and Apple can downgrade an individual
+    message.
+    """
 
     delivered_at: Optional[datetime] = None
     """When the message was delivered. Null if not yet delivered."""

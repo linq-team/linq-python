@@ -21,7 +21,12 @@ class ChatHandle(BaseModel):
     """When this participant joined the chat"""
 
     service: ServiceType
-    """Messaging service type"""
+    """Messaging service type.
+
+    Where this names the transport a message used, it is per-message: a chat's own
+    `service` can differ from a message in it, and Apple can downgrade an individual
+    message.
+    """
 
     is_me: Optional[bool] = None
     """Whether this handle belongs to the sender (your phone number)"""
