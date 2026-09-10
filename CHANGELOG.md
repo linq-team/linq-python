@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.52.0](https://github.com/linq-team/linq-python/compare/v0.51.2...v0.52.0) (2026-09-10)
+
+
+### Features
+
+* add emoji sticker support alongside url and attachment_id ([824aba6](https://github.com/linq-team/linq-python/commit/824aba6a0b71e7eae3ef71f3650a78eb5238c0e8))
+
 ## [0.51.2](https://github.com/linq-team/linq-python/compare/v0.51.1...v0.51.2) (2026-09-10)
 
 
