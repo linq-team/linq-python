@@ -95,14 +95,14 @@ class Placement(TypedDict, total=False):
     """Clockwise rotation in degrees."""
 
     scale: float
-    """Size relative to the default, where 1 matches the size a sticker gets natively.
+    """How large the sticker is drawn.
 
-    Values outside 0.5–1.5 are clamped rather than rejected. The upper bound keeps a
-    sticker within the size range iMessage itself displays: its own limit is larger,
-    but that allowance assumes the transparent padding Apple's stickers carry, which
-    a full-bleed image does not have.
+    Omit it for the default size — equivalent to `1` for an image, or `0.5` for an
+    emoji.
 
-    Scale is linear, so 1.5 is a little over twice the area.
+    Values outside 0.05–2.5 are clamped rather than rejected.
+
+    Scale is linear, so 2.5 is a little over six times the area.
     """
 
     x: float
