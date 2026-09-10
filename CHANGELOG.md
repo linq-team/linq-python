@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.51.2](https://github.com/linq-team/linq-python/compare/v0.51.1...v0.51.2) (2026-09-10)
+
+
+### Documentation
+
+* clarify message service transport semantics ([df61742](https://github.com/linq-team/linq-python/commit/df617427fe0e82877283121f09b015dc356a772a))
+
 ## [0.51.1](https://github.com/linq-team/linq-python/compare/v0.51.0...v0.51.1) (2026-09-09)
 
 
