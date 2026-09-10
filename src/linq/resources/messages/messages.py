@@ -482,6 +482,7 @@ class MessagesResource(SyncAPIResource):
         type: ReactionType,
         attachment_id: str | Omit = omit,
         custom_emoji: str | Omit = omit,
+        emoji: str | Omit = omit,
         part_index: int | Omit = omit,
         placement: message_add_reaction_params.Placement | Omit = omit,
         url: str | Omit = omit,
@@ -505,8 +506,14 @@ class MessagesResource(SyncAPIResource):
         - laugh 😂
         - emphasize ‼️
         - question ❓
-        - custom - any emoji (use `custom_emoji` field to specify)
-        - sticker - an image peeled onto the message (use `url` or `attachment_id`)
+        - custom - any emoji as a tapback (use `custom_emoji` field to specify)
+        - sticker - an emoji or image peeled onto the message (use `emoji`, `url` or
+          `attachment_id`)
+
+        **`custom` and `sticker` are different products.** A `custom` reaction is a
+        tapback: the emoji sits in a small bubble on the corner of the message. A
+        `sticker` is peeled onto the bubble itself, and can be dragged, resized and
+        rotated. Both accept an emoji; they do not look alike.
 
         **Stickers** are iMessage-only and cannot be removed — iMessage has no unpeel
         operation, so `operation: "remove"` with `type: "sticker"` is rejected.
@@ -524,10 +531,23 @@ class MessagesResource(SyncAPIResource):
           attachment_id: Reference to a sticker image pre-uploaded via `POST /v3/attachments`. Only valid
               when type is "sticker".
 
-              Either `url` or `attachment_id` must be provided when type is "sticker", but not
-              both.
+              Exactly one of `emoji`, `url` or `attachment_id` is required when type is
+              "sticker".
 
           custom_emoji: Custom emoji string. Required when type is "custom".
+
+              This is a **tapback** — the emoji sits in the tapback bubble on the corner of
+              the message. To peel an emoji onto the message as a draggable sticker instead,
+              use type "sticker" with `emoji`.
+
+          emoji: A single emoji to peel onto the message as a sticker. Only valid when type is
+              "sticker", and it is rendered on the device so it matches the glyph a person
+              would peel by hand.
+
+              Exactly one of `emoji`, `url` or `attachment_id` is required when type is
+              "sticker".
+
+              Not to be confused with `custom_emoji`, which produces a tapback.
 
           part_index: Optional index of the message part to react to. If not provided, reacts to the
               entire message (part 0).
@@ -545,8 +565,8 @@ class MessagesResource(SyncAPIResource):
               no download step, so the image must already be stored. To send a sticker from
               elsewhere, upload it with `POST /v3/attachments` first and pass `attachment_id`.
 
-              Either `url` or `attachment_id` must be provided when type is "sticker", but not
-              both.
+              Exactly one of `emoji`, `url` or `attachment_id` is required when type is
+              "sticker".
 
           extra_headers: Send extra headers
 
@@ -566,6 +586,7 @@ class MessagesResource(SyncAPIResource):
                     "type": type,
                     "attachment_id": attachment_id,
                     "custom_emoji": custom_emoji,
+                    "emoji": emoji,
                     "part_index": part_index,
                     "placement": placement,
                     "url": url,
@@ -1249,6 +1270,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         type: ReactionType,
         attachment_id: str | Omit = omit,
         custom_emoji: str | Omit = omit,
+        emoji: str | Omit = omit,
         part_index: int | Omit = omit,
         placement: message_add_reaction_params.Placement | Omit = omit,
         url: str | Omit = omit,
@@ -1272,8 +1294,14 @@ class AsyncMessagesResource(AsyncAPIResource):
         - laugh 😂
         - emphasize ‼️
         - question ❓
-        - custom - any emoji (use `custom_emoji` field to specify)
-        - sticker - an image peeled onto the message (use `url` or `attachment_id`)
+        - custom - any emoji as a tapback (use `custom_emoji` field to specify)
+        - sticker - an emoji or image peeled onto the message (use `emoji`, `url` or
+          `attachment_id`)
+
+        **`custom` and `sticker` are different products.** A `custom` reaction is a
+        tapback: the emoji sits in a small bubble on the corner of the message. A
+        `sticker` is peeled onto the bubble itself, and can be dragged, resized and
+        rotated. Both accept an emoji; they do not look alike.
 
         **Stickers** are iMessage-only and cannot be removed — iMessage has no unpeel
         operation, so `operation: "remove"` with `type: "sticker"` is rejected.
@@ -1291,10 +1319,23 @@ class AsyncMessagesResource(AsyncAPIResource):
           attachment_id: Reference to a sticker image pre-uploaded via `POST /v3/attachments`. Only valid
               when type is "sticker".
 
-              Either `url` or `attachment_id` must be provided when type is "sticker", but not
-              both.
+              Exactly one of `emoji`, `url` or `attachment_id` is required when type is
+              "sticker".
 
           custom_emoji: Custom emoji string. Required when type is "custom".
+
+              This is a **tapback** — the emoji sits in the tapback bubble on the corner of
+              the message. To peel an emoji onto the message as a draggable sticker instead,
+              use type "sticker" with `emoji`.
+
+          emoji: A single emoji to peel onto the message as a sticker. Only valid when type is
+              "sticker", and it is rendered on the device so it matches the glyph a person
+              would peel by hand.
+
+              Exactly one of `emoji`, `url` or `attachment_id` is required when type is
+              "sticker".
+
+              Not to be confused with `custom_emoji`, which produces a tapback.
 
           part_index: Optional index of the message part to react to. If not provided, reacts to the
               entire message (part 0).
@@ -1312,8 +1353,8 @@ class AsyncMessagesResource(AsyncAPIResource):
               no download step, so the image must already be stored. To send a sticker from
               elsewhere, upload it with `POST /v3/attachments` first and pass `attachment_id`.
 
-              Either `url` or `attachment_id` must be provided when type is "sticker", but not
-              both.
+              Exactly one of `emoji`, `url` or `attachment_id` is required when type is
+              "sticker".
 
           extra_headers: Send extra headers
 
@@ -1333,6 +1374,7 @@ class AsyncMessagesResource(AsyncAPIResource):
                     "type": type,
                     "attachment_id": attachment_id,
                     "custom_emoji": custom_emoji,
+                    "emoji": emoji,
                     "part_index": part_index,
                     "placement": placement,
                     "url": url,
