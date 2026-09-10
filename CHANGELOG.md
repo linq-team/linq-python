@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.52.1](https://github.com/linq-team/linq-python/compare/v0.52.0...v0.52.1) (2026-09-10)
+
+
+### Bug Fixes
+
+* adjust sticker scale parameter bounds and defaults ([f614689](https://github.com/linq-team/linq-python/commit/f6146896d396f6150830ba88f83171e2d0c535f7))
+
 ## [0.52.0](https://github.com/linq-team/linq-python/compare/v0.51.2...v0.52.0) (2026-09-10)
 
 
