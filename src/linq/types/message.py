@@ -210,7 +210,12 @@ class Message(BaseModel):
     """Message parts in order (text, media, and link)"""
 
     preferred_service: Optional[ServiceType] = None
-    """Messaging service type"""
+    """Messaging service type.
+
+    Where this names the transport a message used, it is per-message: a chat's own
+    `service` can differ from a message in it, and Apple can downgrade an individual
+    message.
+    """
 
     read_at: Optional[datetime] = None
     """When the message was read"""
@@ -232,4 +237,9 @@ class Message(BaseModel):
     """When the message was sent"""
 
     service: Optional[ServiceType] = None
-    """Messaging service type"""
+    """Messaging service type.
+
+    Where this names the transport a message used, it is per-message: a chat's own
+    `service` can differ from a message in it, and Apple can downgrade an individual
+    message.
+    """

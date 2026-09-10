@@ -105,7 +105,12 @@ class Data(BaseModel):
     """When the chat was last updated"""
 
     service: Optional[ServiceType] = None
-    """Messaging service type"""
+    """Messaging service type.
+
+    Where this names the transport a message used, it is per-message: a chat's own
+    `service` can differ from a message in it, and Apple can downgrade an individual
+    message.
+    """
 
 
 class ChatCreatedWebhookEvent(BaseModel):

@@ -58,7 +58,12 @@ class MessageCreateResponse(BaseModel):
     """A message that was sent (used in CreateChat and SendMessage responses)"""
 
     service: ServiceType
-    """Messaging service type"""
+    """Messaging service type.
+
+    Where this names the transport a message used, it is per-message: a chat's own
+    `service` can differ from a message in it, and Apple can downgrade an individual
+    message.
+    """
 
     previous_chat_id: Optional[str] = None
     """

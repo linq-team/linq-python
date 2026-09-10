@@ -307,7 +307,12 @@ class MessageContentParam(TypedDict, total=False):
     """
 
     preferred_service: ServiceType
-    """Messaging service type"""
+    """Messaging service type.
+
+    Where this names the transport a message used, it is per-message: a chat's own
+    `service` can differ from a message in it, and Apple can downgrade an individual
+    message.
+    """
 
     reply_to: ReplyToParam
     """Reply to another message to create a threaded conversation"""
