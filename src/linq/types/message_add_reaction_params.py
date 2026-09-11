@@ -42,8 +42,7 @@ class MessageAddReactionParams(TypedDict, total=False):
     emoji: str
     """A single emoji to peel onto the message as a sticker.
 
-    Only valid when type is "sticker", and it is rendered on the device so it
-    matches the glyph a person would peel by hand.
+    Only valid when type is "sticker".
 
     Exactly one of `emoji`, `url` or `attachment_id` is required when type is
     "sticker".
@@ -71,9 +70,8 @@ class MessageAddReactionParams(TypedDict, total=False):
     Linq attachment URL of the sticker image — the `download_url` returned by
     `POST /v3/attachments`. Only valid when type is "sticker".
 
-    Unlike a media part, this does **not** accept an arbitrary host: reactions have
-    no download step, so the image must already be stored. To send a sticker from
-    elsewhere, upload it with `POST /v3/attachments` first and pass `attachment_id`.
+    The image must already be stored with us. To send a sticker from elsewhere,
+    upload it with `POST /v3/attachments` first and pass `attachment_id`.
 
     Exactly one of `emoji`, `url` or `attachment_id` is required when type is
     "sticker".
