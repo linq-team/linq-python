@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.52.2](https://github.com/linq-team/linq-python/compare/v0.52.1...v0.52.2) (2026-09-11)
+
+
+### Documentation
+
+* add example to stop chat location sharing request ([261fc1f](https://github.com/linq-team/linq-python/commit/261fc1f20ba869ecb1eeb3e6f28aacf5a3c10a81))
+
 ## [0.52.1](https://github.com/linq-team/linq-python/compare/v0.52.0...v0.52.1) (2026-09-10)
 
 
