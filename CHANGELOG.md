@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.53.0](https://github.com/linq-team/linq-python/compare/v0.52.3...v0.53.0) (2026-09-11)
+
+
+### Features
+
+* clarify sticker behavior for animated images and simplify docs ([d509801](https://github.com/linq-team/linq-python/commit/d509801aa648c190961b9772367e7030883b7d1b))
+
 ## [0.52.3](https://github.com/linq-team/linq-python/compare/v0.52.2...v0.52.3) (2026-09-11)
 
 
