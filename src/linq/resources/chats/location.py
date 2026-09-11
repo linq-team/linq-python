@@ -201,33 +201,19 @@ class LocationResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> StopChatLocationSharingResponse:
-        """
-        End the location share a contact started with you, as though they had stopped it
-        themselves. Their device stops listing you as someone they share with, so they
-        can start a fresh share cleanly.
+        """Stop a contact's location share with you.
 
-        Use this to recover when a share has gone stale — coordinates that stop
-        advancing, or a share you believe has ended but is still reported as active.
-        Without it the only remedy is asking the contact to stop and re-share, which is
-        confusing for them because their phone still shows everything as working.
+        `handle` is required and names whose
+        share to end.
 
-        This is not reversible from the API. Sharing can only resume when the contact
-        starts a new share, so prompt them to re-share afterwards. Request a new one
-        with `POST /v3/chats/{chatId}/location/request`.
+        Returns `202` when the request is accepted. The stop is carried out on the
+        contact's device, and the `location.sharing.stopped` webhook fires once sharing
+        has ended.
 
-        Apple keeps one location-sharing relationship per person rather than per chat,
-        so this ends that contact's share everywhere, not only in this chat.
+        Sharing is per contact, so this ends that contact's share in every chat you have
+        with them.
 
-        `handle` names whose share to end, and is always required — a group chat can
-        have several people sharing, and this is not an operation to infer a target for.
-
-        **This returns `202`, not `200`.** The removal happens on the device that holds
-        the sharing relationship, so a success here means the request was accepted, not
-        that sharing has ended. Wait for the `location.sharing.stopped` webhook to
-        confirm it — that webhook is what tells you the contact's device has actually
-        let go.
-
-        Returns `404` if the contact is not currently sharing.
+        Returns `404` if the contact isn't currently sharing.
 
         Args:
           handle: Phone number (E.164 format) or email address of the contact whose share to end
@@ -430,33 +416,19 @@ class AsyncLocationResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> StopChatLocationSharingResponse:
-        """
-        End the location share a contact started with you, as though they had stopped it
-        themselves. Their device stops listing you as someone they share with, so they
-        can start a fresh share cleanly.
+        """Stop a contact's location share with you.
 
-        Use this to recover when a share has gone stale — coordinates that stop
-        advancing, or a share you believe has ended but is still reported as active.
-        Without it the only remedy is asking the contact to stop and re-share, which is
-        confusing for them because their phone still shows everything as working.
+        `handle` is required and names whose
+        share to end.
 
-        This is not reversible from the API. Sharing can only resume when the contact
-        starts a new share, so prompt them to re-share afterwards. Request a new one
-        with `POST /v3/chats/{chatId}/location/request`.
+        Returns `202` when the request is accepted. The stop is carried out on the
+        contact's device, and the `location.sharing.stopped` webhook fires once sharing
+        has ended.
 
-        Apple keeps one location-sharing relationship per person rather than per chat,
-        so this ends that contact's share everywhere, not only in this chat.
+        Sharing is per contact, so this ends that contact's share in every chat you have
+        with them.
 
-        `handle` names whose share to end, and is always required — a group chat can
-        have several people sharing, and this is not an operation to infer a target for.
-
-        **This returns `202`, not `200`.** The removal happens on the device that holds
-        the sharing relationship, so a success here means the request was accepted, not
-        that sharing has ended. Wait for the `location.sharing.stopped` webhook to
-        confirm it — that webhook is what tells you the contact's device has actually
-        let go.
-
-        Returns `404` if the contact is not currently sharing.
+        Returns `404` if the contact isn't currently sharing.
 
         Args:
           handle: Phone number (E.164 format) or email address of the contact whose share to end
