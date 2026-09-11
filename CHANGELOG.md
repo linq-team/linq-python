@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.52.3](https://github.com/linq-team/linq-python/compare/v0.52.2...v0.52.3) (2026-09-11)
+
+
+### Bug Fixes
+
+* clarify location sharing stop endpoint behavior ([7c606b2](https://github.com/linq-team/linq-python/commit/7c606b2b0c3f8e5e16927e08d9c954f7abfe71d1))
+
 ## [0.52.2](https://github.com/linq-team/linq-python/compare/v0.52.1...v0.52.2) (2026-09-11)
 
 
