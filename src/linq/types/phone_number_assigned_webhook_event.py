@@ -5,33 +5,21 @@ from typing_extensions import Literal
 
 from .._models import BaseModel
 
-__all__ = ["PhoneNumberStatusUpdatedWebhookEvent", "Data"]
+__all__ = ["PhoneNumberAssignedWebhookEvent", "Data"]
 
 
 class Data(BaseModel):
-    """Payload for phone_number.status_updated webhook events"""
+    """Payload for phone_number.assigned and phone_number.released webhook events"""
 
     changed_at: datetime
-    """When the status change occurred"""
-
-    new_reputation: Literal["HEALTHY", "AT_RISK", "CRITICAL"]
-    """The new line reputation"""
-
-    new_status: Literal["ACTIVE", "FLAGGED"]
-    """The new service status"""
+    """When the ownership change occurred"""
 
     phone_number: str
     """Phone number in E.164 format"""
 
-    previous_reputation: Literal["HEALTHY", "AT_RISK", "CRITICAL"]
-    """The previous line reputation"""
 
-    previous_status: Literal["ACTIVE", "FLAGGED"]
-    """The previous service status"""
-
-
-class PhoneNumberStatusUpdatedWebhookEvent(BaseModel):
-    """Complete webhook payload for phone_number.status_updated events"""
+class PhoneNumberAssignedWebhookEvent(BaseModel):
+    """Complete webhook payload for phone_number.assigned events"""
 
     api_version: str
     """API version for the webhook payload format"""
@@ -40,7 +28,7 @@ class PhoneNumberStatusUpdatedWebhookEvent(BaseModel):
     """When the event was created"""
 
     data: Data
-    """Payload for phone_number.status_updated webhook events"""
+    """Payload for phone_number.assigned and phone_number.released webhook events"""
 
     event_id: str
     """Unique identifier for this event (for deduplication)"""

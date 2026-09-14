@@ -32,6 +32,8 @@ from .payment_authorized_webhook_event import PaymentAuthorizedWebhookEvent
 from .participant_removed_webhook_event import ParticipantRemovedWebhookEvent
 from .poll_reaction_added_webhook_event import PollReactionAddedWebhookEvent
 from .contact_card_received_webhook_event import ContactCardReceivedWebhookEvent
+from .phone_number_assigned_webhook_event import PhoneNumberAssignedWebhookEvent
+from .phone_number_released_webhook_event import PhoneNumberReleasedWebhookEvent
 from .chat_background_updated_webhook_event import ChatBackgroundUpdatedWebhookEvent
 from .chat_group_icon_updated_webhook_event import ChatGroupIconUpdatedWebhookEvent
 from .chat_group_name_updated_webhook_event import ChatGroupNameUpdatedWebhookEvent
@@ -78,6 +80,8 @@ UnwrapWebhookEvent: TypeAlias = Annotated[
         ChatBackgroundUpdateFailedWebhookEvent,
         ContactCardReceivedWebhookEvent,
         PhoneNumberStatusUpdatedWebhookEvent,
+        PhoneNumberAssignedWebhookEvent,
+        PhoneNumberReleasedWebhookEvent,
         ConnectionCreatedWebhookEvent,
         ConnectionRevokedWebhookEvent,
         LocationSharingStartedWebhookEvent,

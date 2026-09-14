@@ -182,6 +182,8 @@ class PaymentCanceledWebhookEvent(BaseModel):
         "chat.typing_indicator.started",
         "chat.typing_indicator.stopped",
         "phone_number.status_updated",
+        "phone_number.assigned",
+        "phone_number.released",
         "contact_card.received",
         "call.initiated",
         "call.ringing",
