@@ -387,6 +387,8 @@ from linq.types import (
     ChatBackgroundUpdateFailedWebhookEvent,
     ContactCardReceivedWebhookEvent,
     PhoneNumberStatusUpdatedWebhookEvent,
+    PhoneNumberAssignedWebhookEvent,
+    PhoneNumberReleasedWebhookEvent,
     ConnectionCreatedWebhookEvent,
     ConnectionRevokedWebhookEvent,
     LocationSharingStartedWebhookEvent,
