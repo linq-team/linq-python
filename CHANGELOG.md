@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.54.0](https://github.com/linq-team/linq-python/compare/v0.53.0...v0.54.0) (2026-09-14)
+
+
+### Features
+
+* add environment_id field to subscription objects ([e94c6c1](https://github.com/linq-team/linq-python/commit/e94c6c1a3f9ecae53d0c4aeca6b27320502b47de))
+
 ## [0.53.0](https://github.com/linq-team/linq-python/compare/v0.52.3...v0.53.0) (2026-09-11)
 
 
