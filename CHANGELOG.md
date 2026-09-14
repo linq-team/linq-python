@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.55.0](https://github.com/linq-team/linq-python/compare/v0.54.0...v0.55.0) (2026-09-14)
+
+
+### Features
+
+* add phone_number.assigned and phone_number.released webhooks ([bd8240a](https://github.com/linq-team/linq-python/commit/bd8240a71a1c30ff9dbbff982bfdd4ae11edf718))
+
 ## [0.54.0](https://github.com/linq-team/linq-python/compare/v0.53.0...v0.54.0) (2026-09-14)
 
 
