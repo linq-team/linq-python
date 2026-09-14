@@ -28,6 +28,13 @@ class WebhookSubscription(BaseModel):
     updated_at: datetime
     """When the subscription was last updated"""
 
+    environment_id: Optional[str] = None
+    """Environment this subscription belongs to.
+
+    Null means production. Only events from lines in the same environment are
+    delivered.
+    """
+
     phone_numbers: Optional[List[str]] = None
     """Phone numbers this subscription filters for.
 
