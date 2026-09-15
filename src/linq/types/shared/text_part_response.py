@@ -6,6 +6,7 @@ from typing_extensions import Literal
 from .reaction import Reaction
 from ..._models import BaseModel
 from .text_decoration import TextDecoration
+from .inline_sticker_response import InlineStickerResponse
 
 __all__ = ["TextPartResponse", "Mention"]
 
@@ -45,6 +46,15 @@ class TextPartResponse(BaseModel):
 
     value: str
     """The text content"""
+
+    inline_stickers: Optional[List[InlineStickerResponse]] = None
+    """Stickers placed inside the text, in the order they appear in `value`.
+
+    `null` when the part has none.
+
+    Set on messages sent with `inline_stickers`. An inline sticker received over
+    iMessage currently arrives as a separate media part.
+    """
 
     mention: Optional[str] = None
     """DEPRECATED: Use `mentions` instead.

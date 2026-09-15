@@ -8,3 +8,4 @@ from .text_decoration import TextDecoration as TextDecoration
 from .link_part_response import LinkPartResponse as LinkPartResponse
 from .text_part_response import TextPartResponse as TextPartResponse
 from .media_part_response import MediaPartResponse as MediaPartResponse
+from .inline_sticker_response import InlineStickerResponse as InlineStickerResponse

@@ -12,6 +12,7 @@ from .shared import (
     LinkPartResponse as LinkPartResponse,
     TextPartResponse as TextPartResponse,
     MediaPartResponse as MediaPartResponse,
+    InlineStickerResponse as InlineStickerResponse,
 )
 from .message import Message as Message
 from .payment import Payment as Payment
@@ -36,6 +37,7 @@ from .reputation_evidence import ReputationEvidence as ReputationEvidence
 from .blocked_handle_entry import BlockedHandleEntry as BlockedHandleEntry
 from .chat_create_response import ChatCreateResponse as ChatCreateResponse
 from .chat_update_response import ChatUpdateResponse as ChatUpdateResponse
+from .inline_sticker_param import InlineStickerParam as InlineStickerParam
 from .message_effect_param import MessageEffectParam as MessageEffectParam
 from .unwrap_webhook_event import UnwrapWebhookEvent as UnwrapWebhookEvent
 from .webhook_subscription import WebhookSubscription as WebhookSubscription

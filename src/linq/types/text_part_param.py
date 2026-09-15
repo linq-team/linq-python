@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Iterable
 from typing_extensions import Literal, Required, TypedDict
 
+from .inline_sticker_param import InlineStickerParam
 from .shared_params.text_decoration import TextDecoration
 
 __all__ = ["TextPartParam"]
@@ -20,6 +21,33 @@ class TextPartParam(TypedDict, total=False):
     This value is sent as-is with no parsing or transformation — Markdown syntax
     will be delivered as plain text. Use `text_decorations` to apply inline
     formatting and animations (iMessage only).
+    """
+
+    inline_stickers: Iterable[InlineStickerParam]
+    """
+    Optional stickers placed inside the text, in the line with the words (iMessage
+    only).
+
+    Each sticker replaces the characters in its `range` `[start, end)` of `value`,
+    and takes its image from exactly one of `url` or `attachment_id` — an image
+    uploaded with `POST /v3/attachments`. The characters a sticker covers are hidden
+    on iMessage and are what SMS and RCS recipients receive and VoiceOver reads, so
+    cover something that stands in for the sticker (`"🎂"`, `"[cake]"`). To keep a
+    word visible, give the sticker its own placeholder: `"Sip cup 🥤"` with the
+    range on `🥤`.
+
+    Up to 100 stickers and 10 different images per part. Copies of one image count
+    as one: twenty copies of one sticker use one of the 10. An animated image
+    arrives as a still.
+
+    Stickers cannot overlap each other or a `text_decorations` range, cannot split a
+    character, and cannot be combined with `mention`.
+
+    _Characters are measured as UTF-16 code units. Most characters count as 1; some
+    emoji count as 2._
+
+    **Note:** on SMS and RCS the stickers are dropped and `value` is sent as plain
+    text.
     """
 
     mention: str
