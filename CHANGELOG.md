@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.56.0](https://github.com/linq-team/linq-python/compare/v0.55.0...v0.56.0) (2026-09-15)
+
+
+### Features
+
+* add inline stickers support for imessage text messages ([abe79e1](https://github.com/linq-team/linq-python/commit/abe79e1abd474d6deec9627f3a32f13c00e19fcb))
+
 ## [0.55.0](https://github.com/linq-team/linq-python/compare/v0.54.0...v0.55.0) (2026-09-14)
 
 
