@@ -3,6 +3,7 @@
 ```python
 from linq.types import (
     ChatHandle,
+    InlineStickerResponse,
     LinkPartResponse,
     MediaPartResponse,
     Reaction,
@@ -20,6 +21,7 @@ Types:
 ```python
 from linq.types import (
     Chat,
+    InlineSticker,
     LinkPart,
     MediaPart,
     MessageContent,
