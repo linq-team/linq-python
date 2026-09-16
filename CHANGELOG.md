@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.56.1](https://github.com/linq-team/linq-python/compare/v0.56.0...v0.56.1) (2026-09-16)
+
+
+### Bug Fixes
+
+* remove environment_id field from subscription objects ([13fd1dd](https://github.com/linq-team/linq-python/commit/13fd1ddbdbe6f11f9acdfee77f64eda1ba456445))
+
 ## [0.56.0](https://github.com/linq-team/linq-python/compare/v0.55.0...v0.56.0) (2026-09-15)
 
 
