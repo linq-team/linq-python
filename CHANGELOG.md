@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.56.2](https://github.com/linq-team/linq-python/compare/v0.56.1...v0.56.2) (2026-09-18)
+
+
+### Documentation
+
+* clarify message transport behavior for newly created chats ([55c1d50](https://github.com/linq-team/linq-python/commit/55c1d50fd9a6abb5dffbb03cf200d6428c577b4a))
+
 ## [0.56.1](https://github.com/linq-team/linq-python/compare/v0.56.0...v0.56.1) (2026-09-16)
 
 
