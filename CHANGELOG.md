@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.57.0](https://github.com/linq-team/linq-python/compare/v0.56.2...v0.57.0) (2026-09-19)
+
+
+### Features
+
+* add delivery affinity routing headers to webhook subscriptions ([74295f8](https://github.com/linq-team/linq-python/commit/74295f85328cf5f56380ba5fcc4dd11b8ab718b3))
+
 ## [0.56.2](https://github.com/linq-team/linq-python/compare/v0.56.1...v0.56.2) (2026-09-18)
 
 
