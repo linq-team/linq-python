@@ -180,6 +180,8 @@ class WebhookSubscriptionsResource(SyncAPIResource):
         subscribed_events: List[WebhookEventType],
         target_url: str,
         phone_numbers: SequenceNotStr[str] | Omit = omit,
+        routing_id_header: str | Omit = omit,
+        routing_key_header: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -229,6 +231,14 @@ class WebhookSubscriptionsResource(SyncAPIResource):
               empty, events from all phone numbers are delivered. Phone numbers must be in
               E.164 format.
 
+          routing_id_header: Name of the header carrying the chat id, used to hash-route before a token is
+              learned. Defaults to `Linq-Chat-Id`. Ignored without `routing_key_header`.
+
+          routing_key_header:
+              Enables delivery affinity. Name of the header carrying an opaque routing token:
+              we send it on each webhook for a chat and read it back from your 2xx response,
+              so your edge can route to the cluster holding that chat. Omit to disable.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -244,6 +254,8 @@ class WebhookSubscriptionsResource(SyncAPIResource):
                     "subscribed_events": subscribed_events,
                     "target_url": target_url,
                     "phone_numbers": phone_numbers,
+                    "routing_id_header": routing_id_header,
+                    "routing_key_header": routing_key_header,
                 },
                 webhook_subscription_create_params.WebhookSubscriptionCreateParams,
             ),
@@ -293,6 +305,8 @@ class WebhookSubscriptionsResource(SyncAPIResource):
         *,
         is_active: bool | Omit = omit,
         phone_numbers: Optional[SequenceNotStr[str]] | Omit = omit,
+        routing_id_header: Optional[str] | Omit = omit,
+        routing_key_header: Optional[str] | Omit = omit,
         subscribed_events: List[WebhookEventType] | Omit = omit,
         target_url: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -317,6 +331,12 @@ class WebhookSubscriptionsResource(SyncAPIResource):
               the filter and receive events from all phone numbers. Phone numbers must be in
               E.164 format.
 
+          routing_id_header: Updated header name for the chat id. Set to null or an empty string to fall back
+              to `Linq-Chat-Id`.
+
+          routing_key_header: Updated header name for the routing token. Set to null or an empty string to
+              disable delivery affinity and drop the stored tokens.
+
           subscribed_events: Updated list of event types to subscribe to
 
           target_url: New target URL for webhook events
@@ -337,6 +357,8 @@ class WebhookSubscriptionsResource(SyncAPIResource):
                 {
                     "is_active": is_active,
                     "phone_numbers": phone_numbers,
+                    "routing_id_header": routing_id_header,
+                    "routing_key_header": routing_key_header,
                     "subscribed_events": subscribed_events,
                     "target_url": target_url,
                 },
@@ -560,6 +582,8 @@ class AsyncWebhookSubscriptionsResource(AsyncAPIResource):
         subscribed_events: List[WebhookEventType],
         target_url: str,
         phone_numbers: SequenceNotStr[str] | Omit = omit,
+        routing_id_header: str | Omit = omit,
+        routing_key_header: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -609,6 +633,14 @@ class AsyncWebhookSubscriptionsResource(AsyncAPIResource):
               empty, events from all phone numbers are delivered. Phone numbers must be in
               E.164 format.
 
+          routing_id_header: Name of the header carrying the chat id, used to hash-route before a token is
+              learned. Defaults to `Linq-Chat-Id`. Ignored without `routing_key_header`.
+
+          routing_key_header:
+              Enables delivery affinity. Name of the header carrying an opaque routing token:
+              we send it on each webhook for a chat and read it back from your 2xx response,
+              so your edge can route to the cluster holding that chat. Omit to disable.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -624,6 +656,8 @@ class AsyncWebhookSubscriptionsResource(AsyncAPIResource):
                     "subscribed_events": subscribed_events,
                     "target_url": target_url,
                     "phone_numbers": phone_numbers,
+                    "routing_id_header": routing_id_header,
+                    "routing_key_header": routing_key_header,
                 },
                 webhook_subscription_create_params.WebhookSubscriptionCreateParams,
             ),
@@ -673,6 +707,8 @@ class AsyncWebhookSubscriptionsResource(AsyncAPIResource):
         *,
         is_active: bool | Omit = omit,
         phone_numbers: Optional[SequenceNotStr[str]] | Omit = omit,
+        routing_id_header: Optional[str] | Omit = omit,
+        routing_key_header: Optional[str] | Omit = omit,
         subscribed_events: List[WebhookEventType] | Omit = omit,
         target_url: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -697,6 +733,12 @@ class AsyncWebhookSubscriptionsResource(AsyncAPIResource):
               the filter and receive events from all phone numbers. Phone numbers must be in
               E.164 format.
 
+          routing_id_header: Updated header name for the chat id. Set to null or an empty string to fall back
+              to `Linq-Chat-Id`.
+
+          routing_key_header: Updated header name for the routing token. Set to null or an empty string to
+              disable delivery affinity and drop the stored tokens.
+
           subscribed_events: Updated list of event types to subscribe to
 
           target_url: New target URL for webhook events
@@ -717,6 +759,8 @@ class AsyncWebhookSubscriptionsResource(AsyncAPIResource):
                 {
                     "is_active": is_active,
                     "phone_numbers": phone_numbers,
+                    "routing_id_header": routing_id_header,
+                    "routing_key_header": routing_key_header,
                     "subscribed_events": subscribed_events,
                     "target_url": target_url,
                 },

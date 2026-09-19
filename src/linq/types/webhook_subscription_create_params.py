@@ -25,3 +25,17 @@ class WebhookSubscriptionCreateParams(TypedDict, total=False):
     subscription. If omitted or empty, events from all phone numbers are delivered.
     Phone numbers must be in E.164 format.
     """
+
+    routing_id_header: str
+    """
+    Name of the header carrying the chat id, used to hash-route before a token is
+    learned. Defaults to `Linq-Chat-Id`. Ignored without `routing_key_header`.
+    """
+
+    routing_key_header: str
+    """Enables delivery affinity.
+
+    Name of the header carrying an opaque routing token: we send it on each webhook
+    for a chat and read it back from your 2xx response, so your edge can route to
+    the cluster holding that chat. Omit to disable.
+    """

@@ -23,6 +23,19 @@ class WebhookSubscriptionUpdateParams(TypedDict, total=False):
     numbers. Phone numbers must be in E.164 format.
     """
 
+    routing_id_header: Optional[str]
+    """Updated header name for the chat id.
+
+    Set to null or an empty string to fall back to `Linq-Chat-Id`.
+    """
+
+    routing_key_header: Optional[str]
+    """Updated header name for the routing token.
+
+    Set to null or an empty string to disable delivery affinity and drop the stored
+    tokens.
+    """
+
     subscribed_events: List[WebhookEventType]
     """Updated list of event types to subscribe to"""
 
