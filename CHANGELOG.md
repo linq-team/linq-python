@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.57.1](https://github.com/linq-team/linq-python/compare/v0.57.0...v0.57.1) (2026-09-19)
+
+
+### Bug Fixes
+
+* update webhook header name examples to reflect current api ([402c23d](https://github.com/linq-team/linq-python/commit/402c23d227897788a16347df4904fdce74e5f143))
+
 ## [0.57.0](https://github.com/linq-team/linq-python/compare/v0.56.2...v0.57.0) (2026-09-19)
 
 
