@@ -44,3 +44,9 @@ class WebhookSubscriptionCreateResponse(BaseModel):
 
     If null or empty, events from all phone numbers are delivered.
     """
+
+    routing_id_header: Optional[str] = None
+    """Header carrying the chat id. Defaults to `Linq-Chat-Id` when affinity is on."""
+
+    routing_key_header: Optional[str] = None
+    """Header carrying the routing token. Null disables delivery affinity."""
