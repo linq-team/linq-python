@@ -37,8 +37,8 @@ class TestWebhookSubscriptions:
             subscribed_events=["message.sent", "message.delivered", "message.read"],
             target_url="https://webhooks.example.com/linq/events",
             phone_numbers=["+12025551234", "+12025559876"],
-            routing_id_header="x-openai-chat-id",
-            routing_key_header="x-openai-thread-route",
+            routing_id_header="X-Chat-Id",
+            routing_key_header="X-Route-Token",
         )
         assert_matches_type(WebhookSubscriptionCreateResponse, webhook_subscription, path=["response"])
 
@@ -127,8 +127,8 @@ class TestWebhookSubscriptions:
             subscription_id="b2c3d4e5-f6a7-8901-bcde-f23456789012",
             is_active=True,
             phone_numbers=["+12025551234"],
-            routing_id_header="x-openai-chat-id",
-            routing_key_header="x-openai-thread-route",
+            routing_id_header="X-Chat-Id",
+            routing_key_header="X-Route-Token",
             subscribed_events=["message.sent", "message.delivered"],
             target_url="https://webhooks.example.com/linq/events",
         )
@@ -260,8 +260,8 @@ class TestAsyncWebhookSubscriptions:
             subscribed_events=["message.sent", "message.delivered", "message.read"],
             target_url="https://webhooks.example.com/linq/events",
             phone_numbers=["+12025551234", "+12025559876"],
-            routing_id_header="x-openai-chat-id",
-            routing_key_header="x-openai-thread-route",
+            routing_id_header="X-Chat-Id",
+            routing_key_header="X-Route-Token",
         )
         assert_matches_type(WebhookSubscriptionCreateResponse, webhook_subscription, path=["response"])
 
@@ -350,8 +350,8 @@ class TestAsyncWebhookSubscriptions:
             subscription_id="b2c3d4e5-f6a7-8901-bcde-f23456789012",
             is_active=True,
             phone_numbers=["+12025551234"],
-            routing_id_header="x-openai-chat-id",
-            routing_key_header="x-openai-thread-route",
+            routing_id_header="X-Chat-Id",
+            routing_key_header="X-Route-Token",
             subscribed_events=["message.sent", "message.delivered"],
             target_url="https://webhooks.example.com/linq/events",
         )
