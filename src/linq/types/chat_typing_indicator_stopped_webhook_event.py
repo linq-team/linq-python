@@ -1,8 +1,10 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+from typing import Optional
 from datetime import datetime
 
 from .._models import BaseModel
+from .shared.chat_handle import ChatHandle
 from .webhook_event_type import WebhookEventType
 
 __all__ = ["ChatTypingIndicatorStoppedWebhookEvent", "Data"]
@@ -13,6 +15,9 @@ class Data(BaseModel):
 
     chat_id: str
     """Chat identifier"""
+
+    actor_handle: Optional[ChatHandle] = None
+    """Who stopped typing."""
 
 
 class ChatTypingIndicatorStoppedWebhookEvent(BaseModel):
