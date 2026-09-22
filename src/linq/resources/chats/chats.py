@@ -864,7 +864,9 @@ class ChatsResource(SyncAPIResource):
 
         **Note:** A contact card must be configured before sharing. You can set up your
         contact card via the [Contact Card API](#tag/Contact-Card) or on the
-        [Linq dashboard](https://dashboard.linqapp.com/contact-cards).
+        [Linq dashboard](https://dashboard.linqapp.com/contact-cards). If the sending
+        line has no active contact card, the request is rejected with `404` (error code
+        `2012`, "Contact card not found").
 
         Args:
           extra_headers: Send extra headers
@@ -1671,7 +1673,9 @@ class AsyncChatsResource(AsyncAPIResource):
 
         **Note:** A contact card must be configured before sharing. You can set up your
         contact card via the [Contact Card API](#tag/Contact-Card) or on the
-        [Linq dashboard](https://dashboard.linqapp.com/contact-cards).
+        [Linq dashboard](https://dashboard.linqapp.com/contact-cards). If the sending
+        line has no active contact card, the request is rejected with `404` (error code
+        `2012`, "Contact card not found").
 
         Args:
           extra_headers: Send extra headers
