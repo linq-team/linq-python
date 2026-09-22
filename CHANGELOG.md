@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.58.1](https://github.com/linq-team/linq-python/compare/v0.58.0...v0.58.1) (2026-09-22)
+
+
+### Bug Fixes
+
+* clarify contact card requirement for sharing contact info ([d61df69](https://github.com/linq-team/linq-python/commit/d61df69c45cdcae7337303444dc3a8bd6d8f8327))
+
 ## [0.58.0](https://github.com/linq-team/linq-python/compare/v0.57.1...v0.58.0) (2026-09-20)
 
 
