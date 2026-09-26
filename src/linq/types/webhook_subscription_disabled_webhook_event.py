@@ -50,11 +50,11 @@ class DataAPIToken(BaseModel):
     expires_at: Optional[datetime] = None
     """When the token expires; null if it never does."""
 
+    token_prefix: str
+    """The token's visible prefix."""
+
     name: Optional[str] = None
     """Absent when the token has no name."""
-
-    token_prefix: Optional[str] = None
-    """The token's visible prefix. On `api_token.created` and `api_token.deleted`."""
 
 
 class DataChangeFirstName(BaseModel):
