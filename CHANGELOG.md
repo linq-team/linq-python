@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.59.1](https://github.com/linq-team/linq-python/compare/v0.59.0...v0.59.1) (2026-09-26)
+
+
+### Bug Fixes
+
+* remove environment id field from webhook payloads ([c191e11](https://github.com/linq-team/linq-python/commit/c191e110fa43f40e7a88acbd52c889f94f4ee535))
+
 ## [0.59.0](https://github.com/linq-team/linq-python/compare/v0.58.2...v0.59.0) (2026-09-26)
 
 
