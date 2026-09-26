@@ -103,17 +103,14 @@ class DataContactCard(BaseModel):
 
 
 class DataEnvironment(BaseModel):
-    """An environment.
+    """An environment, identified by name.
 
-    Production is `{"id": null, "name": "Production", "type": "production"}`; every other environment has an `id` and type `environment`.
+    Production is `{"name": "Production", "type": "environment"}`; a named environment you created (e.g. "Staging") looks the same shape, just with its own name.
     """
 
-    id: Optional[str] = None
-    """Null for Production."""
+    name: str
 
-    type: Literal["production", "environment"]
-
-    name: Optional[str] = None
+    type: Literal["environment"]
 
 
 class DataTeamMember(BaseModel):
@@ -144,7 +141,7 @@ class DataWebhookSubscription(BaseModel):
 class Data(BaseModel):
     """A change on your account, the same change shown on your Activity page.
 
-    Every event carries `summary`, `occurred_at`, `actor` and `origin`. The object fields (`api_token`, `webhook_subscription`, `environment`, `contact_card`, `phone_number`, `team_member`) identify what changed; on update events `change` describes the transition. Created and deleted events carry only the object that was created or deleted. Fields are absent when they don't apply; `null` appears only inside `change` and as Production's environment `id`.
+    Every event carries `summary`, `occurred_at`, `actor` and `origin`. The object fields (`api_token`, `webhook_subscription`, `environment`, `contact_card`, `phone_number`, `team_member`) identify what changed; on update events `change` describes the transition. Created and deleted events carry only the object that was created or deleted. Fields are absent when they don't apply; `null` appears only inside `change`.
     """
 
     actor: DataActor
@@ -186,10 +183,11 @@ class Data(BaseModel):
     """The contact card that changed."""
 
     environment: Optional[DataEnvironment] = None
-    """An environment.
+    """An environment, identified by name.
 
-    Production is `{"id": null, "name": "Production", "type": "production"}`; every
-    other environment has an `id` and type `environment`.
+    Production is `{"name": "Production", "type": "environment"}`; a named
+    environment you created (e.g. "Staging") looks the same shape, just with its own
+    name.
     """
 
     lines_moved_to_production: Optional[int] = None
@@ -235,7 +233,7 @@ class WebhookSubscriptionDisabledWebhookEvent(BaseModel):
     `phone_number`, `team_member`) identify what changed; on update events `change`
     describes the transition. Created and deleted events carry only the object that
     was created or deleted. Fields are absent when they don't apply; `null` appears
-    only inside `change` and as Production's environment `id`.
+    only inside `change`.
     """
 
     event_id: str
