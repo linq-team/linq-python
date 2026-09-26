@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.59.0](https://github.com/linq-team/linq-python/compare/v0.58.2...v0.59.0) (2026-09-26)
+
+
+### Features
+
+* add webhook events for account changes ([54a61b8](https://github.com/linq-team/linq-python/commit/54a61b80a2c7f0e5552419264ad986b35d280839))
+
 ## [0.58.2](https://github.com/linq-team/linq-python/compare/v0.58.1...v0.58.2) (2026-09-26)
 
 
