@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.58.2](https://github.com/linq-team/linq-python/compare/v0.58.1...v0.58.2) (2026-09-26)
+
+
+### Bug Fixes
+
+* update webhook retry behavior to 30-minute window with adjusted timing ([01a1176](https://github.com/linq-team/linq-python/commit/01a117642257d85785d5fbe72ee2188fb42da1e0))
+
 ## [0.58.1](https://github.com/linq-team/linq-python/compare/v0.58.0...v0.58.1) (2026-09-22)
 
 
