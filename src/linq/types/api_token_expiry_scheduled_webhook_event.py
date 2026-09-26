@@ -14,7 +14,9 @@ __all__ = [
     "DataActor",
     "DataAPIToken",
     "DataChange",
-    "DataChangeName",
+    "DataChangeFirstName",
+    "DataChangeImageURL",
+    "DataChangeLastName",
     "DataContactCard",
     "DataEnvironment",
     "DataTeamMember",
@@ -59,31 +61,69 @@ class DataAPIToken(BaseModel):
     """The token's visible prefix. On `api_token.created` and `api_token.deleted`."""
 
 
-class DataChangeName(BaseModel):
-    """A contact card name change.
+class DataChangeFirstName(BaseModel):
+    """A single field's change, on `contact_card.updated`.
 
-    Only on `contact_card.updated`, when the name changed.
+    Present only for the field that changed.
     """
 
     from_: Optional[str] = FieldInfo(alias="from", default=None)
-    """The name before the change; null when the card had no name."""
+    """The value before the change; null when the card had none."""
 
     to: Optional[str] = None
-    """The name after the change; null when it was removed."""
+    """The value after the change; null when it was removed."""
+
+
+class DataChangeImageURL(BaseModel):
+    """A single field's change, on `contact_card.updated`.
+
+    Present only for the field that changed.
+    """
+
+    from_: Optional[str] = FieldInfo(alias="from", default=None)
+    """The value before the change; null when the card had none."""
+
+    to: Optional[str] = None
+    """The value after the change; null when it was removed."""
+
+
+class DataChangeLastName(BaseModel):
+    """A single field's change, on `contact_card.updated`.
+
+    Present only for the field that changed.
+    """
+
+    from_: Optional[str] = FieldInfo(alias="from", default=None)
+    """The value before the change; null when the card had none."""
+
+    to: Optional[str] = None
+    """The value after the change; null when it was removed."""
 
 
 class DataChange(BaseModel):
     """
-    The transition an update event describes: `from` is the value before and `to` the value after. Present only on update events (`*.updated`, `*.renamed`, `*_changed`, `api_token.expiry_scheduled`, `environment.line_moved`, `webhook_subscription.routing_headers_*`); created, deleted, enabled, disabled, expired and activated events never carry it. `null` means none: `to: null` means cleared and `from: null` means first set. The value type depends on the event and is given in each event's description. `contact_card.updated` uses `name` instead of `from` and `to`.
+    The transition an update event describes: `from` is the value before and `to` the value after. Present only on update events (`*.updated`, `*.renamed`, `*_changed`, `api_token.expiry_scheduled`, `environment.line_moved`, `webhook_subscription.routing_headers_*`); created, deleted, enabled, disabled, expired and activated events never carry it. `null` means none: `to: null` means cleared and `from: null` means first set. The value type depends on the event and is given in each event's description. `contact_card.updated` uses `first_name`, `last_name` and `image_url` instead of `from` and `to`, each present only when that field changed.
+    """
+
+    first_name: Optional[DataChangeFirstName] = None
+    """A single field's change, on `contact_card.updated`.
+
+    Present only for the field that changed.
     """
 
     from_: Optional[object] = FieldInfo(alias="from", default=None)
     """The value before the change; null when there was none."""
 
-    name: Optional[DataChangeName] = None
-    """A contact card name change.
+    image_url: Optional[DataChangeImageURL] = None
+    """A single field's change, on `contact_card.updated`.
 
-    Only on `contact_card.updated`, when the name changed.
+    Present only for the field that changed.
+    """
+
+    last_name: Optional[DataChangeLastName] = None
+    """A single field's change, on `contact_card.updated`.
+
+    Present only for the field that changed.
     """
 
     to: Optional[object] = None
@@ -95,11 +135,13 @@ class DataContactCard(BaseModel):
 
     id: str
 
-    name: Optional[str] = None
-    """Display name. Absent when the card has no name."""
+    first_name: str
 
-    photo_updated: Optional[bool] = None
-    """True when the photo changed. Only on `contact_card.updated`."""
+    image_url: Optional[str] = None
+    """Null when the card has no photo."""
+
+    last_name: Optional[str] = None
+    """Null when the card has no last name."""
 
 
 class DataEnvironment(BaseModel):
@@ -175,8 +217,9 @@ class Data(BaseModel):
     `webhook_subscription.routing_headers_*`); created, deleted, enabled, disabled,
     expired and activated events never carry it. `null` means none: `to: null` means
     cleared and `from: null` means first set. The value type depends on the event
-    and is given in each event's description. `contact_card.updated` uses `name`
-    instead of `from` and `to`.
+    and is given in each event's description. `contact_card.updated` uses
+    `first_name`, `last_name` and `image_url` instead of `from` and `to`, each
+    present only when that field changed.
     """
 
     contact_card: Optional[DataContactCard] = None
