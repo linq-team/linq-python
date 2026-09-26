@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.61.0](https://github.com/linq-team/linq-python/compare/v0.60.0...v0.61.0) (2026-09-26)
+
+
+### Features
+
+* add expires_at field to api token webhook events ([ad7aa1a](https://github.com/linq-team/linq-python/commit/ad7aa1a2e1e132b4a2f26214adf525b5d7b36941))
+
 ## [0.60.0](https://github.com/linq-team/linq-python/compare/v0.59.1...v0.60.0) (2026-09-26)
 
 
