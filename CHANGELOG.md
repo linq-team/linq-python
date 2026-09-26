@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.60.0](https://github.com/linq-team/linq-python/compare/v0.59.1...v0.60.0) (2026-09-26)
+
+
+### Features
+
+* split contact card name into first and last name fields ([b2244bd](https://github.com/linq-team/linq-python/commit/b2244bd82b1b71d2c6b3c1bd2e816e08babcd118))
+
 ## [0.59.1](https://github.com/linq-team/linq-python/compare/v0.59.0...v0.59.1) (2026-09-26)
 
 
