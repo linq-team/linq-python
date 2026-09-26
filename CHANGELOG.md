@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.62.0](https://github.com/linq-team/linq-python/compare/v0.61.0...v0.62.0) (2026-09-26)
+
+
+### Features
+
+* add token_prefix to api_token webhook events ([3b2d0cb](https://github.com/linq-team/linq-python/commit/3b2d0cb5714a3bf0e0b0186f3b5e2e9179337ad3))
+
 ## [0.61.0](https://github.com/linq-team/linq-python/compare/v0.60.0...v0.61.0) (2026-09-26)
 
 
