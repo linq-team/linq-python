@@ -48,11 +48,7 @@ class DataAPIToken(BaseModel):
     id: str
 
     expires_at: Optional[datetime] = None
-    """When the token expires.
-
-    On `api_token.created`, `api_token.expired` and `api_token.deleted`; absent if
-    it never expires.
-    """
+    """When the token expires; null if it never does."""
 
     name: Optional[str] = None
     """Absent when the token has no name."""
