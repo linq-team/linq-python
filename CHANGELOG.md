@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.62.1](https://github.com/linq-team/linq-python/compare/v0.62.0...v0.62.1) (2026-10-01)
+
+
+### Bug Fixes
+
+* clarify imessage app card update delivery requirements ([47035d1](https://github.com/linq-team/linq-python/commit/47035d1f18a2ea787871e4b9130c34b47c6c7ef2))
+
 ## [0.62.0](https://github.com/linq-team/linq-python/compare/v0.61.0...v0.62.0) (2026-09-26)
 
 
