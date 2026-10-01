@@ -677,9 +677,9 @@ class MessagesResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> MessageUpdateAppCardResponse:
         """
-        Replaces a previously delivered `imessage_app` card on the recipient's screen
-        with new content, instead of posting a new bubble (like a game move redrawing
-        the board).
+        Replaces a previously sent `imessage_app` card on the recipient's screen with
+        new content, instead of posting a new bubble (like a game move redrawing the
+        board).
 
         The update is delivered as a **new message** with its own id and delivery
         lifecycle (`message.sent` / `message.delivered` / `message.failed` webhooks fire
@@ -690,8 +690,9 @@ class MessagesResource(SyncAPIResource):
 
         - The referenced message must be an `imessage_app` card sent by you (`400`
           otherwise — inbound cards cannot be updated).
-        - The referenced card must already be delivered (`409` otherwise — retry after
-          the `message.delivered` webhook for it).
+        - The referenced card must already be sent (`409` otherwise — retry after its
+          `message.sent` webhook, in both direct messages and group chats). An update
+          sent the instant that webhook arrives can still get one `409`; retry it.
         - The app identity (`team_id`, `bundle_id`, name) is inherited from the original
           card and cannot change; only `url`, `fallback_text`, and `layout` are
           replaced.
@@ -1465,9 +1466,9 @@ class AsyncMessagesResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> MessageUpdateAppCardResponse:
         """
-        Replaces a previously delivered `imessage_app` card on the recipient's screen
-        with new content, instead of posting a new bubble (like a game move redrawing
-        the board).
+        Replaces a previously sent `imessage_app` card on the recipient's screen with
+        new content, instead of posting a new bubble (like a game move redrawing the
+        board).
 
         The update is delivered as a **new message** with its own id and delivery
         lifecycle (`message.sent` / `message.delivered` / `message.failed` webhooks fire
@@ -1478,8 +1479,9 @@ class AsyncMessagesResource(AsyncAPIResource):
 
         - The referenced message must be an `imessage_app` card sent by you (`400`
           otherwise — inbound cards cannot be updated).
-        - The referenced card must already be delivered (`409` otherwise — retry after
-          the `message.delivered` webhook for it).
+        - The referenced card must already be sent (`409` otherwise — retry after its
+          `message.sent` webhook, in both direct messages and group chats). An update
+          sent the instant that webhook arrives can still get one `409`; retry it.
         - The app identity (`team_id`, `bundle_id`, name) is inherited from the original
           card and cannot change; only `url`, `fallback_text`, and `layout` are
           replaced.
