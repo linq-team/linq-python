@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing_extensions import TypedDict
+from typing_extensions import Literal, TypedDict
 
 from .._types import SequenceNotStr
 
@@ -27,4 +27,16 @@ class AvailableNumberRetrieveParams(TypedDict, total=False):
 
     When provided, an existing chat with these recipients makes the choice sticky.
     Repeat the parameter for multiple recipients.
+    """
+
+    type: Literal["RCS", "iMessage"]
+    """Only return a line of this kind. Case-insensitive.
+
+    - `RCS`: Android lines, which send RCS (and SMS) only.
+    - `iMessage`: iMessage lines.
+
+    Applies to the returned `phone_number`, to the sticky choice when `to` is given
+    (an existing chat on another kind of line is not returned), and to the vCard's
+    backup numbers. Omit it to choose from all your lines. Returns 503 if you have
+    no available line of this kind.
     """
