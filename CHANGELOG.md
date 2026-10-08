@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.63.0](https://github.com/linq-team/linq-python/compare/v0.62.1...v0.63.0) (2026-10-08)
+
+
+### Features
+
+* add type parameter to phone number resolution endpoint ([c57a9e9](https://github.com/linq-team/linq-python/commit/c57a9e93d33c55e20a731ba25b3aa7da99b4a386))
+
 ## [0.62.1](https://github.com/linq-team/linq-python/compare/v0.62.0...v0.62.1) (2026-10-01)
 
 
