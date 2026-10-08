@@ -66,6 +66,15 @@ class PhoneNumber(BaseModel):
     Null when no forwarding number is configured.
     """
 
+    line_type: Optional[Literal["iMessage", "RCS"]] = None
+    """
+    The kind of line: `iMessage` for an iMessage-capable line, `RCS` for an RCS-only
+    line, which sends RCS and SMS but never iMessage. Same values as the `type`
+    parameter on `GET /v3/available_number`. A property of the line itself, so
+    unlike `service` it does not change with the conversation: an iMessage-capable
+    line can still carry an RCS or SMS conversation.
+    """
+
 
 class PhoneNumberListResponse(BaseModel):
     phone_numbers: List[PhoneNumber]
