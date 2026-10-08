@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.64.0](https://github.com/linq-team/linq-python/compare/v0.63.0...v0.64.0) (2026-10-08)
+
+
+### Features
+
+* add line_type field to handle and phone number resources ([7552482](https://github.com/linq-team/linq-python/commit/7552482e2b4ea34baccb3d5e1312e036109cf786))
+
 ## [0.63.0](https://github.com/linq-team/linq-python/compare/v0.62.1...v0.63.0) (2026-10-08)
 
 
