@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing_extensions import Literal
+
 import httpx
 
 from ..types import available_number_retrieve_params
@@ -64,6 +66,7 @@ class AvailableNumberResource(SyncAPIResource):
         *,
         exclude_from: SequenceNotStr[str] | Omit = omit,
         to: SequenceNotStr[str] | Omit = omit,
+        type: Literal["RCS", "iMessage"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -90,6 +93,9 @@ class AvailableNumberResource(SyncAPIResource):
         recipients so they can save the line as a contact. Lines you pass in
         `exclude_from` are left out of the vCard too.
 
+        Pass `type` to pick only from one kind of line — for example `RCS` to get one of
+        your Android (RCS-only) lines. Omit it to choose from all of them.
+
         Args:
           exclude_from: Lines (E.164) to leave out of this selection. Applies to the returned
               `phone_number`, to the sticky choice when `to` is given, and to the vCard's
@@ -103,6 +109,16 @@ class AvailableNumberResource(SyncAPIResource):
           to: Recipient handles (E.164 or email) the message is destined for. When provided,
               an existing chat with these recipients makes the choice sticky. Repeat the
               parameter for multiple recipients.
+
+          type: Only return a line of this kind. Case-insensitive.
+
+              - `RCS`: Android lines, which send RCS (and SMS) only.
+              - `iMessage`: iMessage lines.
+
+              Applies to the returned `phone_number`, to the sticky choice when `to` is given
+              (an existing chat on another kind of line is not returned), and to the vCard's
+              backup numbers. Omit it to choose from all your lines. Returns 503 if you have
+              no available line of this kind.
 
           extra_headers: Send extra headers
 
@@ -123,6 +139,7 @@ class AvailableNumberResource(SyncAPIResource):
                     {
                         "exclude_from": exclude_from,
                         "to": to,
+                        "type": type,
                     },
                     available_number_retrieve_params.AvailableNumberRetrieveParams,
                 ),
@@ -174,6 +191,7 @@ class AsyncAvailableNumberResource(AsyncAPIResource):
         *,
         exclude_from: SequenceNotStr[str] | Omit = omit,
         to: SequenceNotStr[str] | Omit = omit,
+        type: Literal["RCS", "iMessage"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -200,6 +218,9 @@ class AsyncAvailableNumberResource(AsyncAPIResource):
         recipients so they can save the line as a contact. Lines you pass in
         `exclude_from` are left out of the vCard too.
 
+        Pass `type` to pick only from one kind of line — for example `RCS` to get one of
+        your Android (RCS-only) lines. Omit it to choose from all of them.
+
         Args:
           exclude_from: Lines (E.164) to leave out of this selection. Applies to the returned
               `phone_number`, to the sticky choice when `to` is given, and to the vCard's
@@ -213,6 +234,16 @@ class AsyncAvailableNumberResource(AsyncAPIResource):
           to: Recipient handles (E.164 or email) the message is destined for. When provided,
               an existing chat with these recipients makes the choice sticky. Repeat the
               parameter for multiple recipients.
+
+          type: Only return a line of this kind. Case-insensitive.
+
+              - `RCS`: Android lines, which send RCS (and SMS) only.
+              - `iMessage`: iMessage lines.
+
+              Applies to the returned `phone_number`, to the sticky choice when `to` is given
+              (an existing chat on another kind of line is not returned), and to the vCard's
+              backup numbers. Omit it to choose from all your lines. Returns 503 if you have
+              no available line of this kind.
 
           extra_headers: Send extra headers
 
@@ -233,6 +264,7 @@ class AsyncAvailableNumberResource(AsyncAPIResource):
                     {
                         "exclude_from": exclude_from,
                         "to": to,
+                        "type": type,
                     },
                     available_number_retrieve_params.AvailableNumberRetrieveParams,
                 ),

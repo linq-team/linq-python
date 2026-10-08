@@ -29,6 +29,7 @@ class TestAvailableNumber:
         available_number = client.available_number.retrieve(
             exclude_from=["string"],
             to=["string"],
+            type="RCS",
         )
         assert_matches_type(AvailableNumberRetrieveResponse, available_number, path=["response"])
 
@@ -72,6 +73,7 @@ class TestAsyncAvailableNumber:
         available_number = await async_client.available_number.retrieve(
             exclude_from=["string"],
             to=["string"],
+            type="RCS",
         )
         assert_matches_type(AvailableNumberRetrieveResponse, available_number, path=["response"])
 
