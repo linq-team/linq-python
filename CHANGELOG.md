@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.65.0](https://github.com/linq-team/linq-python/compare/v0.64.0...v0.65.0) (2026-10-09)
+
+
+### Features
+
+* add rate limit information and 429 responses to chat sharing and contact card endpoints ([7d71fd4](https://github.com/linq-team/linq-python/commit/7d71fd4b4e068582fe9ae9b4abc79a533d810fad))
+
 ## [0.64.0](https://github.com/linq-team/linq-python/compare/v0.63.0...v0.64.0) (2026-10-08)
 
 
