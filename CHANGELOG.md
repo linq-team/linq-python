@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.67.0](https://github.com/linq-team/linq-python/compare/v0.66.0...v0.67.0) (2026-11-06)
+
+
+### Features
+
+* support image tapbacks and improve reaction documentation ([1c79845](https://github.com/linq-team/linq-python/commit/1c79845c8b872761fbfd8b62cd7c9084224c0075))
+
 ## [0.66.0](https://github.com/linq-team/linq-python/compare/v0.65.0...v0.66.0) (2026-11-06)
 
 
