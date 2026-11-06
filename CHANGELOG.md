@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.66.0](https://github.com/linq-team/linq-python/compare/v0.65.0...v0.66.0) (2026-11-06)
+
+
+### Features
+
+* add force_notify option for imessage voice memos ([59fe9e2](https://github.com/linq-team/linq-python/commit/59fe9e25583a9f5fa5b5d8c7046b8c0fb5adc57d))
+
 ## [0.65.0](https://github.com/linq-team/linq-python/compare/v0.64.0...v0.65.0) (2026-10-09)
 
 
