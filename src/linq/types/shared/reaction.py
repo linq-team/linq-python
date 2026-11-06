@@ -10,9 +10,9 @@ __all__ = ["Reaction", "Sticker"]
 
 
 class Sticker(BaseModel):
-    """Sticker attachment details when reaction_type is "sticker".
-
-    Null for non-sticker reactions.
+    """
+    The image when type is "sticker", or when type is "custom" and the tapback is an image.
+    Null otherwise.
     """
 
     file_name: Optional[str] = None
@@ -41,9 +41,10 @@ class Reaction(BaseModel):
     """Type of reaction.
 
     Standard iMessage tapbacks are love, like, dislike, laugh, emphasize, question.
-    Custom emoji reactions have type "custom" with the actual emoji in the
-    custom_emoji field. Sticker reactions have type "sticker" with sticker
-    attachment details in the sticker field.
+    Custom tapbacks have type "custom": an emoji tapback carries the emoji in the
+    custom_emoji field, and an image tapback carries the image in the sticker field.
+    Sticker reactions have type "sticker" with sticker attachment details in the
+    sticker field.
     """
 
     id: Optional[str] = None
@@ -59,10 +60,10 @@ class Reaction(BaseModel):
     """
 
     custom_emoji: Optional[str] = None
-    """Custom emoji if type is "custom", null otherwise"""
+    """Custom emoji if type is "custom" and the tapback is an emoji, null otherwise"""
 
     sticker: Optional[Sticker] = None
-    """Sticker attachment details when reaction_type is "sticker".
-
-    Null for non-sticker reactions.
+    """
+    The image when type is "sticker", or when type is "custom" and the tapback is an
+    image. Null otherwise.
     """
