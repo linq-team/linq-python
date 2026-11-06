@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.67.1](https://github.com/linq-team/linq-python/compare/v0.67.0...v0.67.1) (2026-11-06)
+
+
+### Documentation
+
+* update sip configuration guidance in api documentation ([2a83fe7](https://github.com/linq-team/linq-python/commit/2a83fe7755d73ab29a90ecea9088b172770855ee))
+
 ## [0.67.0](https://github.com/linq-team/linq-python/compare/v0.66.0...v0.67.0) (2026-11-06)
 
 
