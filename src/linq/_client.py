@@ -856,13 +856,8 @@ class LinqAPIV3(SyncAPIClient):
     def sip_profiles(self) -> SipProfilesResource:
         """## SIP configuration
 
-        Add these IP ranges to your SIP endpoint's allowlist:
-
-        ```
-        54.172.60.0/30
-        54.244.51.0/30
-        168.86.128.0/18
-        ```
+        Your Linq representative provides the signaling and media IP ranges and
+        ports to allow through your firewall during onboarding.
 
         Set `primary_uri` to your endpoint as scheme + host — `sips:` for TLS or
         `sip:` for UDP, with no user part (we add it). Each call arrives at your
@@ -873,7 +868,7 @@ class LinqAPIV3(SyncAPIClient):
         ```
 
         so you can route on the dialed number. The caller's number is in the
-        `From` header in E.164. Media (RTP) uses UDP ports 10000–60000.
+        `From` header in E.164.
         """
         from .resources.sip_profiles import SipProfilesResource
 
@@ -2078,13 +2073,8 @@ class AsyncLinqAPIV3(AsyncAPIClient):
     def sip_profiles(self) -> AsyncSipProfilesResource:
         """## SIP configuration
 
-        Add these IP ranges to your SIP endpoint's allowlist:
-
-        ```
-        54.172.60.0/30
-        54.244.51.0/30
-        168.86.128.0/18
-        ```
+        Your Linq representative provides the signaling and media IP ranges and
+        ports to allow through your firewall during onboarding.
 
         Set `primary_uri` to your endpoint as scheme + host — `sips:` for TLS or
         `sip:` for UDP, with no user part (we add it). Each call arrives at your
@@ -2095,7 +2085,7 @@ class AsyncLinqAPIV3(AsyncAPIClient):
         ```
 
         so you can route on the dialed number. The caller's number is in the
-        `From` header in E.164. Media (RTP) uses UDP ports 10000–60000.
+        `From` header in E.164.
         """
         from .resources.sip_profiles import AsyncSipProfilesResource
 
@@ -3234,13 +3224,8 @@ class LinqAPIV3WithRawResponse:
     def sip_profiles(self) -> sip_profiles.SipProfilesResourceWithRawResponse:
         """## SIP configuration
 
-        Add these IP ranges to your SIP endpoint's allowlist:
-
-        ```
-        54.172.60.0/30
-        54.244.51.0/30
-        168.86.128.0/18
-        ```
+        Your Linq representative provides the signaling and media IP ranges and
+        ports to allow through your firewall during onboarding.
 
         Set `primary_uri` to your endpoint as scheme + host — `sips:` for TLS or
         `sip:` for UDP, with no user part (we add it). Each call arrives at your
@@ -3251,7 +3236,7 @@ class LinqAPIV3WithRawResponse:
         ```
 
         so you can route on the dialed number. The caller's number is in the
-        `From` header in E.164. Media (RTP) uses UDP ports 10000–60000.
+        `From` header in E.164.
         """
         from .resources.sip_profiles import SipProfilesResourceWithRawResponse
 
@@ -4262,13 +4247,8 @@ class AsyncLinqAPIV3WithRawResponse:
     def sip_profiles(self) -> sip_profiles.AsyncSipProfilesResourceWithRawResponse:
         """## SIP configuration
 
-        Add these IP ranges to your SIP endpoint's allowlist:
-
-        ```
-        54.172.60.0/30
-        54.244.51.0/30
-        168.86.128.0/18
-        ```
+        Your Linq representative provides the signaling and media IP ranges and
+        ports to allow through your firewall during onboarding.
 
         Set `primary_uri` to your endpoint as scheme + host — `sips:` for TLS or
         `sip:` for UDP, with no user part (we add it). Each call arrives at your
@@ -4279,7 +4259,7 @@ class AsyncLinqAPIV3WithRawResponse:
         ```
 
         so you can route on the dialed number. The caller's number is in the
-        `From` header in E.164. Media (RTP) uses UDP ports 10000–60000.
+        `From` header in E.164.
         """
         from .resources.sip_profiles import AsyncSipProfilesResourceWithRawResponse
 
@@ -5290,13 +5270,8 @@ class LinqAPIV3WithStreamedResponse:
     def sip_profiles(self) -> sip_profiles.SipProfilesResourceWithStreamingResponse:
         """## SIP configuration
 
-        Add these IP ranges to your SIP endpoint's allowlist:
-
-        ```
-        54.172.60.0/30
-        54.244.51.0/30
-        168.86.128.0/18
-        ```
+        Your Linq representative provides the signaling and media IP ranges and
+        ports to allow through your firewall during onboarding.
 
         Set `primary_uri` to your endpoint as scheme + host — `sips:` for TLS or
         `sip:` for UDP, with no user part (we add it). Each call arrives at your
@@ -5307,7 +5282,7 @@ class LinqAPIV3WithStreamedResponse:
         ```
 
         so you can route on the dialed number. The caller's number is in the
-        `From` header in E.164. Media (RTP) uses UDP ports 10000–60000.
+        `From` header in E.164.
         """
         from .resources.sip_profiles import SipProfilesResourceWithStreamingResponse
 
@@ -6318,13 +6293,8 @@ class AsyncLinqAPIV3WithStreamedResponse:
     def sip_profiles(self) -> sip_profiles.AsyncSipProfilesResourceWithStreamingResponse:
         """## SIP configuration
 
-        Add these IP ranges to your SIP endpoint's allowlist:
-
-        ```
-        54.172.60.0/30
-        54.244.51.0/30
-        168.86.128.0/18
-        ```
+        Your Linq representative provides the signaling and media IP ranges and
+        ports to allow through your firewall during onboarding.
 
         Set `primary_uri` to your endpoint as scheme + host — `sips:` for TLS or
         `sip:` for UDP, with no user part (we add it). Each call arrives at your
@@ -6335,7 +6305,7 @@ class AsyncLinqAPIV3WithStreamedResponse:
         ```
 
         so you can route on the dialed number. The caller's number is in the
-        `From` header in E.164. Media (RTP) uses UDP ports 10000–60000.
+        `From` header in E.164.
         """
         from .resources.sip_profiles import AsyncSipProfilesResourceWithStreamingResponse
 
