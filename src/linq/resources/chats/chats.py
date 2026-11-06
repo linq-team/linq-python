@@ -363,6 +363,7 @@ class ChatsResource(SyncAPIResource):
         from_: str,
         message: MessageContentParam,
         to: SequenceNotStr[str],
+        force_notify: bool | Omit = omit,
         override_optout: bool | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -500,6 +501,11 @@ class ChatsResource(SyncAPIResource):
           to: Array of recipient handles (phone numbers in E.164 format or email addresses).
               For individual chats, provide one recipient. For group chats, provide multiple.
 
+          force_notify: iMessage only. If the recipient has Do Not Disturb or another Focus on and the
+              message is delivered silently, alert them anyway (iMessage's "Notify Anyway").
+              Best effort: ignored for SMS and RCS, and a no-op when the recipient was already
+              notified.
+
           override_optout: Send even though the recipient asked you to stop (`403`, error code `2024`).
               Applies to this request only: the opt-out stays in place, so the next send
               without this flag is rejected again. Every override is recorded against your API
@@ -520,6 +526,7 @@ class ChatsResource(SyncAPIResource):
                     "from_": from_,
                     "message": message,
                     "to": to,
+                    "force_notify": force_notify,
                     "override_optout": override_optout,
                 },
                 chat_create_params.ChatCreateParams,
@@ -782,6 +789,7 @@ class ChatsResource(SyncAPIResource):
         chat_id: str,
         *,
         attachment_id: str | Omit = omit,
+        force_notify: bool | Omit = omit,
         override_optout: bool | Omit = omit,
         voice_memo_url: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -813,6 +821,10 @@ class ChatsResource(SyncAPIResource):
 
               Either `voice_memo_url` or `attachment_id` must be provided, but not both.
 
+          force_notify: iMessage only. If the recipient has Do Not Disturb or another Focus on and the
+              voice memo is delivered silently, alert them anyway (iMessage's "Notify
+              Anyway"). Best effort: a no-op when the recipient was already notified.
+
           override_optout: Send even though the recipient asked you to stop (`403`, error code `2024`).
               Applies to this request only: the opt-out stays in place, so the next send
               without this flag is rejected again. Every override is recorded against your API
@@ -837,6 +849,7 @@ class ChatsResource(SyncAPIResource):
             body=maybe_transform(
                 {
                     "attachment_id": attachment_id,
+                    "force_notify": force_notify,
                     "override_optout": override_optout,
                     "voice_memo_url": voice_memo_url,
                 },
@@ -1174,6 +1187,7 @@ class AsyncChatsResource(AsyncAPIResource):
         from_: str,
         message: MessageContentParam,
         to: SequenceNotStr[str],
+        force_notify: bool | Omit = omit,
         override_optout: bool | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -1311,6 +1325,11 @@ class AsyncChatsResource(AsyncAPIResource):
           to: Array of recipient handles (phone numbers in E.164 format or email addresses).
               For individual chats, provide one recipient. For group chats, provide multiple.
 
+          force_notify: iMessage only. If the recipient has Do Not Disturb or another Focus on and the
+              message is delivered silently, alert them anyway (iMessage's "Notify Anyway").
+              Best effort: ignored for SMS and RCS, and a no-op when the recipient was already
+              notified.
+
           override_optout: Send even though the recipient asked you to stop (`403`, error code `2024`).
               Applies to this request only: the opt-out stays in place, so the next send
               without this flag is rejected again. Every override is recorded against your API
@@ -1331,6 +1350,7 @@ class AsyncChatsResource(AsyncAPIResource):
                     "from_": from_,
                     "message": message,
                     "to": to,
+                    "force_notify": force_notify,
                     "override_optout": override_optout,
                 },
                 chat_create_params.ChatCreateParams,
@@ -1593,6 +1613,7 @@ class AsyncChatsResource(AsyncAPIResource):
         chat_id: str,
         *,
         attachment_id: str | Omit = omit,
+        force_notify: bool | Omit = omit,
         override_optout: bool | Omit = omit,
         voice_memo_url: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -1624,6 +1645,10 @@ class AsyncChatsResource(AsyncAPIResource):
 
               Either `voice_memo_url` or `attachment_id` must be provided, but not both.
 
+          force_notify: iMessage only. If the recipient has Do Not Disturb or another Focus on and the
+              voice memo is delivered silently, alert them anyway (iMessage's "Notify
+              Anyway"). Best effort: a no-op when the recipient was already notified.
+
           override_optout: Send even though the recipient asked you to stop (`403`, error code `2024`).
               Applies to this request only: the opt-out stays in place, so the next send
               without this flag is rejected again. Every override is recorded against your API
@@ -1648,6 +1673,7 @@ class AsyncChatsResource(AsyncAPIResource):
             body=await async_maybe_transform(
                 {
                     "attachment_id": attachment_id,
+                    "force_notify": force_notify,
                     "override_optout": override_optout,
                     "voice_memo_url": voice_memo_url,
                 },

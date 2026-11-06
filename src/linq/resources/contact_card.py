@@ -82,6 +82,10 @@ class ContactCardResource(SyncAPIResource):
         existing card is never overwritten by accident. Use `PATCH /v3/contact_card` to
         change it.
 
+        Contact cards are an iMessage-only feature. On a non-iMessage (SMS/RCS) line the
+        response is `403` (`2011`) — the card is not supported there and no retry will
+        help.
+
         Rate limited per phone number: `POST` and `PATCH` share a budget of 3 calls
         every 10 minutes. Further calls return `429`, with `Retry-After` carrying the
         wait.
@@ -189,6 +193,10 @@ class ContactCardResource(SyncAPIResource):
         The update did not reach the line, so the card is left not active — wait before
         retrying, because repeated attempts extend the rate limit.
 
+        Contact cards are an iMessage-only feature. On a non-iMessage (SMS/RCS) line the
+        response is `403` (`2011`) — the card is not supported there and no retry will
+        help.
+
         Rate limited per phone number: `POST` and `PATCH` share a budget of 3 calls
         every 10 minutes. Further calls return `429`, with `Retry-After` carrying the
         wait.
@@ -292,6 +300,10 @@ class AsyncContactCardResource(AsyncAPIResource):
         **Note:** once a card is active, this endpoint returns `409` (`2014`) so an
         existing card is never overwritten by accident. Use `PATCH /v3/contact_card` to
         change it.
+
+        Contact cards are an iMessage-only feature. On a non-iMessage (SMS/RCS) line the
+        response is `403` (`2011`) — the card is not supported there and no retry will
+        help.
 
         Rate limited per phone number: `POST` and `PATCH` share a budget of 3 calls
         every 10 minutes. Further calls return `429`, with `Retry-After` carrying the
@@ -399,6 +411,10 @@ class AsyncContactCardResource(AsyncAPIResource):
         If the upstream write is rate-limited, the response is `503` (`4004`) instead.
         The update did not reach the line, so the card is left not active — wait before
         retrying, because repeated attempts extend the rate limit.
+
+        Contact cards are an iMessage-only feature. On a non-iMessage (SMS/RCS) line the
+        response is `403` (`2011`) — the card is not supported there and no retry will
+        help.
 
         Rate limited per phone number: `POST` and `PATCH` share a budget of 3 calls
         every 10 minutes. Further calls return `429`, with `Retry-After` carrying the

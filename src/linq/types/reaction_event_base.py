@@ -76,11 +76,13 @@ class ReactionEventBase(BaseModel):
     """When the reaction was added or removed"""
 
     reaction_id: Optional[str] = None
-    """Identifier for this reaction.
-
-    Pass it to `PATCH /v3/messages/{messageId}/reactions/{reactionId}` to move a
-    sticker. Stickers stack, so this is what distinguishes one sticker from another
-    on the same message.
+    """
+    Identifier for this reaction, matching `id` on the message's `reactions`.
+    Changing a tapback keeps the same id, and `reaction.removed` carries the id of
+    the reaction it removed. Pass it to
+    `PATCH /v3/messages/{messageId}/reactions/{reactionId}` to move a sticker.
+    Stickers stack, so this is what distinguishes one sticker from another on the
+    same message.
     """
 
     service: Optional[ServiceType] = None

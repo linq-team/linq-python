@@ -17,6 +17,7 @@ from .shared import (
 from .message import Message as Message
 from .payment import Payment as Payment
 from .reply_to import ReplyTo as ReplyTo
+from .sip_profile import SipProfile as SipProfile
 from .message_effect import MessageEffect as MessageEffect
 from .reply_to_param import ReplyToParam as ReplyToParam
 from .link_part_param import LinkPartParam as LinkPartParam
@@ -27,6 +28,7 @@ from .message_event_v2 import MessageEventV2 as MessageEventV2
 from .payment_provider import PaymentProvider as PaymentProvider
 from .reputation_audit import ReputationAudit as ReputationAudit
 from .set_contact_card import SetContactCard as SetContactCard
+from .call_voice_record import CallVoiceRecord as CallVoiceRecord
 from .reputation_driver import ReputationDriver as ReputationDriver
 from .reputation_report import ReputationReport as ReputationReport
 from .chat_create_params import ChatCreateParams as ChatCreateParams
@@ -47,6 +49,7 @@ from .message_create_params import MessageCreateParams as MessageCreateParams
 from .message_update_params import MessageUpdateParams as MessageUpdateParams
 from .payment_create_params import PaymentCreateParams as PaymentCreateParams
 from .reputation_driver_key import ReputationDriverKey as ReputationDriverKey
+from .call_voice_list_params import CallVoiceListParams as CallVoiceListParams
 from .chat_list_chats_params import ChatListChatsParams as ChatListChatsParams
 from .reputation_action_item import ReputationActionItem as ReputationActionItem
 from .schemas_message_effect import SchemasMessageEffect as SchemasMessageEffect
@@ -56,6 +59,7 @@ from .poll_read_webhook_event import PollReadWebhookEvent as PollReadWebhookEven
 from .poll_sent_webhook_event import PollSentWebhookEvent as PollSentWebhookEvent
 from .reputation_opt_out_chat import ReputationOptOutChat as ReputationOptOutChat
 from .attachment_create_params import AttachmentCreateParams as AttachmentCreateParams
+from .call_voice_list_response import CallVoiceListResponse as CallVoiceListResponse
 from .chat_leave_chat_response import ChatLeaveChatResponse as ChatLeaveChatResponse
 from .experience_list_response import ExperienceListResponse as ExperienceListResponse
 from .reputation_audit_started import ReputationAuditStarted as ReputationAuditStarted
@@ -63,6 +67,10 @@ from .payment_handle_connection import PaymentHandleConnection as PaymentHandleC
 from .phonenumber_list_response import PhonenumberListResponse as PhonenumberListResponse
 from .poll_failed_webhook_event import PollFailedWebhookEvent as PollFailedWebhookEvent
 from .reputation_unhealthy_chat import ReputationUnhealthyChat as ReputationUnhealthyChat
+from .sip_profile_assign_params import SipProfileAssignParams as SipProfileAssignParams
+from .sip_profile_create_params import SipProfileCreateParams as SipProfileCreateParams
+from .sip_profile_list_response import SipProfileListResponse as SipProfileListResponse
+from .sip_profile_update_params import SipProfileUpdateParams as SipProfileUpdateParams
 from .attachment_create_response import AttachmentCreateResponse as AttachmentCreateResponse
 from .chat_created_webhook_event import ChatCreatedWebhookEvent as ChatCreatedWebhookEvent
 from .chat_send_voicememo_params import ChatSendVoicememoParams as ChatSendVoicememoParams
@@ -80,6 +88,7 @@ from .message_add_reaction_params import MessageAddReactionParams as MessageAddR
 from .payment_request_list_params import PaymentRequestListParams as PaymentRequestListParams
 from .poll_received_webhook_event import PollReceivedWebhookEvent as PollReceivedWebhookEvent
 from .schemas_media_part_response import SchemasMediaPartResponse as SchemasMediaPartResponse
+from .sip_profile_assign_response import SipProfileAssignResponse as SipProfileAssignResponse
 from .webhook_event_list_response import WebhookEventListResponse as WebhookEventListResponse
 from .attachment_retrieve_response import AttachmentRetrieveResponse as AttachmentRetrieveResponse
 from .blocked_handle_list_response import BlockedHandleListResponse as BlockedHandleListResponse
@@ -100,6 +109,7 @@ from .payment_expired_webhook_event import PaymentExpiredWebhookEvent as Payment
 from .payment_request_create_params import PaymentRequestCreateParams as PaymentRequestCreateParams
 from .payment_request_list_response import PaymentRequestListResponse as PaymentRequestListResponse
 from .poll_vote_added_webhook_event import PollVoteAddedWebhookEvent as PollVoteAddedWebhookEvent
+from .call_voice_ended_webhook_event import CallVoiceEndedWebhookEvent as CallVoiceEndedWebhookEvent
 from .contact_card_retrieve_response import ContactCardRetrieveResponse as ContactCardRetrieveResponse
 from .message_received_webhook_event import MessageReceivedWebhookEvent as MessageReceivedWebhookEvent
 from .message_update_app_card_params import MessageUpdateAppCardParams as MessageUpdateAppCardParams
@@ -110,6 +120,7 @@ from .api_token_created_webhook_event import APITokenCreatedWebhookEvent as APIT
 from .api_token_deleted_webhook_event import APITokenDeletedWebhookEvent as APITokenDeletedWebhookEvent
 from .api_token_expired_webhook_event import APITokenExpiredWebhookEvent as APITokenExpiredWebhookEvent
 from .api_token_renamed_webhook_event import APITokenRenamedWebhookEvent as APITokenRenamedWebhookEvent
+from .call_voice_failed_webhook_event import CallVoiceFailedWebhookEvent as CallVoiceFailedWebhookEvent
 from .message_delivered_webhook_event import MessageDeliveredWebhookEvent as MessageDeliveredWebhookEvent
 from .participant_added_webhook_event import ParticipantAddedWebhookEvent as ParticipantAddedWebhookEvent
 from .payment_provider_connect_params import PaymentProviderConnectParams as PaymentProviderConnectParams
@@ -117,11 +128,14 @@ from .payment_succeeded_webhook_event import PaymentSucceededWebhookEvent as Pay
 from .poll_vote_removed_webhook_event import PollVoteRemovedWebhookEvent as PollVoteRemovedWebhookEvent
 from .team_member_added_webhook_event import TeamMemberAddedWebhookEvent as TeamMemberAddedWebhookEvent
 from .available_number_retrieve_params import AvailableNumberRetrieveParams as AvailableNumberRetrieveParams
+from .call_voice_ringing_webhook_event import CallVoiceRingingWebhookEvent as CallVoiceRingingWebhookEvent
 from .connection_created_webhook_event import ConnectionCreatedWebhookEvent as ConnectionCreatedWebhookEvent
 from .connection_revoked_webhook_event import ConnectionRevokedWebhookEvent as ConnectionRevokedWebhookEvent
 from .message_update_app_card_response import MessageUpdateAppCardResponse as MessageUpdateAppCardResponse
 from .payment_authorized_webhook_event import PaymentAuthorizedWebhookEvent as PaymentAuthorizedWebhookEvent
 from .api_token_activated_webhook_event import APITokenActivatedWebhookEvent as APITokenActivatedWebhookEvent
+from .call_voice_answered_webhook_event import CallVoiceAnsweredWebhookEvent as CallVoiceAnsweredWebhookEvent
+from .call_voice_declined_webhook_event import CallVoiceDeclinedWebhookEvent as CallVoiceDeclinedWebhookEvent
 from .capability_check_i_message_params import CapabilityCheckIMessageParams as CapabilityCheckIMessageParams
 from .environment_created_webhook_event import EnvironmentCreatedWebhookEvent as EnvironmentCreatedWebhookEvent
 from .environment_deleted_webhook_event import EnvironmentDeletedWebhookEvent as EnvironmentDeletedWebhookEvent
@@ -130,6 +144,8 @@ from .participant_removed_webhook_event import ParticipantRemovedWebhookEvent as
 from .payment_provider_connect_response import PaymentProviderConnectResponse as PaymentProviderConnectResponse
 from .poll_reaction_added_webhook_event import PollReactionAddedWebhookEvent as PollReactionAddedWebhookEvent
 from .available_number_retrieve_response import AvailableNumberRetrieveResponse as AvailableNumberRetrieveResponse
+from .call_voice_initiated_webhook_event import CallVoiceInitiatedWebhookEvent as CallVoiceInitiatedWebhookEvent
+from .call_voice_no_answer_webhook_event import CallVoiceNoAnswerWebhookEvent as CallVoiceNoAnswerWebhookEvent
 from .contact_card_created_webhook_event import ContactCardCreatedWebhookEvent as ContactCardCreatedWebhookEvent
 from .contact_card_deleted_webhook_event import ContactCardDeletedWebhookEvent as ContactCardDeletedWebhookEvent
 from .contact_card_updated_webhook_event import ContactCardUpdatedWebhookEvent as ContactCardUpdatedWebhookEvent
@@ -196,6 +212,9 @@ from .chat_typing_indicator_stopped_webhook_event import (
 )
 from .webhook_subscription_disabled_webhook_event import (
     WebhookSubscriptionDisabledWebhookEvent as WebhookSubscriptionDisabledWebhookEvent,
+)
+from .phone_number_line_type_updated_webhook_event import (
+    PhoneNumberLineTypeUpdatedWebhookEvent as PhoneNumberLineTypeUpdatedWebhookEvent,
 )
 from .phone_number_forwarding_updated_webhook_event import (
     PhoneNumberForwardingUpdatedWebhookEvent as PhoneNumberForwardingUpdatedWebhookEvent,

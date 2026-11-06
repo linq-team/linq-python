@@ -221,6 +221,7 @@ class MessagesResource(SyncAPIResource):
         to: SequenceNotStr[str],
         continuation_message: message_create_params.ContinuationMessage | Omit = omit,
         exclude_from: SequenceNotStr[str] | Omit = omit,
+        force_notify: bool | Omit = omit,
         override_optout: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -276,11 +277,10 @@ class MessagesResource(SyncAPIResource):
         - Voice memos are **not** supported here. To send an iMessage voice-memo bubble,
           use `POST /v3/chats/{chatId}/voicememo` with a known chat id.
 
-        ## Service preference, effects, decorations, inline stickers
+        ## Effects, decorations, inline stickers
 
-        Set `message.preferred_service` (`iMessage` | `RCS` | `SMS`), `message.effect`,
-        and per-part `text_decorations` and `inline_stickers` exactly as on the other
-        send endpoints.
+        Set `message.effect` and per-part `text_decorations` and `inline_stickers`
+        exactly as on the other send endpoints.
 
         Always responds `202 Accepted` — chat creation is incidental to the send.
 
@@ -321,6 +321,11 @@ class MessagesResource(SyncAPIResource):
               like `4155551234` is rejected rather than silently skipped. Excluding every one
               of your available lines returns 400 when a line has to be picked.
 
+          force_notify: iMessage only. If the recipient has Do Not Disturb or another Focus on and the
+              message is delivered silently, alert them anyway (iMessage's "Notify Anyway").
+              Best effort: ignored for SMS and RCS, and a no-op when the recipient was already
+              notified.
+
           override_optout: Send even though the recipient asked you to stop (`403`, error code `2024`).
               Applies to this request only: the opt-out stays in place, so the next send
               without this flag is rejected again. Every override is recorded against your API
@@ -343,6 +348,7 @@ class MessagesResource(SyncAPIResource):
                     "to": to,
                     "continuation_message": continuation_message,
                     "exclude_from": exclude_from,
+                    "force_notify": force_notify,
                     "override_optout": override_optout,
                 },
                 message_create_params.MessageCreateParams,
@@ -521,6 +527,9 @@ class MessagesResource(SyncAPIResource):
         `placement`, and can be changed afterwards with
         `PATCH /v3/messages/{messageId}/reactions/{reactionId}`. An animated image peels
         as an animated sticker, in whatever shape the file already has.
+
+        **Polls** take stickers only. Any tapback on a poll message — standard or
+        `custom` — is rejected with a 400.
 
         Args:
           operation: Whether to add or remove the reaction
@@ -1010,6 +1019,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         to: SequenceNotStr[str],
         continuation_message: message_create_params.ContinuationMessage | Omit = omit,
         exclude_from: SequenceNotStr[str] | Omit = omit,
+        force_notify: bool | Omit = omit,
         override_optout: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -1065,11 +1075,10 @@ class AsyncMessagesResource(AsyncAPIResource):
         - Voice memos are **not** supported here. To send an iMessage voice-memo bubble,
           use `POST /v3/chats/{chatId}/voicememo` with a known chat id.
 
-        ## Service preference, effects, decorations, inline stickers
+        ## Effects, decorations, inline stickers
 
-        Set `message.preferred_service` (`iMessage` | `RCS` | `SMS`), `message.effect`,
-        and per-part `text_decorations` and `inline_stickers` exactly as on the other
-        send endpoints.
+        Set `message.effect` and per-part `text_decorations` and `inline_stickers`
+        exactly as on the other send endpoints.
 
         Always responds `202 Accepted` — chat creation is incidental to the send.
 
@@ -1110,6 +1119,11 @@ class AsyncMessagesResource(AsyncAPIResource):
               like `4155551234` is rejected rather than silently skipped. Excluding every one
               of your available lines returns 400 when a line has to be picked.
 
+          force_notify: iMessage only. If the recipient has Do Not Disturb or another Focus on and the
+              message is delivered silently, alert them anyway (iMessage's "Notify Anyway").
+              Best effort: ignored for SMS and RCS, and a no-op when the recipient was already
+              notified.
+
           override_optout: Send even though the recipient asked you to stop (`403`, error code `2024`).
               Applies to this request only: the opt-out stays in place, so the next send
               without this flag is rejected again. Every override is recorded against your API
@@ -1132,6 +1146,7 @@ class AsyncMessagesResource(AsyncAPIResource):
                     "to": to,
                     "continuation_message": continuation_message,
                     "exclude_from": exclude_from,
+                    "force_notify": force_notify,
                     "override_optout": override_optout,
                 },
                 message_create_params.MessageCreateParams,
@@ -1310,6 +1325,9 @@ class AsyncMessagesResource(AsyncAPIResource):
         `placement`, and can be changed afterwards with
         `PATCH /v3/messages/{messageId}/reactions/{reactionId}`. An animated image peels
         as an animated sticker, in whatever shape the file already has.
+
+        **Polls** take stickers only. Any tapback on a poll message — standard or
+        `custom` — is rejected with a 400.
 
         Args:
           operation: Whether to add or remove the reaction

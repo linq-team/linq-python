@@ -134,6 +134,7 @@ class TestMessages:
                     "part_index": 0,
                 },
             },
+            force_notify=False,
             override_optout=False,
         )
         assert_matches_type(MessageSendResponse, message, path=["response"])
@@ -296,6 +297,7 @@ class TestAsyncMessages:
                     "part_index": 0,
                 },
             },
+            force_notify=False,
             override_optout=False,
         )
         assert_matches_type(MessageSendResponse, message, path=["response"])

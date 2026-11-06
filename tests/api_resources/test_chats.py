@@ -89,6 +89,7 @@ class TestChats:
                 },
             },
             to=["+12052532136"],
+            force_notify=False,
             override_optout=False,
         )
         assert_matches_type(ChatCreateResponse, chat, path=["response"])
@@ -354,6 +355,7 @@ class TestChats:
         chat = client.chats.send_voicememo(
             chat_id="f19ee7b8-8533-4c5c-83ec-4ef8d6d1ddbd",
             attachment_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            force_notify=False,
             override_optout=False,
             voice_memo_url="https://example.com/voice-memo.m4a",
         )
@@ -506,6 +508,7 @@ class TestAsyncChats:
                 },
             },
             to=["+12052532136"],
+            force_notify=False,
             override_optout=False,
         )
         assert_matches_type(ChatCreateResponse, chat, path=["response"])
@@ -771,6 +774,7 @@ class TestAsyncChats:
         chat = await async_client.chats.send_voicememo(
             chat_id="f19ee7b8-8533-4c5c-83ec-4ef8d6d1ddbd",
             attachment_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            force_notify=False,
             override_optout=False,
             voice_memo_url="https://example.com/voice-memo.m4a",
         )

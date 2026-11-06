@@ -315,6 +315,36 @@ Methods:
 - <code title="get /v3/experiences/{experience}">client.experiences.<a href="./src/linq/resources/experiences.py">retrieve</a>(experience) -> <a href="./src/linq/types/experience_retrieve_response.py">ExperienceRetrieveResponse</a></code>
 - <code title="get /v3/experiences">client.experiences.<a href="./src/linq/resources/experiences.py">list</a>() -> <a href="./src/linq/types/experience_list_response.py">ExperienceListResponse</a></code>
 
+# SipProfiles
+
+Types:
+
+```python
+from linq.types import SipProfile, SipProfileListResponse, SipProfileAssignResponse
+```
+
+Methods:
+
+- <code title="post /v3/sip-profiles">client.sip_profiles.<a href="./src/linq/resources/sip_profiles.py">create</a>(\*\*<a href="src/linq/types/sip_profile_create_params.py">params</a>) -> <a href="./src/linq/types/sip_profile.py">SipProfile</a></code>
+- <code title="get /v3/sip-profiles/{sipProfileId}">client.sip_profiles.<a href="./src/linq/resources/sip_profiles.py">retrieve</a>(sip_profile_id) -> <a href="./src/linq/types/sip_profile.py">SipProfile</a></code>
+- <code title="put /v3/sip-profiles/{sipProfileId}">client.sip_profiles.<a href="./src/linq/resources/sip_profiles.py">update</a>(sip_profile_id, \*\*<a href="src/linq/types/sip_profile_update_params.py">params</a>) -> <a href="./src/linq/types/sip_profile.py">SipProfile</a></code>
+- <code title="get /v3/sip-profiles">client.sip_profiles.<a href="./src/linq/resources/sip_profiles.py">list</a>() -> <a href="./src/linq/types/sip_profile_list_response.py">SipProfileListResponse</a></code>
+- <code title="delete /v3/sip-profiles/{sipProfileId}">client.sip_profiles.<a href="./src/linq/resources/sip_profiles.py">delete</a>(sip_profile_id) -> None</code>
+- <code title="put /v3/phone-numbers/{phoneNumber}/sip-profile">client.sip_profiles.<a href="./src/linq/resources/sip_profiles.py">assign</a>(phone_number, \*\*<a href="src/linq/types/sip_profile_assign_params.py">params</a>) -> <a href="./src/linq/types/sip_profile_assign_response.py">SipProfileAssignResponse</a></code>
+
+# CallVoice
+
+Types:
+
+```python
+from linq.types import CallVoiceRecord, CallVoiceListResponse
+```
+
+Methods:
+
+- <code title="get /v3/call-voice/{callVoiceId}">client.call_voice.<a href="./src/linq/resources/call_voice.py">retrieve</a>(call_voice_id) -> <a href="./src/linq/types/call_voice_record.py">CallVoiceRecord</a></code>
+- <code title="get /v3/phone-numbers/{phoneNumber}/call-voice">client.call_voice.<a href="./src/linq/resources/call_voice.py">list</a>(phone_number, \*\*<a href="src/linq/types/call_voice_list_params.py">params</a>) -> <a href="./src/linq/types/call_voice_list_response.py">CallVoiceListResponse</a></code>
+
 # WebhookEvents
 
 Types:
@@ -391,6 +421,7 @@ from linq.types import (
     PhoneNumberStatusUpdatedWebhookEvent,
     PhoneNumberAssignedWebhookEvent,
     PhoneNumberReleasedWebhookEvent,
+    PhoneNumberLineTypeUpdatedWebhookEvent,
     ConnectionCreatedWebhookEvent,
     ConnectionRevokedWebhookEvent,
     LocationSharingStartedWebhookEvent,
@@ -427,6 +458,13 @@ from linq.types import (
     TeamMemberAddedWebhookEvent,
     TeamMemberSignedInWebhookEvent,
     TeamMemberSignedOutWebhookEvent,
+    CallVoiceInitiatedWebhookEvent,
+    CallVoiceRingingWebhookEvent,
+    CallVoiceAnsweredWebhookEvent,
+    CallVoiceEndedWebhookEvent,
+    CallVoiceFailedWebhookEvent,
+    CallVoiceDeclinedWebhookEvent,
+    CallVoiceNoAnswerWebhookEvent,
     UnwrapWebhookEvent,
 )
 ```

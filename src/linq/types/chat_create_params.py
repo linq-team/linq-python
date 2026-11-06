@@ -38,6 +38,14 @@ class ChatCreateParams(TypedDict, total=False):
     For individual chats, provide one recipient. For group chats, provide multiple.
     """
 
+    force_notify: bool
+    """iMessage only.
+
+    If the recipient has Do Not Disturb or another Focus on and the message is
+    delivered silently, alert them anyway (iMessage's "Notify Anyway"). Best effort:
+    ignored for SMS and RCS, and a no-op when the recipient was already notified.
+    """
+
     override_optout: bool
     """Send even though the recipient asked you to stop (`403`, error code `2024`).
 

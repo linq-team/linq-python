@@ -25,6 +25,14 @@ from .payments import (
     AsyncPaymentsResourceWithStreamingResponse,
 )
 from .webhooks import WebhooksResource, AsyncWebhooksResource
+from .call_voice import (
+    CallVoiceResource,
+    AsyncCallVoiceResource,
+    CallVoiceResourceWithRawResponse,
+    AsyncCallVoiceResourceWithRawResponse,
+    CallVoiceResourceWithStreamingResponse,
+    AsyncCallVoiceResourceWithStreamingResponse,
+)
 from .capability import (
     CapabilityResource,
     AsyncCapabilityResource,
@@ -64,6 +72,14 @@ from .phonenumbers import (
     AsyncPhonenumbersResourceWithRawResponse,
     PhonenumbersResourceWithStreamingResponse,
     AsyncPhonenumbersResourceWithStreamingResponse,
+)
+from .sip_profiles import (
+    SipProfilesResource,
+    AsyncSipProfilesResource,
+    SipProfilesResourceWithRawResponse,
+    AsyncSipProfilesResourceWithRawResponse,
+    SipProfilesResourceWithStreamingResponse,
+    AsyncSipProfilesResourceWithStreamingResponse,
 )
 from .phone_numbers import (
     PhoneNumbersResource,
@@ -203,6 +219,18 @@ __all__ = [
     "AsyncExperiencesResourceWithRawResponse",
     "ExperiencesResourceWithStreamingResponse",
     "AsyncExperiencesResourceWithStreamingResponse",
+    "SipProfilesResource",
+    "AsyncSipProfilesResource",
+    "SipProfilesResourceWithRawResponse",
+    "AsyncSipProfilesResourceWithRawResponse",
+    "SipProfilesResourceWithStreamingResponse",
+    "AsyncSipProfilesResourceWithStreamingResponse",
+    "CallVoiceResource",
+    "AsyncCallVoiceResource",
+    "CallVoiceResourceWithRawResponse",
+    "AsyncCallVoiceResourceWithRawResponse",
+    "CallVoiceResourceWithStreamingResponse",
+    "AsyncCallVoiceResourceWithStreamingResponse",
     "WebhookEventsResource",
     "AsyncWebhookEventsResource",
     "WebhookEventsResourceWithRawResponse",
