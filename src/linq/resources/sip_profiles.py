@@ -28,13 +28,8 @@ __all__ = ["SipProfilesResource", "AsyncSipProfilesResource"]
 class SipProfilesResource(SyncAPIResource):
     """## SIP configuration
 
-    Add these IP ranges to your SIP endpoint's allowlist:
-
-    ```
-    54.172.60.0/30
-    54.244.51.0/30
-    168.86.128.0/18
-    ```
+    Your Linq representative provides the signaling and media IP ranges and
+    ports to allow through your firewall during onboarding.
 
     Set `primary_uri` to your endpoint as scheme + host — `sips:` for TLS or
     `sip:` for UDP, with no user part (we add it). Each call arrives at your
@@ -45,7 +40,7 @@ class SipProfilesResource(SyncAPIResource):
     ```
 
     so you can route on the dialed number. The caller's number is in the
-    `From` header in E.164. Media (RTP) uses UDP ports 10000–60000.
+    `From` header in E.164.
     """
 
     @cached_property
@@ -83,13 +78,8 @@ class SipProfilesResource(SyncAPIResource):
         """
         ## SIP configuration
 
-        Add these IP ranges to your SIP endpoint's allowlist:
-
-        ```
-        54.172.60.0/30
-        54.244.51.0/30
-        168.86.128.0/18
-        ```
+        Your Linq representative provides the signaling and media IP ranges and ports to
+        allow through your firewall during onboarding.
 
         Set `primary_uri` to your endpoint as scheme + host — `sips:` for TLS or `sip:`
         for UDP, with no user part (we add it). Each call arrives at your endpoint as:
@@ -99,7 +89,7 @@ class SipProfilesResource(SyncAPIResource):
         ```
 
         so you can route on the dialed number. The caller's number is in the `From`
-        header in E.164. Media (RTP) uses UDP ports 10000–60000.
+        header in E.164.
 
         ---
 
@@ -289,13 +279,8 @@ class SipProfilesResource(SyncAPIResource):
         """
         ## SIP configuration
 
-        Add these IP ranges to your SIP endpoint's allowlist:
-
-        ```
-        54.172.60.0/30
-        54.244.51.0/30
-        168.86.128.0/18
-        ```
+        Your Linq representative provides the signaling and media IP ranges and ports to
+        allow through your firewall during onboarding.
 
         Set `primary_uri` to your endpoint as scheme + host — `sips:` for TLS or `sip:`
         for UDP, with no user part (we add it). Each call arrives at your endpoint as:
@@ -305,7 +290,7 @@ class SipProfilesResource(SyncAPIResource):
         ```
 
         so you can route on the dialed number. The caller's number is in the `From`
-        header in E.164. Media (RTP) uses UDP ports 10000–60000.
+        header in E.164.
 
         ---
 
@@ -341,13 +326,8 @@ class SipProfilesResource(SyncAPIResource):
 class AsyncSipProfilesResource(AsyncAPIResource):
     """## SIP configuration
 
-    Add these IP ranges to your SIP endpoint's allowlist:
-
-    ```
-    54.172.60.0/30
-    54.244.51.0/30
-    168.86.128.0/18
-    ```
+    Your Linq representative provides the signaling and media IP ranges and
+    ports to allow through your firewall during onboarding.
 
     Set `primary_uri` to your endpoint as scheme + host — `sips:` for TLS or
     `sip:` for UDP, with no user part (we add it). Each call arrives at your
@@ -358,7 +338,7 @@ class AsyncSipProfilesResource(AsyncAPIResource):
     ```
 
     so you can route on the dialed number. The caller's number is in the
-    `From` header in E.164. Media (RTP) uses UDP ports 10000–60000.
+    `From` header in E.164.
     """
 
     @cached_property
@@ -396,13 +376,8 @@ class AsyncSipProfilesResource(AsyncAPIResource):
         """
         ## SIP configuration
 
-        Add these IP ranges to your SIP endpoint's allowlist:
-
-        ```
-        54.172.60.0/30
-        54.244.51.0/30
-        168.86.128.0/18
-        ```
+        Your Linq representative provides the signaling and media IP ranges and ports to
+        allow through your firewall during onboarding.
 
         Set `primary_uri` to your endpoint as scheme + host — `sips:` for TLS or `sip:`
         for UDP, with no user part (we add it). Each call arrives at your endpoint as:
@@ -412,7 +387,7 @@ class AsyncSipProfilesResource(AsyncAPIResource):
         ```
 
         so you can route on the dialed number. The caller's number is in the `From`
-        header in E.164. Media (RTP) uses UDP ports 10000–60000.
+        header in E.164.
 
         ---
 
@@ -602,13 +577,8 @@ class AsyncSipProfilesResource(AsyncAPIResource):
         """
         ## SIP configuration
 
-        Add these IP ranges to your SIP endpoint's allowlist:
-
-        ```
-        54.172.60.0/30
-        54.244.51.0/30
-        168.86.128.0/18
-        ```
+        Your Linq representative provides the signaling and media IP ranges and ports to
+        allow through your firewall during onboarding.
 
         Set `primary_uri` to your endpoint as scheme + host — `sips:` for TLS or `sip:`
         for UDP, with no user part (we add it). Each call arrives at your endpoint as:
@@ -618,7 +588,7 @@ class AsyncSipProfilesResource(AsyncAPIResource):
         ```
 
         so you can route on the dialed number. The caller's number is in the `From`
-        header in E.164. Media (RTP) uses UDP ports 10000–60000.
+        header in E.164.
 
         ---
 
