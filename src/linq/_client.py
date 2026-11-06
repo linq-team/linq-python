@@ -41,11 +41,13 @@ if TYPE_CHECKING:
         chats,
         messages,
         payments,
+        call_voice,
         capability,
         attachments,
         experiences,
         contact_card,
         phonenumbers,
+        sip_profiles,
         phone_numbers,
         webhook_events,
         blocked_handles,
@@ -57,12 +59,14 @@ if TYPE_CHECKING:
     )
     from .resources.payments import PaymentsResource, AsyncPaymentsResource
     from .resources.webhooks import WebhooksResource, AsyncWebhooksResource
+    from .resources.call_voice import CallVoiceResource, AsyncCallVoiceResource
     from .resources.capability import CapabilityResource, AsyncCapabilityResource
     from .resources.attachments import AttachmentsResource, AsyncAttachmentsResource
     from .resources.chats.chats import ChatsResource, AsyncChatsResource
     from .resources.experiences import ExperiencesResource, AsyncExperiencesResource
     from .resources.contact_card import ContactCardResource, AsyncContactCardResource
     from .resources.phonenumbers import PhonenumbersResource, AsyncPhonenumbersResource
+    from .resources.sip_profiles import SipProfilesResource, AsyncSipProfilesResource
     from .resources.phone_numbers import PhoneNumbersResource, AsyncPhoneNumbersResource
     from .resources.webhook_events import WebhookEventsResource, AsyncWebhookEventsResource
     from .resources.blocked_handles import BlockedHandlesResource, AsyncBlockedHandlesResource
@@ -460,6 +464,19 @@ class LinqAPIV3(SyncAPIClient):
         pick an eligible number for you, skipping ineligible ones; if none of your assigned
         numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
         specific number to blame with a `403`).
+
+        **Published vs unpublished.** A *published* number is available for your account to use.
+        Only published numbers appear in `GET /v3/phone_numbers`.
+
+        Unpublished numbers allow `GET` requests. `POST`, `PUT`, `PATCH`, and `DELETE` requests that
+        change a chat return `403` with error code `2033` (`Phone number is unpublished`).
+
+        A number's existing data is preserved when its status changes to unpublished. Unpublished
+        status alone does not block reads, blocked-handle management, or deletion
+        of your data. Existing authorization, retention, and endpoint rules still apply.
+
+        Webhook events are suppressed for affected numbers when their publication status is known to
+        be unpublished.
         """
         from .resources.phonenumbers import PhonenumbersResource
 
@@ -483,6 +500,19 @@ class LinqAPIV3(SyncAPIClient):
         pick an eligible number for you, skipping ineligible ones; if none of your assigned
         numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
         specific number to blame with a `403`).
+
+        **Published vs unpublished.** A *published* number is available for your account to use.
+        Only published numbers appear in `GET /v3/phone_numbers`.
+
+        Unpublished numbers allow `GET` requests. `POST`, `PUT`, `PATCH`, and `DELETE` requests that
+        change a chat return `403` with error code `2033` (`Phone number is unpublished`).
+
+        A number's existing data is preserved when its status changes to unpublished. Unpublished
+        status alone does not block reads, blocked-handle management, or deletion
+        of your data. Existing authorization, retention, and endpoint rules still apply.
+
+        Webhook events are suppressed for affected numbers when their publication status is known to
+        be unpublished.
         """
         from .resources.phone_numbers import PhoneNumbersResource
 
@@ -506,6 +536,19 @@ class LinqAPIV3(SyncAPIClient):
         pick an eligible number for you, skipping ineligible ones; if none of your assigned
         numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
         specific number to blame with a `403`).
+
+        **Published vs unpublished.** A *published* number is available for your account to use.
+        Only published numbers appear in `GET /v3/phone_numbers`.
+
+        Unpublished numbers allow `GET` requests. `POST`, `PUT`, `PATCH`, and `DELETE` requests that
+        change a chat return `403` with error code `2033` (`Phone number is unpublished`).
+
+        A number's existing data is preserved when its status changes to unpublished. Unpublished
+        status alone does not block reads, blocked-handle management, or deletion
+        of your data. Existing authorization, retention, and endpoint rules still apply.
+
+        Webhook events are suppressed for affected numbers when their publication status is known to
+        be unpublished.
         """
         from .resources.available_number import AvailableNumberResource
 
@@ -808,6 +851,46 @@ class LinqAPIV3(SyncAPIClient):
         from .resources.experiences import ExperiencesResource
 
         return ExperiencesResource(self)
+
+    @cached_property
+    def sip_profiles(self) -> SipProfilesResource:
+        """## SIP configuration
+
+        Add these IP ranges to your SIP endpoint's allowlist:
+
+        ```
+        54.172.60.0/30
+        54.244.51.0/30
+        168.86.128.0/18
+        ```
+
+        Set `primary_uri` to your endpoint as scheme + host — `sips:` for TLS or
+        `sip:` for UDP, with no user part (we add it). Each call arrives at your
+        endpoint as:
+
+        ```
+        sip:<called-number>@<your-host>
+        ```
+
+        so you can route on the dialed number. The caller's number is in the
+        `From` header in E.164. Media (RTP) uses UDP ports 10000–60000.
+        """
+        from .resources.sip_profiles import SipProfilesResource
+
+        return SipProfilesResource(self)
+
+    @cached_property
+    def call_voice(self) -> CallVoiceResource:
+        """Read the carrier (BYOC) voice calls received on your phone numbers.
+
+        Each
+        record is the durable form of the `call_voice.*` webhooks for that call and
+        shares the same `id`, so you can look a call up by the id a webhook
+        delivered. See SIP Profiles for routing inbound calls to your endpoint.
+        """
+        from .resources.call_voice import CallVoiceResource
+
+        return CallVoiceResource(self)
 
     @cached_property
     def webhook_events(self) -> WebhookEventsResource:
@@ -1603,6 +1686,19 @@ class AsyncLinqAPIV3(AsyncAPIClient):
         pick an eligible number for you, skipping ineligible ones; if none of your assigned
         numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
         specific number to blame with a `403`).
+
+        **Published vs unpublished.** A *published* number is available for your account to use.
+        Only published numbers appear in `GET /v3/phone_numbers`.
+
+        Unpublished numbers allow `GET` requests. `POST`, `PUT`, `PATCH`, and `DELETE` requests that
+        change a chat return `403` with error code `2033` (`Phone number is unpublished`).
+
+        A number's existing data is preserved when its status changes to unpublished. Unpublished
+        status alone does not block reads, blocked-handle management, or deletion
+        of your data. Existing authorization, retention, and endpoint rules still apply.
+
+        Webhook events are suppressed for affected numbers when their publication status is known to
+        be unpublished.
         """
         from .resources.phonenumbers import AsyncPhonenumbersResource
 
@@ -1626,6 +1722,19 @@ class AsyncLinqAPIV3(AsyncAPIClient):
         pick an eligible number for you, skipping ineligible ones; if none of your assigned
         numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
         specific number to blame with a `403`).
+
+        **Published vs unpublished.** A *published* number is available for your account to use.
+        Only published numbers appear in `GET /v3/phone_numbers`.
+
+        Unpublished numbers allow `GET` requests. `POST`, `PUT`, `PATCH`, and `DELETE` requests that
+        change a chat return `403` with error code `2033` (`Phone number is unpublished`).
+
+        A number's existing data is preserved when its status changes to unpublished. Unpublished
+        status alone does not block reads, blocked-handle management, or deletion
+        of your data. Existing authorization, retention, and endpoint rules still apply.
+
+        Webhook events are suppressed for affected numbers when their publication status is known to
+        be unpublished.
         """
         from .resources.phone_numbers import AsyncPhoneNumbersResource
 
@@ -1649,6 +1758,19 @@ class AsyncLinqAPIV3(AsyncAPIClient):
         pick an eligible number for you, skipping ineligible ones; if none of your assigned
         numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
         specific number to blame with a `403`).
+
+        **Published vs unpublished.** A *published* number is available for your account to use.
+        Only published numbers appear in `GET /v3/phone_numbers`.
+
+        Unpublished numbers allow `GET` requests. `POST`, `PUT`, `PATCH`, and `DELETE` requests that
+        change a chat return `403` with error code `2033` (`Phone number is unpublished`).
+
+        A number's existing data is preserved when its status changes to unpublished. Unpublished
+        status alone does not block reads, blocked-handle management, or deletion
+        of your data. Existing authorization, retention, and endpoint rules still apply.
+
+        Webhook events are suppressed for affected numbers when their publication status is known to
+        be unpublished.
         """
         from .resources.available_number import AsyncAvailableNumberResource
 
@@ -1951,6 +2073,46 @@ class AsyncLinqAPIV3(AsyncAPIClient):
         from .resources.experiences import AsyncExperiencesResource
 
         return AsyncExperiencesResource(self)
+
+    @cached_property
+    def sip_profiles(self) -> AsyncSipProfilesResource:
+        """## SIP configuration
+
+        Add these IP ranges to your SIP endpoint's allowlist:
+
+        ```
+        54.172.60.0/30
+        54.244.51.0/30
+        168.86.128.0/18
+        ```
+
+        Set `primary_uri` to your endpoint as scheme + host — `sips:` for TLS or
+        `sip:` for UDP, with no user part (we add it). Each call arrives at your
+        endpoint as:
+
+        ```
+        sip:<called-number>@<your-host>
+        ```
+
+        so you can route on the dialed number. The caller's number is in the
+        `From` header in E.164. Media (RTP) uses UDP ports 10000–60000.
+        """
+        from .resources.sip_profiles import AsyncSipProfilesResource
+
+        return AsyncSipProfilesResource(self)
+
+    @cached_property
+    def call_voice(self) -> AsyncCallVoiceResource:
+        """Read the carrier (BYOC) voice calls received on your phone numbers.
+
+        Each
+        record is the durable form of the `call_voice.*` webhooks for that call and
+        shares the same `id`, so you can look a call up by the id a webhook
+        delivered. See SIP Profiles for routing inbound calls to your endpoint.
+        """
+        from .resources.call_voice import AsyncCallVoiceResource
+
+        return AsyncCallVoiceResource(self)
 
     @cached_property
     def webhook_events(self) -> AsyncWebhookEventsResource:
@@ -2680,6 +2842,19 @@ class LinqAPIV3WithRawResponse:
         pick an eligible number for you, skipping ineligible ones; if none of your assigned
         numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
         specific number to blame with a `403`).
+
+        **Published vs unpublished.** A *published* number is available for your account to use.
+        Only published numbers appear in `GET /v3/phone_numbers`.
+
+        Unpublished numbers allow `GET` requests. `POST`, `PUT`, `PATCH`, and `DELETE` requests that
+        change a chat return `403` with error code `2033` (`Phone number is unpublished`).
+
+        A number's existing data is preserved when its status changes to unpublished. Unpublished
+        status alone does not block reads, blocked-handle management, or deletion
+        of your data. Existing authorization, retention, and endpoint rules still apply.
+
+        Webhook events are suppressed for affected numbers when their publication status is known to
+        be unpublished.
         """
         from .resources.phonenumbers import PhonenumbersResourceWithRawResponse
 
@@ -2703,6 +2878,19 @@ class LinqAPIV3WithRawResponse:
         pick an eligible number for you, skipping ineligible ones; if none of your assigned
         numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
         specific number to blame with a `403`).
+
+        **Published vs unpublished.** A *published* number is available for your account to use.
+        Only published numbers appear in `GET /v3/phone_numbers`.
+
+        Unpublished numbers allow `GET` requests. `POST`, `PUT`, `PATCH`, and `DELETE` requests that
+        change a chat return `403` with error code `2033` (`Phone number is unpublished`).
+
+        A number's existing data is preserved when its status changes to unpublished. Unpublished
+        status alone does not block reads, blocked-handle management, or deletion
+        of your data. Existing authorization, retention, and endpoint rules still apply.
+
+        Webhook events are suppressed for affected numbers when their publication status is known to
+        be unpublished.
         """
         from .resources.phone_numbers import PhoneNumbersResourceWithRawResponse
 
@@ -2726,6 +2914,19 @@ class LinqAPIV3WithRawResponse:
         pick an eligible number for you, skipping ineligible ones; if none of your assigned
         numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
         specific number to blame with a `403`).
+
+        **Published vs unpublished.** A *published* number is available for your account to use.
+        Only published numbers appear in `GET /v3/phone_numbers`.
+
+        Unpublished numbers allow `GET` requests. `POST`, `PUT`, `PATCH`, and `DELETE` requests that
+        change a chat return `403` with error code `2033` (`Phone number is unpublished`).
+
+        A number's existing data is preserved when its status changes to unpublished. Unpublished
+        status alone does not block reads, blocked-handle management, or deletion
+        of your data. Existing authorization, retention, and endpoint rules still apply.
+
+        Webhook events are suppressed for affected numbers when their publication status is known to
+        be unpublished.
         """
         from .resources.available_number import AvailableNumberResourceWithRawResponse
 
@@ -3028,6 +3229,46 @@ class LinqAPIV3WithRawResponse:
         from .resources.experiences import ExperiencesResourceWithRawResponse
 
         return ExperiencesResourceWithRawResponse(self._client.experiences)
+
+    @cached_property
+    def sip_profiles(self) -> sip_profiles.SipProfilesResourceWithRawResponse:
+        """## SIP configuration
+
+        Add these IP ranges to your SIP endpoint's allowlist:
+
+        ```
+        54.172.60.0/30
+        54.244.51.0/30
+        168.86.128.0/18
+        ```
+
+        Set `primary_uri` to your endpoint as scheme + host — `sips:` for TLS or
+        `sip:` for UDP, with no user part (we add it). Each call arrives at your
+        endpoint as:
+
+        ```
+        sip:<called-number>@<your-host>
+        ```
+
+        so you can route on the dialed number. The caller's number is in the
+        `From` header in E.164. Media (RTP) uses UDP ports 10000–60000.
+        """
+        from .resources.sip_profiles import SipProfilesResourceWithRawResponse
+
+        return SipProfilesResourceWithRawResponse(self._client.sip_profiles)
+
+    @cached_property
+    def call_voice(self) -> call_voice.CallVoiceResourceWithRawResponse:
+        """Read the carrier (BYOC) voice calls received on your phone numbers.
+
+        Each
+        record is the durable form of the `call_voice.*` webhooks for that call and
+        shares the same `id`, so you can look a call up by the id a webhook
+        delivered. See SIP Profiles for routing inbound calls to your endpoint.
+        """
+        from .resources.call_voice import CallVoiceResourceWithRawResponse
+
+        return CallVoiceResourceWithRawResponse(self._client.call_voice)
 
     @cached_property
     def webhook_events(self) -> webhook_events.WebhookEventsResourceWithRawResponse:
@@ -3629,6 +3870,19 @@ class AsyncLinqAPIV3WithRawResponse:
         pick an eligible number for you, skipping ineligible ones; if none of your assigned
         numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
         specific number to blame with a `403`).
+
+        **Published vs unpublished.** A *published* number is available for your account to use.
+        Only published numbers appear in `GET /v3/phone_numbers`.
+
+        Unpublished numbers allow `GET` requests. `POST`, `PUT`, `PATCH`, and `DELETE` requests that
+        change a chat return `403` with error code `2033` (`Phone number is unpublished`).
+
+        A number's existing data is preserved when its status changes to unpublished. Unpublished
+        status alone does not block reads, blocked-handle management, or deletion
+        of your data. Existing authorization, retention, and endpoint rules still apply.
+
+        Webhook events are suppressed for affected numbers when their publication status is known to
+        be unpublished.
         """
         from .resources.phonenumbers import AsyncPhonenumbersResourceWithRawResponse
 
@@ -3652,6 +3906,19 @@ class AsyncLinqAPIV3WithRawResponse:
         pick an eligible number for you, skipping ineligible ones; if none of your assigned
         numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
         specific number to blame with a `403`).
+
+        **Published vs unpublished.** A *published* number is available for your account to use.
+        Only published numbers appear in `GET /v3/phone_numbers`.
+
+        Unpublished numbers allow `GET` requests. `POST`, `PUT`, `PATCH`, and `DELETE` requests that
+        change a chat return `403` with error code `2033` (`Phone number is unpublished`).
+
+        A number's existing data is preserved when its status changes to unpublished. Unpublished
+        status alone does not block reads, blocked-handle management, or deletion
+        of your data. Existing authorization, retention, and endpoint rules still apply.
+
+        Webhook events are suppressed for affected numbers when their publication status is known to
+        be unpublished.
         """
         from .resources.phone_numbers import AsyncPhoneNumbersResourceWithRawResponse
 
@@ -3675,6 +3942,19 @@ class AsyncLinqAPIV3WithRawResponse:
         pick an eligible number for you, skipping ineligible ones; if none of your assigned
         numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
         specific number to blame with a `403`).
+
+        **Published vs unpublished.** A *published* number is available for your account to use.
+        Only published numbers appear in `GET /v3/phone_numbers`.
+
+        Unpublished numbers allow `GET` requests. `POST`, `PUT`, `PATCH`, and `DELETE` requests that
+        change a chat return `403` with error code `2033` (`Phone number is unpublished`).
+
+        A number's existing data is preserved when its status changes to unpublished. Unpublished
+        status alone does not block reads, blocked-handle management, or deletion
+        of your data. Existing authorization, retention, and endpoint rules still apply.
+
+        Webhook events are suppressed for affected numbers when their publication status is known to
+        be unpublished.
         """
         from .resources.available_number import AsyncAvailableNumberResourceWithRawResponse
 
@@ -3977,6 +4257,46 @@ class AsyncLinqAPIV3WithRawResponse:
         from .resources.experiences import AsyncExperiencesResourceWithRawResponse
 
         return AsyncExperiencesResourceWithRawResponse(self._client.experiences)
+
+    @cached_property
+    def sip_profiles(self) -> sip_profiles.AsyncSipProfilesResourceWithRawResponse:
+        """## SIP configuration
+
+        Add these IP ranges to your SIP endpoint's allowlist:
+
+        ```
+        54.172.60.0/30
+        54.244.51.0/30
+        168.86.128.0/18
+        ```
+
+        Set `primary_uri` to your endpoint as scheme + host — `sips:` for TLS or
+        `sip:` for UDP, with no user part (we add it). Each call arrives at your
+        endpoint as:
+
+        ```
+        sip:<called-number>@<your-host>
+        ```
+
+        so you can route on the dialed number. The caller's number is in the
+        `From` header in E.164. Media (RTP) uses UDP ports 10000–60000.
+        """
+        from .resources.sip_profiles import AsyncSipProfilesResourceWithRawResponse
+
+        return AsyncSipProfilesResourceWithRawResponse(self._client.sip_profiles)
+
+    @cached_property
+    def call_voice(self) -> call_voice.AsyncCallVoiceResourceWithRawResponse:
+        """Read the carrier (BYOC) voice calls received on your phone numbers.
+
+        Each
+        record is the durable form of the `call_voice.*` webhooks for that call and
+        shares the same `id`, so you can look a call up by the id a webhook
+        delivered. See SIP Profiles for routing inbound calls to your endpoint.
+        """
+        from .resources.call_voice import AsyncCallVoiceResourceWithRawResponse
+
+        return AsyncCallVoiceResourceWithRawResponse(self._client.call_voice)
 
     @cached_property
     def webhook_events(self) -> webhook_events.AsyncWebhookEventsResourceWithRawResponse:
@@ -4578,6 +4898,19 @@ class LinqAPIV3WithStreamedResponse:
         pick an eligible number for you, skipping ineligible ones; if none of your assigned
         numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
         specific number to blame with a `403`).
+
+        **Published vs unpublished.** A *published* number is available for your account to use.
+        Only published numbers appear in `GET /v3/phone_numbers`.
+
+        Unpublished numbers allow `GET` requests. `POST`, `PUT`, `PATCH`, and `DELETE` requests that
+        change a chat return `403` with error code `2033` (`Phone number is unpublished`).
+
+        A number's existing data is preserved when its status changes to unpublished. Unpublished
+        status alone does not block reads, blocked-handle management, or deletion
+        of your data. Existing authorization, retention, and endpoint rules still apply.
+
+        Webhook events are suppressed for affected numbers when their publication status is known to
+        be unpublished.
         """
         from .resources.phonenumbers import PhonenumbersResourceWithStreamingResponse
 
@@ -4601,6 +4934,19 @@ class LinqAPIV3WithStreamedResponse:
         pick an eligible number for you, skipping ineligible ones; if none of your assigned
         numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
         specific number to blame with a `403`).
+
+        **Published vs unpublished.** A *published* number is available for your account to use.
+        Only published numbers appear in `GET /v3/phone_numbers`.
+
+        Unpublished numbers allow `GET` requests. `POST`, `PUT`, `PATCH`, and `DELETE` requests that
+        change a chat return `403` with error code `2033` (`Phone number is unpublished`).
+
+        A number's existing data is preserved when its status changes to unpublished. Unpublished
+        status alone does not block reads, blocked-handle management, or deletion
+        of your data. Existing authorization, retention, and endpoint rules still apply.
+
+        Webhook events are suppressed for affected numbers when their publication status is known to
+        be unpublished.
         """
         from .resources.phone_numbers import PhoneNumbersResourceWithStreamingResponse
 
@@ -4624,6 +4970,19 @@ class LinqAPIV3WithStreamedResponse:
         pick an eligible number for you, skipping ineligible ones; if none of your assigned
         numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
         specific number to blame with a `403`).
+
+        **Published vs unpublished.** A *published* number is available for your account to use.
+        Only published numbers appear in `GET /v3/phone_numbers`.
+
+        Unpublished numbers allow `GET` requests. `POST`, `PUT`, `PATCH`, and `DELETE` requests that
+        change a chat return `403` with error code `2033` (`Phone number is unpublished`).
+
+        A number's existing data is preserved when its status changes to unpublished. Unpublished
+        status alone does not block reads, blocked-handle management, or deletion
+        of your data. Existing authorization, retention, and endpoint rules still apply.
+
+        Webhook events are suppressed for affected numbers when their publication status is known to
+        be unpublished.
         """
         from .resources.available_number import AvailableNumberResourceWithStreamingResponse
 
@@ -4926,6 +5285,46 @@ class LinqAPIV3WithStreamedResponse:
         from .resources.experiences import ExperiencesResourceWithStreamingResponse
 
         return ExperiencesResourceWithStreamingResponse(self._client.experiences)
+
+    @cached_property
+    def sip_profiles(self) -> sip_profiles.SipProfilesResourceWithStreamingResponse:
+        """## SIP configuration
+
+        Add these IP ranges to your SIP endpoint's allowlist:
+
+        ```
+        54.172.60.0/30
+        54.244.51.0/30
+        168.86.128.0/18
+        ```
+
+        Set `primary_uri` to your endpoint as scheme + host — `sips:` for TLS or
+        `sip:` for UDP, with no user part (we add it). Each call arrives at your
+        endpoint as:
+
+        ```
+        sip:<called-number>@<your-host>
+        ```
+
+        so you can route on the dialed number. The caller's number is in the
+        `From` header in E.164. Media (RTP) uses UDP ports 10000–60000.
+        """
+        from .resources.sip_profiles import SipProfilesResourceWithStreamingResponse
+
+        return SipProfilesResourceWithStreamingResponse(self._client.sip_profiles)
+
+    @cached_property
+    def call_voice(self) -> call_voice.CallVoiceResourceWithStreamingResponse:
+        """Read the carrier (BYOC) voice calls received on your phone numbers.
+
+        Each
+        record is the durable form of the `call_voice.*` webhooks for that call and
+        shares the same `id`, so you can look a call up by the id a webhook
+        delivered. See SIP Profiles for routing inbound calls to your endpoint.
+        """
+        from .resources.call_voice import CallVoiceResourceWithStreamingResponse
+
+        return CallVoiceResourceWithStreamingResponse(self._client.call_voice)
 
     @cached_property
     def webhook_events(self) -> webhook_events.WebhookEventsResourceWithStreamingResponse:
@@ -5527,6 +5926,19 @@ class AsyncLinqAPIV3WithStreamedResponse:
         pick an eligible number for you, skipping ineligible ones; if none of your assigned
         numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
         specific number to blame with a `403`).
+
+        **Published vs unpublished.** A *published* number is available for your account to use.
+        Only published numbers appear in `GET /v3/phone_numbers`.
+
+        Unpublished numbers allow `GET` requests. `POST`, `PUT`, `PATCH`, and `DELETE` requests that
+        change a chat return `403` with error code `2033` (`Phone number is unpublished`).
+
+        A number's existing data is preserved when its status changes to unpublished. Unpublished
+        status alone does not block reads, blocked-handle management, or deletion
+        of your data. Existing authorization, retention, and endpoint rules still apply.
+
+        Webhook events are suppressed for affected numbers when their publication status is known to
+        be unpublished.
         """
         from .resources.phonenumbers import AsyncPhonenumbersResourceWithStreamingResponse
 
@@ -5550,6 +5962,19 @@ class AsyncLinqAPIV3WithStreamedResponse:
         pick an eligible number for you, skipping ineligible ones; if none of your assigned
         numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
         specific number to blame with a `403`).
+
+        **Published vs unpublished.** A *published* number is available for your account to use.
+        Only published numbers appear in `GET /v3/phone_numbers`.
+
+        Unpublished numbers allow `GET` requests. `POST`, `PUT`, `PATCH`, and `DELETE` requests that
+        change a chat return `403` with error code `2033` (`Phone number is unpublished`).
+
+        A number's existing data is preserved when its status changes to unpublished. Unpublished
+        status alone does not block reads, blocked-handle management, or deletion
+        of your data. Existing authorization, retention, and endpoint rules still apply.
+
+        Webhook events are suppressed for affected numbers when their publication status is known to
+        be unpublished.
         """
         from .resources.phone_numbers import AsyncPhoneNumbersResourceWithStreamingResponse
 
@@ -5573,6 +5998,19 @@ class AsyncLinqAPIV3WithStreamedResponse:
         pick an eligible number for you, skipping ineligible ones; if none of your assigned
         numbers are eligible, you get `409` (no `from` number was ever chosen, so there's no
         specific number to blame with a `403`).
+
+        **Published vs unpublished.** A *published* number is available for your account to use.
+        Only published numbers appear in `GET /v3/phone_numbers`.
+
+        Unpublished numbers allow `GET` requests. `POST`, `PUT`, `PATCH`, and `DELETE` requests that
+        change a chat return `403` with error code `2033` (`Phone number is unpublished`).
+
+        A number's existing data is preserved when its status changes to unpublished. Unpublished
+        status alone does not block reads, blocked-handle management, or deletion
+        of your data. Existing authorization, retention, and endpoint rules still apply.
+
+        Webhook events are suppressed for affected numbers when their publication status is known to
+        be unpublished.
         """
         from .resources.available_number import AsyncAvailableNumberResourceWithStreamingResponse
 
@@ -5875,6 +6313,46 @@ class AsyncLinqAPIV3WithStreamedResponse:
         from .resources.experiences import AsyncExperiencesResourceWithStreamingResponse
 
         return AsyncExperiencesResourceWithStreamingResponse(self._client.experiences)
+
+    @cached_property
+    def sip_profiles(self) -> sip_profiles.AsyncSipProfilesResourceWithStreamingResponse:
+        """## SIP configuration
+
+        Add these IP ranges to your SIP endpoint's allowlist:
+
+        ```
+        54.172.60.0/30
+        54.244.51.0/30
+        168.86.128.0/18
+        ```
+
+        Set `primary_uri` to your endpoint as scheme + host — `sips:` for TLS or
+        `sip:` for UDP, with no user part (we add it). Each call arrives at your
+        endpoint as:
+
+        ```
+        sip:<called-number>@<your-host>
+        ```
+
+        so you can route on the dialed number. The caller's number is in the
+        `From` header in E.164. Media (RTP) uses UDP ports 10000–60000.
+        """
+        from .resources.sip_profiles import AsyncSipProfilesResourceWithStreamingResponse
+
+        return AsyncSipProfilesResourceWithStreamingResponse(self._client.sip_profiles)
+
+    @cached_property
+    def call_voice(self) -> call_voice.AsyncCallVoiceResourceWithStreamingResponse:
+        """Read the carrier (BYOC) voice calls received on your phone numbers.
+
+        Each
+        record is the durable form of the `call_voice.*` webhooks for that call and
+        shares the same `id`, so you can look a call up by the id a webhook
+        delivered. See SIP Profiles for routing inbound calls to your endpoint.
+        """
+        from .resources.call_voice import AsyncCallVoiceResourceWithStreamingResponse
+
+        return AsyncCallVoiceResourceWithStreamingResponse(self._client.call_voice)
 
     @cached_property
     def webhook_events(self) -> webhook_events.AsyncWebhookEventsResourceWithStreamingResponse:

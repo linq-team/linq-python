@@ -246,6 +246,27 @@ class MessageEventV2(BaseModel):
     delivered_at: Optional[datetime] = None
     """When the message was delivered. Null if not yet delivered."""
 
+    device_first_seen_at: Optional[datetime] = None
+    """
+    When the sending device was first seen for this sender (the message time for a
+    newly seen device). Absent for SMS/RCS and for outbound messages.
+    """
+
+    device_id: Optional[str] = None
+    """An opaque identifier for the sending device.
+
+    Pair it with `device_status` to tell a sender's devices apart, including after a
+    new device has become `known`. Absent for SMS/RCS and for outbound messages.
+    """
+
+    device_status: Optional[Literal["first_contact", "known", "new"]] = None
+    """The device a sender used, relative to devices we've seen from them before.
+
+    `first_contact` = their first device (first message we've seen from this
+    sender); `known` = a device we've seen before; `new` = a device we have NOT seen
+    for a sender who already had one (the account/SIM-takeover signal).
+    """
+
     effect: Optional[SchemasMessageEffect] = None
     """iMessage effect applied to a message (screen or bubble animation)"""
 

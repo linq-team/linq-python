@@ -24,6 +24,6 @@ class PollEnvelope(BaseModel):
     """Poll content — options and the aggregate voter count."""
 
     reactions: List[Reaction]
-    """Tapbacks/stickers on the whole poll (message part 0)."""
+    """Stickers on the whole poll (message part 0). Polls take stickers only."""
 
     updated_at: datetime

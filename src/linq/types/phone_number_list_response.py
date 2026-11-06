@@ -43,6 +43,13 @@ class PhoneNumber(BaseModel):
     id: str
     """Unique identifier for the phone number"""
 
+    line_status: Literal["ACTIVE", "FLAGGED"]
+    """Operational status of the line (distinct from `reputation`).
+
+    - `ACTIVE` — The line is not flagged and can be used normally.
+    - `FLAGGED` — The line has been flagged and may have limited functionality.
+    """
+
     phone_number: str
     """Phone number in E.164 format"""
 

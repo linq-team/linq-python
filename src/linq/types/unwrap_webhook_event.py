@@ -18,6 +18,7 @@ from .poll_delivered_webhook_event import PollDeliveredWebhookEvent
 from .reaction_added_webhook_event import ReactionAddedWebhookEvent
 from .payment_expired_webhook_event import PaymentExpiredWebhookEvent
 from .poll_vote_added_webhook_event import PollVoteAddedWebhookEvent
+from .call_voice_ended_webhook_event import CallVoiceEndedWebhookEvent
 from .message_received_webhook_event import MessageReceivedWebhookEvent
 from .payment_canceled_webhook_event import PaymentCanceledWebhookEvent
 from .payment_declined_webhook_event import PaymentDeclinedWebhookEvent
@@ -26,20 +27,26 @@ from .api_token_created_webhook_event import APITokenCreatedWebhookEvent
 from .api_token_deleted_webhook_event import APITokenDeletedWebhookEvent
 from .api_token_expired_webhook_event import APITokenExpiredWebhookEvent
 from .api_token_renamed_webhook_event import APITokenRenamedWebhookEvent
+from .call_voice_failed_webhook_event import CallVoiceFailedWebhookEvent
 from .message_delivered_webhook_event import MessageDeliveredWebhookEvent
 from .participant_added_webhook_event import ParticipantAddedWebhookEvent
 from .payment_succeeded_webhook_event import PaymentSucceededWebhookEvent
 from .poll_vote_removed_webhook_event import PollVoteRemovedWebhookEvent
 from .team_member_added_webhook_event import TeamMemberAddedWebhookEvent
+from .call_voice_ringing_webhook_event import CallVoiceRingingWebhookEvent
 from .connection_created_webhook_event import ConnectionCreatedWebhookEvent
 from .connection_revoked_webhook_event import ConnectionRevokedWebhookEvent
 from .payment_authorized_webhook_event import PaymentAuthorizedWebhookEvent
 from .api_token_activated_webhook_event import APITokenActivatedWebhookEvent
+from .call_voice_answered_webhook_event import CallVoiceAnsweredWebhookEvent
+from .call_voice_declined_webhook_event import CallVoiceDeclinedWebhookEvent
 from .environment_created_webhook_event import EnvironmentCreatedWebhookEvent
 from .environment_deleted_webhook_event import EnvironmentDeletedWebhookEvent
 from .environment_renamed_webhook_event import EnvironmentRenamedWebhookEvent
 from .participant_removed_webhook_event import ParticipantRemovedWebhookEvent
 from .poll_reaction_added_webhook_event import PollReactionAddedWebhookEvent
+from .call_voice_initiated_webhook_event import CallVoiceInitiatedWebhookEvent
+from .call_voice_no_answer_webhook_event import CallVoiceNoAnswerWebhookEvent
 from .contact_card_created_webhook_event import ContactCardCreatedWebhookEvent
 from .contact_card_deleted_webhook_event import ContactCardDeletedWebhookEvent
 from .contact_card_updated_webhook_event import ContactCardUpdatedWebhookEvent
@@ -66,6 +73,7 @@ from .chat_group_name_update_failed_webhook_event import ChatGroupNameUpdateFail
 from .chat_typing_indicator_started_webhook_event import ChatTypingIndicatorStartedWebhookEvent
 from .chat_typing_indicator_stopped_webhook_event import ChatTypingIndicatorStoppedWebhookEvent
 from .webhook_subscription_disabled_webhook_event import WebhookSubscriptionDisabledWebhookEvent
+from .phone_number_line_type_updated_webhook_event import PhoneNumberLineTypeUpdatedWebhookEvent
 from .phone_number_forwarding_updated_webhook_event import PhoneNumberForwardingUpdatedWebhookEvent
 from .webhook_subscription_events_updated_webhook_event import WebhookSubscriptionEventsUpdatedWebhookEvent
 from .webhook_subscription_target_url_changed_webhook_event import WebhookSubscriptionTargetURLChangedWebhookEvent
@@ -111,6 +119,7 @@ UnwrapWebhookEvent: TypeAlias = Annotated[
         PhoneNumberStatusUpdatedWebhookEvent,
         PhoneNumberAssignedWebhookEvent,
         PhoneNumberReleasedWebhookEvent,
+        PhoneNumberLineTypeUpdatedWebhookEvent,
         ConnectionCreatedWebhookEvent,
         ConnectionRevokedWebhookEvent,
         LocationSharingStartedWebhookEvent,
@@ -147,6 +156,13 @@ UnwrapWebhookEvent: TypeAlias = Annotated[
         TeamMemberAddedWebhookEvent,
         TeamMemberSignedInWebhookEvent,
         TeamMemberSignedOutWebhookEvent,
+        CallVoiceInitiatedWebhookEvent,
+        CallVoiceRingingWebhookEvent,
+        CallVoiceAnsweredWebhookEvent,
+        CallVoiceEndedWebhookEvent,
+        CallVoiceFailedWebhookEvent,
+        CallVoiceDeclinedWebhookEvent,
+        CallVoiceNoAnswerWebhookEvent,
     ],
     PropertyInfo(discriminator="event_type"),
 ]

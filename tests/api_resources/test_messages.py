@@ -89,6 +89,7 @@ class TestMessages:
             to=["+14155559876"],
             continuation_message={"text": "Hi, it's Acme Support reaching you from a new number."},
             exclude_from=["+12052535597"],
+            force_notify=False,
             override_optout=False,
             idempotency_key="send-abc123xyz",
         )
@@ -606,6 +607,7 @@ class TestAsyncMessages:
             to=["+14155559876"],
             continuation_message={"text": "Hi, it's Acme Support reaching you from a new number."},
             exclude_from=["+12052535597"],
+            force_notify=False,
             override_optout=False,
             idempotency_key="send-abc123xyz",
         )
