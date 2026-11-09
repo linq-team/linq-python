@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.67.2](https://github.com/linq-team/linq-python/compare/v0.67.1...v0.67.2) (2026-11-09)
+
+
+### Documentation
+
+* clarify sticker placement coordinate system and behavior ([d71c16b](https://github.com/linq-team/linq-python/commit/d71c16bab058f0b8f875bb9d16b32321b111a169))
+
 ## [0.67.1](https://github.com/linq-team/linq-python/compare/v0.67.0...v0.67.1) (2026-11-06)
 
 
