@@ -287,8 +287,8 @@ class TestMessages:
             placement={
                 "rotation": 15,
                 "scale": 1.25,
-                "x": -0.25,
-                "y": 0.4,
+                "x": 0.9,
+                "y": -0.3,
             },
             url="https://cdn.linqapp.com/attachments/example/sticker.png",
         )
@@ -483,8 +483,8 @@ class TestMessages:
             placement={
                 "rotation": 15,
                 "scale": 0.75,
-                "x": 0.6,
-                "y": 0.5,
+                "x": 0.9,
+                "y": 0.9,
             },
         )
         assert_matches_type(MessageUpdateStickerPlacementResponse, message, path=["response"])
@@ -805,8 +805,8 @@ class TestAsyncMessages:
             placement={
                 "rotation": 15,
                 "scale": 1.25,
-                "x": -0.25,
-                "y": 0.4,
+                "x": 0.9,
+                "y": -0.3,
             },
             url="https://cdn.linqapp.com/attachments/example/sticker.png",
         )
@@ -1001,8 +1001,8 @@ class TestAsyncMessages:
             placement={
                 "rotation": 15,
                 "scale": 0.75,
-                "x": 0.6,
-                "y": 0.5,
+                "x": 0.9,
+                "y": 0.9,
             },
         )
         assert_matches_type(MessageUpdateStickerPlacementResponse, message, path=["response"])
