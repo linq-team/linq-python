@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.67.3](https://github.com/linq-team/linq-python/compare/v0.67.2...v0.67.3) (2026-11-10)
+
+
+### Bug Fixes
+
+* update message timeout error reason text ([f319ea0](https://github.com/linq-team/linq-python/commit/f319ea08059a4efb8ea5bc94e8afe2719df15cff))
+
 ## [0.67.2](https://github.com/linq-team/linq-python/compare/v0.67.1...v0.67.2) (2026-11-09)
 
 
