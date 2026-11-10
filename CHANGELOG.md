@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.67.4](https://github.com/linq-team/linq-python/compare/v0.67.3...v0.67.4) (2026-11-10)
+
+
+### Bug Fixes
+
+* clarify message.failed webhook event ordering and delivery possibilities ([dd01140](https://github.com/linq-team/linq-python/commit/dd0114043b4f70718fef82187f1df350d236fb03))
+
 ## [0.67.3](https://github.com/linq-team/linq-python/compare/v0.67.2...v0.67.3) (2026-11-10)
 
 
