@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.67.5](https://github.com/linq-team/linq-python/compare/v0.67.4...v0.67.5) (2026-11-11)
+
+
+### Bug Fixes
+
+* update webhook retry backoff timing and add additional retry attempts ([4757018](https://github.com/linq-team/linq-python/commit/47570182a77260bddf7f72a20486fbba10abf798))
+
 ## [0.67.4](https://github.com/linq-team/linq-python/compare/v0.67.3...v0.67.4) (2026-11-10)
 
 
