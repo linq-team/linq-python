@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.67.6](https://github.com/linq-team/linq-python/compare/v0.67.5...v0.67.6) (2026-11-13)
+
+
+### Bug Fixes
+
+* clarify messaging for flagged line delivery problems ([85c4f7f](https://github.com/linq-team/linq-python/commit/85c4f7f7111dadd4cd76966d2cf7942cb3b90977))
+
 ## [0.67.5](https://github.com/linq-team/linq-python/compare/v0.67.4...v0.67.5) (2026-11-11)
 
 
