@@ -529,8 +529,10 @@ class MessagesResource(SyncAPIResource):
         **Stickers** are iMessage-only and cannot be removed, so `operation: "remove"`
         with `type: "sticker"` is rejected. Position, size and rotation are optional via
         `placement`, and can be changed afterwards with
-        `PATCH /v3/messages/{messageId}/reactions/{reactionId}`. An animated image peels
-        as an animated sticker, in whatever shape the file already has.
+        `PATCH /v3/messages/{messageId}/reactions/{reactionId}`. A GIF with a
+        transparent background peels as an animated sticker, in the shape of the file. A
+        GIF with a solid background has its subject cut out and peels as a still; if no
+        subject is found, it peels as-is.
 
         **Polls** take stickers only. Any tapback on a poll message — standard or
         `custom` — is rejected with a 400.
@@ -1368,8 +1370,10 @@ class AsyncMessagesResource(AsyncAPIResource):
         **Stickers** are iMessage-only and cannot be removed, so `operation: "remove"`
         with `type: "sticker"` is rejected. Position, size and rotation are optional via
         `placement`, and can be changed afterwards with
-        `PATCH /v3/messages/{messageId}/reactions/{reactionId}`. An animated image peels
-        as an animated sticker, in whatever shape the file already has.
+        `PATCH /v3/messages/{messageId}/reactions/{reactionId}`. A GIF with a
+        transparent background peels as an animated sticker, in the shape of the file. A
+        GIF with a solid background has its subject cut out and peels as a still; if no
+        subject is found, it peels as-is.
 
         **Polls** take stickers only. Any tapback on a poll message — standard or
         `custom` — is rejected with a 400.

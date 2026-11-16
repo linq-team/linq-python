@@ -285,6 +285,7 @@ class TestMessages:
             emoji="🎉",
             part_index=1,
             placement={
+                "anchor": "bottom_right",
                 "rotation": 15,
                 "scale": 1.25,
                 "x": 0.9,
@@ -481,6 +482,7 @@ class TestMessages:
             reaction_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             message_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             placement={
+                "anchor": "bottom_right",
                 "rotation": 15,
                 "scale": 0.75,
                 "x": 0.9,
@@ -803,6 +805,7 @@ class TestAsyncMessages:
             emoji="🎉",
             part_index=1,
             placement={
+                "anchor": "bottom_right",
                 "rotation": 15,
                 "scale": 1.25,
                 "x": 0.9,
@@ -999,6 +1002,7 @@ class TestAsyncMessages:
             reaction_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             message_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             placement={
+                "anchor": "bottom_right",
                 "rotation": 15,
                 "scale": 0.75,
                 "x": 0.9,
