@@ -127,6 +127,22 @@ class Placement(TypedDict, total=False):
     recipient's screen renders narrower than the sender's.
     """
 
+    anchor: Literal["top_left", "top", "top_right", "left", "center", "right", "bottom_left", "bottom", "bottom_right"]
+    """Which point of the sticker sits at `x`/`y`.
+
+    Omit it to place the sticker's centre there, as without `anchor`.
+
+    Use it to line a sticker up with the bubble's edges:
+    `x: 1, y: 0, anchor: "bottom_right"` rests the sticker on the bubble's top-right
+    corner, right edges flush. With `anchor` set, `x`/`y` past the bubble's edge are
+    measured in sticker widths/heights, so `y: -0.1` lifts it clear by the same gap
+    on every message. A sticker never extends past the bubble's left edge.
+
+    With `anchor` set, `scale` is the size on an iPhone on every message, and the
+    edges stay lined up on every device. Other screens scale the sticker with the
+    bubble.
+    """
+
     rotation: float
     """Clockwise rotation in degrees."""
 
