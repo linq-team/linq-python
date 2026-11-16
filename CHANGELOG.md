@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.68.0](https://github.com/linq-team/linq-python/compare/v0.67.6...v0.68.0) (2026-11-16)
+
+
+### Features
+
+* add anchor parameter for sticker placement alignment ([f446122](https://github.com/linq-team/linq-python/commit/f446122406f8e4293d76c1f2b222950424e37db0))
+
 ## [0.67.6](https://github.com/linq-team/linq-python/compare/v0.67.5...v0.67.6) (2026-11-13)
 
 
