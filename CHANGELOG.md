@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.69.0](https://github.com/linq-team/linq-python/compare/v0.68.1...v0.69.0) (2026-11-18)
+
+
+### Features
+
+* clarify imessage capability check behavior without from parameter ([91f7603](https://github.com/linq-team/linq-python/commit/91f76032bcffecf7d37e11107ed44032067e9a69))
+
 ## [0.68.1](https://github.com/linq-team/linq-python/compare/v0.68.0...v0.68.1) (2026-11-18)
 
 
