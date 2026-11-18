@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.68.1](https://github.com/linq-team/linq-python/compare/v0.68.0...v0.68.1) (2026-11-18)
+
+
+### Bug Fixes
+
+* clarify sms exclusion for send failure webhook event 4006 ([964c356](https://github.com/linq-team/linq-python/commit/964c3564e24e5b57ce452b9c4a5198afee3c40c3))
+
 ## [0.68.0](https://github.com/linq-team/linq-python/compare/v0.67.6...v0.68.0) (2026-11-16)
 
 
