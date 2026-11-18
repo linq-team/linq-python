@@ -61,6 +61,9 @@ class CapabilityResource(SyncAPIResource):
         Check whether a recipient address (phone number or email) is reachable via
         iMessage.
 
+        Without `from`, the check runs from one of your phone numbers in the same
+        environment as the API token making the request.
+
         Args:
           address: The recipient address to check. `check_imessage` accepts an E.164 phone number
               or an email address; `check_rcs` accepts an E.164 phone number only and rejects
@@ -188,6 +191,9 @@ class AsyncCapabilityResource(AsyncAPIResource):
         """
         Check whether a recipient address (phone number or email) is reachable via
         iMessage.
+
+        Without `from`, the check runs from one of your phone numbers in the same
+        environment as the API token making the request.
 
         Args:
           address: The recipient address to check. `check_imessage` accepts an E.164 phone number
