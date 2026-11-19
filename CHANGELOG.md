@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.70.2](https://github.com/linq-team/linq-python/compare/v0.70.1...v0.70.2) (2026-11-19)
+
+
+### Bug Fixes
+
+* update reputation driver label example text ([a5d6c85](https://github.com/linq-team/linq-python/commit/a5d6c85f9644828d7f7da1ed454638c0a893604b))
+
 ## [0.70.1](https://github.com/linq-team/linq-python/compare/v0.70.0...v0.70.1) (2026-11-19)
 
 
