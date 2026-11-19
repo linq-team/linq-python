@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.71.0](https://github.com/linq-team/linq-python/compare/v0.70.2...v0.71.0) (2026-11-19)
+
+
+### Features
+
+* add text_decorations support to mention parts ([face9c9](https://github.com/linq-team/linq-python/commit/face9c9678cacc7f081410dc0b97d2772970ef07))
+
 ## [0.70.2](https://github.com/linq-team/linq-python/compare/v0.70.1...v0.70.2) (2026-11-19)
 
 
