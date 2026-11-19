@@ -1,9 +1,11 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+from typing import List, Optional
 from datetime import datetime
 from typing_extensions import Literal
 
 from .._models import BaseModel
+from .reputation_driver_key import ReputationDriverKey
 
 __all__ = ["PhoneNumberStatusUpdatedWebhookEvent", "Data"]
 
@@ -28,6 +30,15 @@ class Data(BaseModel):
 
     previous_status: Literal["ACTIVE", "FLAGGED"]
     """The previous service status"""
+
+    new_state: Optional[Literal["HEALTHY", "WATCH", "NEEDS_ATTENTION", "DELIVERY_LIMITED"]] = None
+    """The new line state"""
+
+    previous_state: Optional[Literal["HEALTHY", "WATCH", "NEEDS_ATTENTION", "DELIVERY_LIMITED"]] = None
+    """The previous line state"""
+
+    reason_codes: Optional[List[ReputationDriverKey]] = None
+    """What is behind `new_state`, in a stable order. Empty when nothing is."""
 
 
 class PhoneNumberStatusUpdatedWebhookEvent(BaseModel):
