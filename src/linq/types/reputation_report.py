@@ -34,7 +34,13 @@ class ReputationReport(BaseModel):
     """
 
     severity: Optional[Literal["HEALTHY", "AT_RISK", "CRITICAL"]] = None
-    """Current reputation of this phone line.
+    """**Legacy.** Use `state`.
+
+    Derived from `state`: `HEALTHY` and `WATCH` report `HEALTHY`, `NEEDS_ATTENTION`
+    reports `AT_RISK`, and `DELIVERY_LIMITED` reports `CRITICAL`. It stays available
+    for a long notice period before removal.
+
+    Current reputation of this phone line.
 
     - `HEALTHY` — The line is in good standing. Send normally.
     - `AT_RISK` — Warning signs on the line: engagement is low across many of its

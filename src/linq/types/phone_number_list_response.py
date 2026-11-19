@@ -4,6 +4,7 @@ from typing import List, Optional
 from typing_extensions import Literal
 
 from .._models import BaseModel
+from .reputation_driver_key import ReputationDriverKey
 
 __all__ = ["PhoneNumberListResponse", "PhoneNumber", "PhoneNumberReputation"]
 
@@ -23,8 +24,32 @@ class PhoneNumberReputation(BaseModel):
     Deep-link to the relevant section of the Phone Reputation guide for this status.
     """
 
+    reason_codes: List[ReputationDriverKey]
+    """What is behind `state`, in a stable order.
+
+    Empty when nothing is. Same vocabulary as the reputation report's drivers.
+    """
+
+    state: Literal["HEALTHY", "WATCH", "NEEDS_ATTENTION", "DELIVERY_LIMITED"]
+    """Current state of this phone line.
+
+    - `HEALTHY` — This line is in good standing.
+    - `WATCH` — A recent change in activity that usually settles on its own.
+    - `NEEDS_ATTENTION` — A sustained pattern that needs a change in how this line
+      is used.
+    - `DELIVERY_LIMITED` — Outbound messages from this line are not being delivered.
+
+    Defaults to `HEALTHY` for lines that have not yet been scored.
+    """
+
     status: Literal["HEALTHY", "AT_RISK", "CRITICAL"]
-    """Current reputation of this phone line.
+    """**Legacy.** Use `state`.
+
+    Derived from `state`: `HEALTHY` and `WATCH` report `HEALTHY`, `NEEDS_ATTENTION`
+    reports `AT_RISK`, and `DELIVERY_LIMITED` reports `CRITICAL`. It stays available
+    for a long notice period before removal.
+
+    Current reputation of this phone line.
 
     - `HEALTHY` — The line is in good standing. Send normally.
     - `AT_RISK` — Warning signs on the line: engagement is low across many of its
