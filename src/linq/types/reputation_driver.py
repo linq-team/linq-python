@@ -43,7 +43,7 @@ class ReputationDriver(BaseModel):
     """
 
     label: Optional[str] = None
-    """Display name for `key`, ready to show as-is (for example "Delivery Limited")."""
+    """Display name for `key`, ready to show as-is (for example "Delivery problem")."""
 
     metric: Optional[str] = None
     """A specific observed figure when available; otherwise a short qualitative note."""
