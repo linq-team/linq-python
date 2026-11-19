@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.70.0](https://github.com/linq-team/linq-python/compare/v0.69.0...v0.70.0) (2026-11-19)
+
+
+### Features
+
+* add label field to reputation driver details ([b8c12db](https://github.com/linq-team/linq-python/commit/b8c12db3c4aa4466b5a3acaa432224b0e73f18e1))
+
 ## [0.69.0](https://github.com/linq-team/linq-python/compare/v0.68.1...v0.69.0) (2026-11-18)
 
 
