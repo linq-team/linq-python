@@ -42,6 +42,9 @@ class ReputationDriver(BaseModel):
     - `other` — Fallback for a signal without dedicated partner copy.
     """
 
+    label: Optional[str] = None
+    """Display name for `key`, ready to show as-is (for example "Delivery issue")."""
+
     metric: Optional[str] = None
     """A specific observed figure when available; otherwise a short qualitative note."""
 
