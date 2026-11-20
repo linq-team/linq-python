@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.71.2](https://github.com/linq-team/linq-python/compare/v0.71.1...v0.71.2) (2026-11-20)
+
+
+### Bug Fixes
+
+* clarify new conversation rate warning behavior ([1a9ff8d](https://github.com/linq-team/linq-python/commit/1a9ff8da595564e7203905ef06919bf437245b5f))
+
 ## [0.71.1](https://github.com/linq-team/linq-python/compare/v0.71.0...v0.71.1) (2026-11-19)
 
 
