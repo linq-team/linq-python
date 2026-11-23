@@ -20,9 +20,7 @@ class PhoneNumberReputation(BaseModel):
     """
 
     doc_url: str
-    """
-    Deep-link to the relevant section of the Phone Reputation guide for this status.
-    """
+    """Deep-link to the section of the Phone Reputation guide for this line's `state`."""
 
     reason_codes: List[ReputationDriverKey]
     """What is behind `state`, in a stable order.
