@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.71.3](https://github.com/linq-team/linq-python/compare/v0.71.2...v0.71.3) (2026-11-23)
+
+
+### Bug Fixes
+
+* update phone reputation documentation links and descriptions ([78fd4f9](https://github.com/linq-team/linq-python/commit/78fd4f9a84a6eb10175dd29dc1291abed8f40aa0))
+
 ## [0.71.2](https://github.com/linq-team/linq-python/compare/v0.71.1...v0.71.2) (2026-11-20)
 
 
