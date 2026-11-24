@@ -31,9 +31,11 @@ Edit `.github/workflows/ci.yml`:
    keeping the existing `codegen metadata` guard for pushes.
 2. Add job `ci` (name `ci`), `needs: [lint, build]`,
    `if: always() && github.event_name == 'pull_request' && github.base_ref == 'main'`, that fails unless
-   every `needs.*.result` is `success`. In push runs the job is skipped, so
-   its `name:` is an expression that resolves to `ci-gate (push, unused)`
-   there: a skipped job named `ci` would satisfy the required check.
+   every `needs.*.result` is `success`. In push runs the job is skipped, and
+   a skipped job named `ci` would satisfy the required check, so `name:` is
+   an expression that yields `ci` only on pull_request. GitHub does not
+   evaluate `name:` for a skipped job, so the push run's check shows the raw
+   expression as its name; it is still not `ci`.
    The head commit must carry exactly one `ci` check, and it is not skipped.
 
 No change to triggers, release workflows, or other jobs.

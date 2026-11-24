@@ -59,7 +59,9 @@ jobs:
   ci:
     # Only the pull_request run may produce a check named `ci`. The push run
     # skips this job, and a skipped job named `ci` would satisfy the required
-    # check, so it gets a different name there.
+    # check, so it must not be named `ci` there. GitHub does not evaluate
+    # `name:` for a skipped job, so the push run's check shows this raw
+    # expression as its name. That is expected: it still isn't `ci`.
     name: ${{ github.event_name == 'pull_request' && 'ci' || 'ci-gate (push, unused)' }}
     needs: [lint, build]
     if: always() && github.event_name == 'pull_request' && github.base_ref == 'main'
