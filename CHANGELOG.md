@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.71.4](https://github.com/linq-team/linq-python/compare/v0.71.3...v0.71.4) (2026-11-24)
+
+
+### Chores
+
+* update release automation workflow safety checks ([285130f](https://github.com/linq-team/linq-python/commit/285130fa0da8de39a759dc4fd2ec73ec8e46b88b))
+
 ## [0.71.3](https://github.com/linq-team/linq-python/compare/v0.71.2...v0.71.3) (2026-11-23)
 
 
