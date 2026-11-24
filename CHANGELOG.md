@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.71.5](https://github.com/linq-team/linq-python/compare/v0.71.4...v0.71.5) (2026-11-24)
+
+
+### Chores
+
+* update release automation to use github app for merge ([a66b6de](https://github.com/linq-team/linq-python/commit/a66b6de3813ddb241f06b9b223bf531e4771a4ad))
+
 ## [0.71.4](https://github.com/linq-team/linq-python/compare/v0.71.3...v0.71.4) (2026-11-24)
 
 
