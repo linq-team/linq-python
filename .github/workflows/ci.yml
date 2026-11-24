@@ -57,7 +57,10 @@ jobs:
         run: uv build
 
   ci:
-    name: ci
+    # Only the pull_request run may produce a check named `ci`. The push run
+    # skips this job, and a skipped job named `ci` would satisfy the required
+    # check, so it gets a different name there.
+    name: ${{ github.event_name == 'pull_request' && 'ci' || 'ci-gate (push, unused)' }}
     needs: [lint, build]
     if: always() && github.event_name == 'pull_request' && github.base_ref == 'main'
     runs-on: ubuntu-latest

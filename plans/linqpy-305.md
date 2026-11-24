@@ -27,10 +27,13 @@ epic:
 Edit `.github/workflows/ci.yml`:
 
 1. Extend the `if:` on `lint` and `build` so they also run when
-   `github.event_name == 'pull_request' && github.base_ref == 'main'`,
+   `github.base_ref == 'main'` (only set on pull_request events),
    keeping the existing `codegen metadata` guard for pushes.
 2. Add job `ci` (name `ci`), `needs: [lint, build]`,
    `if: always() && github.event_name == 'pull_request' && github.base_ref == 'main'`, that fails unless
-   every `needs.*.result` is `success`.
+   every `needs.*.result` is `success`. In push runs the job is skipped, so
+   its `name:` is an expression that resolves to `ci-gate (push, unused)`
+   there: a skipped job named `ci` would satisfy the required check.
+   The head commit must carry exactly one `ci` check, and it is not skipped.
 
 No change to triggers, release workflows, or other jobs.
