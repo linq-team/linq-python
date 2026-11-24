@@ -19,7 +19,7 @@ jobs:
     timeout-minutes: 10
     name: lint
     runs-on: ubuntu-latest
-    if: (github.event_name == 'push' || github.event.pull_request.head.repo.fork) && (github.event_name != 'push' || github.event.head_commit.message != 'codegen metadata')
+    if: (github.event_name == 'push' || github.event.pull_request.head.repo.fork || github.base_ref == 'main') && (github.event_name != 'push' || github.event.head_commit.message != 'codegen metadata')
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
@@ -35,7 +35,7 @@ jobs:
         run: ./scripts/lint
 
   build:
-    if: (github.event_name == 'push' || github.event.pull_request.head.repo.fork) && (github.event_name != 'push' || github.event.head_commit.message != 'codegen metadata')
+    if: (github.event_name == 'push' || github.event.pull_request.head.repo.fork || github.base_ref == 'main') && (github.event_name != 'push' || github.event.head_commit.message != 'codegen metadata')
     timeout-minutes: 10
     name: build
     permissions:
@@ -55,3 +55,22 @@ jobs:
 
       - name: Run build
         run: uv build
+
+  ci:
+    name: ci
+    needs: [lint, build]
+    if: always() && github.event_name == 'pull_request' && github.base_ref == 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require every needed job to succeed
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "needed job results: $RESULTS"
+          for r in $RESULTS; do
+            if [ "$r" != "success" ]; then
+              echo "a required job finished with: $r"
+              exit 1
+            fi
+          done
